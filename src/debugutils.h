@@ -12,6 +12,6 @@ class DebugUtils
 public:
 	static void q_Warn( const QString & toWarn, const char * functionName = NULL );
 	static void q_Log ( const QString & toLog, const char * functionName = NULL );
-	
+	static void q_Error ( const QString & toLog, const char * functionName = NULL );
 };
 #endif

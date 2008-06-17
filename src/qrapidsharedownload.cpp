@@ -1,19 +1,23 @@
 #include "qrapidsharedownload.h"
 
-QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( _UrlFileAddress ) 
+QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
 , m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() )
 {
 	QT_DEBUG_FUNCTION
-	if( !( m_UrlFileAddress.isEmpty() )  )
-		ParseAddress() ;
-	
+	SetUrlFileAddress(_UrlFileAddress);
+	QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
+	QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
+	QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
+	QObject::connect( m_apHttpObj.get(), SIGNAL( dataSendProgress( int,int ) ), this, SLOT(  dataSendProgress( int,int ) ) );
+	QObject::connect( m_apHttpObj.get(), SIGNAL( responseHeaderReceived( const QHttpResponseHeader & ) ), this, SLOT(  responseHeaderReceived( const QHttpResponseHeader & ) ) );
+	QObject::connect( m_apHttpObj.get(), SIGNAL( dataReadProgress( int,int ) ), this, SLOT(  dataReadProgress( int,int ) ) );
 }
 QRapidshareDownload::~QRapidshareDownload()
 {
 	QT_DEBUG_FUNCTION
 	m_apHttpObj.release();
+	m_apHttpRequestHeader.release();
 }
-
 void QRapidshareDownload::ParseAddress()
 {
 	QT_DEBUG_FUNCTION
@@ -30,39 +34,82 @@ void QRapidshareDownload::ParseAddress()
 }
 void QRapidshareDownload::SetUrlFileAddress(const QString & _addr )
 {
+	QT_DEBUG_FUNCTION
+	DebugUtils::q_Log( QString(" _addr=") + _addr)	;
 	if( ! _addr.isEmpty() )
 	{
 		m_UrlFileAddress = _addr;
 		ParseAddress();	
 	}
 }
-void QRapidshareDownload::Download( const QObject * toConnect )
+void QRapidshareDownload::Download(const QString & _addr )
 {
 	QT_DEBUG_FUNCTION
-	if( toConnect == NULL ) 
-	{
-		DebugUtils::q_Warn("No object to connect to!", __PRETTY_FUNCTION__ ); 
-	}
-	else
-	{
-		QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), toConnect, SLOT( requestStarted( int ) ) );
-		QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), toConnect, SLOT( requestFinished( int,bool ) ) );
-		QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), toConnect, SLOT( stateChanged( int ) ) );
-		QObject::connect( m_apHttpObj.get(), SIGNAL( dataSendProgress( int,int ) ), toConnect, SLOT(  dataSendProgress( int,int ) ) );
-		QObject::connect( m_apHttpObj.get(), SIGNAL( responseHeaderReceived( const QHttpResponseHeader & ) ), toConnect, SLOT(  responseHeaderReceived( const QHttpResponseHeader & ) ) );	
-	}
+	DebugUtils::q_Log( QString(" _addr=") + _addr)	;
+	SetUrlFileAddress( _addr );
+	QT_DEBUG_FUNCTION		
 	
+	if(m_PathOnServer.isEmpty() || m_HostName.isEmpty() || m_UrlFileAddress.isEmpty() )
+	{
+		DebugUtils::q_Error( QString(" Unable to translate address"), __PRETTY_FUNCTION__)	;
+	}
 	m_apHttpRequestHeader->setRequest("GET", m_PathOnServer);
 	m_apHttpRequestHeader->setValue("Host", m_HostName);
 	m_apHttpObj->setHost(m_HostName);
 	m_apHttpObj->request(*( m_apHttpRequestHeader ) );
+	m_bIsPrepared = true;
 }
-QString QRapidshareDownload::HttpError()
+QString QRapidshareDownload::Cookie()
 {
-	if ( m_apHttpObj->error() == QHttp::NoError ) 
-		return QString("No Error ");
+	return QString("Cookie: user=4625386-%57%4D%32%46%54%5A%67%78%35%59");
+}
+/********** SLOTS **************/
+
+
+
+
+
+
+
+void QRapidshareDownload::requestStarted(const int & idReq)
+{
+	qDebug() << __PRETTY_FUNCTION__<< "idReq =  " << idReq << endl;
+}
+void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
+{	
+	qDebug() << __PRETTY_FUNCTION__<< "idReq =  " << idReq << "isFalse=" << isFalse << endl;
+	if( isFalse )
+	{
+		qDebug() << m_apHttpObj->errorString() << endl;
+		return ; 
+	}
+	m_apHttpRequestHeader->setRequest("POST",m_PathOnServer);
+	m_apHttpRequestHeader->setContentType("application/x-www-form-urlencoded");
+	m_apHttpRequestHeader->setValue("Host", m_HostName);
+	m_apHttpRequestHeader->setValue("Cookie", Cookie() );
+	m_apHttpObj->request(*( m_apHttpRequestHeader ) );	
+}
+void QRapidshareDownload::stateChanged(const int & iState)
+{	
+	qDebug() << __PRETTY_FUNCTION__<< "iState =  " << iState << endl;
+}
+void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
+{	
+	qDebug() << __PRETTY_FUNCTION__<< "done =  " << done << "total=" << total << endl;
+}
+void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
+{
+	qDebug() << __PRETTY_FUNCTION__<< "done =  " << done << "total=" << total << endl;
+}
+void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
+{
+	QT_DEBUG_FUNCTION
+	qDebug() << resp.reasonPhrase() << endl;
+	int iStatusCode = resp.statusCode(); 
+	if( iStatusCode == 200 || iStatusCode == 301 || iStatusCode == 302 || iStatusCode == 303 || iStatusCode == 307 )
+	{
+		;
+	}
 	else
-		return m_apHttpObj->errorString();
-};
-
-
+		;
+}

@@ -16,4 +16,11 @@ void DebugUtils::q_Log( const QString & toLog, const char * functionName )
 		qDebug() << functionName ;
 	qDebug() << toLog;	 
 }
+void DebugUtils::q_Error( const QString & toLog, const char * functionName )
+{
+	qDebug() << "Error!: " ;
+	if( functionName != NULL ) 
+		qDebug() << functionName ;
+	qDebug() << toLog;	 
+}
 //
