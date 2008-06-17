@@ -1,6 +1,6 @@
 #include "qrapidshareuser.h"
 //
-QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass ) \
+QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass ) 
  : m_apUserName( new QString(userName) ), m_apUserPass( new QString ( pass ) )
 {
 	

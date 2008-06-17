@@ -23,4 +23,3 @@ void DebugUtils::q_Error( const QString & toLog, const char * functionName )
 		qDebug() << functionName ;
 	qDebug() << toLog;	 
 }
-//

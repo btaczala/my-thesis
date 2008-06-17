@@ -9,15 +9,15 @@ class QRapidshareUser
 public:
 	QRapidshareUser(const QString &userName, const QString &pass);
 	~QRapidshareUser();
-	QString									getUserName()
+	QString	getUserName()
 	{
 		return *m_apUserName;
 	}
-	QString									getUserPass()
+	QString	getUserPass()
 	{
 		return *m_apUserPass;
 	}
-	QString									ComposeCookie();
+	QString							ComposeCookie();
 private:
 	std::auto_ptr<QString>					m_apUserName;
 	std::auto_ptr<QString>					m_apUserPass;
