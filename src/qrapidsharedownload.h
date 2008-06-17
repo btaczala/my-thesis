@@ -154,6 +154,14 @@ Content-Type: application/x-www-form-urlencoded\r\n
 Content-Length: 16
 Referrer: http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar\r\n
 
+then we get again 
+GET /files/122321322/dl/Me__su____eyrum_vi__spilum_endalaust.part2.rar HTTP/1.1
+Host: rs350gc.rapidshare.com\r\n << DIFFERS FROM PREVIOUS ONE !!!!!!
+Connection: Keep-Alive\r\n 
+Cookie: user=4625386-%57%4D%32%46%54%5A%67%78%35%59\r\n
+User-Agent: Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; en) Opera 8.52\r\n
+Referer: http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar\r\n
+
 
 */
 class QRapidshareDownload : public QObject
