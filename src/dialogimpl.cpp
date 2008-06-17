@@ -5,11 +5,15 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 {
 	QT_DEBUG_FUNCTION
 	setupUi(this);
-	QRapidshareUser aa("4625386", "WM2FTZgx5Y");	
-	qDebug() << aa.ComposeCookie();
-//	QObject::connect(DownloadButton, SIGNAL(  pressed() ), this, SLOT( downloadPressed() ) );
 	
-//	AddressLine->insert("http://rapidshare.com/files/122322166/Me__su____eyrum_vi__spilum_endalaust.part1.rar");
+	QObject::connect(DownloadButton, SIGNAL(  pressed() ), this, SLOT( downloadPressed() ) );
+	QObject::connect(progressBar, SIGNAL( valueChanged( int ) ), this, SLOT( ValueChanged( int ) ) );
+	QObject::connect(&m_RapidShareDownload, SIGNAL( WhatAmIDoing( QString ) ), this, SLOT( ChangeProgressName( QString ) ) );
+	
+	AddressLine->insert("http://rapidshare.com/files/122322166/Me__su____eyrum_vi__spilum_endalaust.part1.rar");
+	progressBar->setValue(0);
+	progressBar->setMinimum(0);
+	progressBar->setMaximum(100);
 }
 void DialogImpl::downloadPressed()
 {
@@ -17,7 +21,23 @@ void DialogImpl::downloadPressed()
 	QString address = AddressLine->displayText();
 	if( !address.isEmpty() )
 	{
+		DownloadButton->setEnabled(false);
 		m_RapidShareDownload.SetUrlFileAddress(address);
 		m_RapidShareDownload.Download();
 	}
 }
+void DialogImpl::ValueChanged(const int & value)
+{
+	QT_DEBUG_FUNCTION
+	if( value == progressBar->maximum() )
+	{
+		DownloadButton->setEnabled(true);
+	}
+}
+void DialogImpl::ChangeProgressName(const QString & what)
+{
+	QT_DEBUG_FUNCTION
+	QString format = what;
+	format += " %p/%m";
+	progressBar->setFormat(format);
+};

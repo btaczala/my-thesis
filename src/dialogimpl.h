@@ -15,9 +15,9 @@ public:
 private:
 	QRapidshareDownload				m_RapidShareDownload;	
 private slots:
-	void downloadPressed();
-	
-	
+	void downloadPressed();	
+	void ValueChanged(const int & value);
+	void ChangeProgressName(const QString & what);
 };
 #endif
 
