@@ -1,7 +1,7 @@
 #include "dialogimpl.h"
 
 DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f) 
-	: QDialog(parent, f), m_RapidShareDownload( "" )
+	: QDialog(parent, f), m_RapidShareDownload( "" ), m_apRapidShareDownloadManager(new RapidShareDownloadManager());
 {
 	QT_DEBUG_FUNCTION
 	setupUi(this);
