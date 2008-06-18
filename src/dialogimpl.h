@@ -18,6 +18,7 @@ private slots:
 	void downloadPressed();	
 	void ValueChanged(const int & value);
 	void ChangeProgressName(const QString & what);
+	void ChangeProgressValue(const int & iPerc);
 };
 #endif
 

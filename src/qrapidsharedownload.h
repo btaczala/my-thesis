@@ -38,11 +38,13 @@ public:
 	static	void								DownloadFile(const QString & _addr);
 	
 private:
-	QString									m_UrlFileAddress;
-	std::auto_ptr<QHttp>							m_apHttpObj;
+	
+	QString												m_UrlFileAddress;
+	QString												m_ReferrerFileAddress;
+	std::auto_ptr<QHttp>								m_apHttpObj;
 	std::auto_ptr<QHttpRequestHeader>					m_apHttpRequestHeader;
 	std::auto_ptr<QRapidshareUser>						m_apRSUser;
-	bool									m_bIsPrepared;
+	bool												m_bIsPrepared;
 	std::auto_ptr<QUrl>							m_apFileUrl;
 	std::auto_ptr<QFile>							m_apFile;
 	RapidShareStateMachine							m_RSStateMachine;
@@ -52,6 +54,7 @@ private:
 	QString									ParseResponseAndGetNewUrl(const QString & resp);
 	int									ParseResponseAndGetFileSize(const QString & resp);
 	void									TranslateAnswer();
+	QString 									ParsePostReponseAndGetAddress(const QString & resp);
 	
 private slots:
 	void 									requestStarted(const int & idReq) ;
@@ -67,6 +70,7 @@ private slots:
 	
 signals:
 	void									WhatAmIDoing(const QString & what);
+	void									DownloadStatus(const int & istate );
 		
 };
 #endif
