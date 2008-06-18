@@ -1,6 +1,6 @@
 #include "qrapidsharedownload.h"
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
-, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "","" ) ), m_apFileUrl( new QUrl() )
+, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "4625386","WM2FTZgx5Y" ) ), m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED )
 {
 	QT_DEBUG_FUNCTION
@@ -165,7 +165,7 @@ void QRapidshareDownload::done(const bool & error)
 		qDebug() << "First post"; 		
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 		m_apHttpObj->setHost( m_apFileUrl->host() );
-		m_apHttpObj->request( *( m_apHttpRequestHeader ), "dl.start=PREMIUM  ");
+		m_apHttpObj->request( *( m_apHttpRequestHeader ), "dl.start=PREMIUM");
  		m_RSStateMachine = POST_FIRST ;
  	}
 	else if( m_RSStateMachine == POST_FIRST)
@@ -177,17 +177,17 @@ void QRapidshareDownload::done(const bool & error)
  		SetUrlFileAddress(newUrlpath);
  		emit WhatAmIDoing("Last Get! :)");
  		m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
- 		m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
+		m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 		m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
 		m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
 		m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
 		m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
-		m_apHttpRequestHeader->setValue("Referrer", "http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar");
-		qDebug() << "Third GET"; 		
+		m_apHttpRequestHeader->setValue("Referer", "http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar");
+		qDebug() << "First post"; 
+		m_RSStateMachine = GET_THIRD; 
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
-		m_apHttpObj->setHost( "rapidshare.com" );
+		m_apHttpObj->setHost( m_apFileUrl->host() );
 		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
- 		m_RSStateMachine = GET_THIRD;
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{

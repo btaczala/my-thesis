@@ -15,7 +15,6 @@ DialogImpl::DialogImpl( QWidget * parent, Qt::WFlags f)
 	progressBar->setValue(0);
 	progressBar->setMinimum(0);
 	progressBar->setMaximum(100);
-
 }
 void DialogImpl::downloadPressed()
 {
