@@ -51,9 +51,15 @@ class MainWindow : public QMainWindow
 		MainWindow(QWidget * parent = 0);
 		~MainWindow();
 	private:
+		void				ConnectActions();
+		void 				SetupUi();
 		QStringList			m_ColumnHeaders;
 		std::auto_ptr<DownloadView>	m_DownloadView;
-
+		QPointer<QMenuBar>		m_MenuBar;
+		QPointer<QMenu>			m_FileMenu;
+		QPointer<QAction>		m_File_NewAction;
+		QPointer<QAction>		m_File_SendToTrayAction;
+		QPointer<QAction>		m_File_ExitAction;
 };
 
 

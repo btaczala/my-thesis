@@ -24,7 +24,6 @@
 int main(int argc, char *argv[])
 {
       QApplication app(argc, argv);
-      qDebug("Hello from Qt 4!");
       MainWindow window;
       window.show();
 
