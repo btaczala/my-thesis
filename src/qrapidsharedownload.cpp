@@ -1,6 +1,6 @@
 #include "qrapidsharedownload.h"
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
-, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "4625386","WM2FTZgx5Y" ) ), m_apFileUrl( new QUrl() )
+, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "","" ) ), m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED )
 {
 	QT_DEBUG_FUNCTION
