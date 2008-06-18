@@ -21,6 +21,22 @@ enum RapidShareStateMachine
   	POST_FIRST,
    	GET_THIRD
 };
+struct DownloadInfo
+{
+	DownloadInfo()
+	{
+		bytesReadCurrent = 0;
+		bytesReadPreviously = 0;
+	}
+	int bytesReadCurrent;
+	int bytesReadPreviously;
+	int Diff()
+	{
+		int ret  = bytesReadCurrent - bytesReadPreviously;
+		return (ret > 0 ) ? ret : -1 ; 
+	}
+};
+
 class QRapidshareDownload : public QObject
 {
 Q_OBJECT
@@ -33,29 +49,30 @@ public:
 	virtual 								~QRapidshareDownload();
 	
 	void 									Download(const QString & _addr = QString("") );
-	void									SetUrlFileAddress(const QString & _addr ) ;
 	/// ???? implement or not ? 
 	static	void								DownloadFile(const QString & _addr);
 	
 private:
 	
-	QString												m_UrlFileAddress;
-	QString												m_ReferrerFileAddress;
-	std::auto_ptr<QHttp>								m_apHttpObj;
-	std::auto_ptr<QHttpRequestHeader>					m_apHttpRequestHeader;
-	std::auto_ptr<QRapidshareUser>						m_apRSUser;
-	bool												m_bIsPrepared;
+	QString										m_UrlFileAddress;
+	QString										m_ReferrerFileAddress;
+	std::auto_ptr<QHttp>						m_apHttpObj;
+	std::auto_ptr<QHttpRequestHeader>			m_apHttpRequestHeader;
+	std::auto_ptr<QRapidshareUser>				m_apRSUser;
+	bool										m_bIsPrepared;
 	std::auto_ptr<QUrl>							m_apFileUrl;
-	std::auto_ptr<QFile>							m_apFile;
-	RapidShareStateMachine							m_RSStateMachine;
-	QString									m_HostName;
-	QString									m_PathOnServer;
-	QString									m_RequestType;	
-	QString									ParseResponseAndGetNewUrl(const QString & resp);
-	int									ParseResponseAndGetFileSize(const QString & resp);
-	void									TranslateAnswer();
-	QString 									ParsePostReponseAndGetAddress(const QString & resp);
+	std::auto_ptr<QFile>						m_apFile;
+	RapidShareStateMachine						m_RSStateMachine;
+	std::auto_ptr<DownloadInfo>					m_downloadInfo;
 	
+	QString										m_HostName;
+	QString										m_PathOnServer;
+	QString										m_RequestType;	
+	QString										ParseResponseAndGetNewUrl(const QString & resp);
+	int											ParseResponseAndGetFileSize(const QString & resp);
+	void										TranslateAnswer();
+	QString 									ParsePostReponseAndGetAddress(const QString & resp);
+	void										SetUrlFileAddress(const QString & _addr ) ;
 private slots:
 	void 									requestStarted(const int & idReq) ;
 	void 									requestFinished(const int & idReq, const bool & isFalse) ;

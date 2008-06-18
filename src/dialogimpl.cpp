@@ -23,8 +23,7 @@ void DialogImpl::downloadPressed()
 	if( !address.isEmpty() )
 	{
 		DownloadButton->setEnabled(false);
-		m_RapidShareDownload.SetUrlFileAddress(address);
-		m_RapidShareDownload.Download();
+		m_RapidShareDownload.Download(address);
 	}
 }
 void DialogImpl::ValueChanged(const int & value)

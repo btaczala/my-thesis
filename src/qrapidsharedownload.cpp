@@ -1,7 +1,7 @@
 #include "qrapidsharedownload.h"
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
 , m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "4625386","WM2FTZgx5Y" ) ), m_apFileUrl( new QUrl() )
-, m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED )
+, m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED ), m_downloadInfo(new DownloadInfo() ) 
 {
 	QT_DEBUG_FUNCTION
 	SetUrlFileAddress(_UrlFileAddress);
@@ -24,6 +24,7 @@ QRapidshareDownload::~QRapidshareDownload()
 	m_apHttpRequestHeader.release();
 	m_apRSUser.release();
 	m_apFileUrl.release() ; 
+	m_downloadInfo.release() ;
 }
 void QRapidshareDownload::SetUrlFileAddress(const QString & _addr )
 {
@@ -39,14 +40,14 @@ void QRapidshareDownload::Download(const QString & _addr )
 	QT_DEBUG_FUNCTION
 	DebugUtils::q_Log( QString(" _addr=") + _addr)	;
 	SetUrlFileAddress( _addr );
-	
+	m_ReferrerFileAddress = _addr;
 	emit WhatAmIDoing("Getting first get");
 	m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 	m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
 	m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
 	m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
 	m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
-	m_apHttpRequestHeader->setValue("Referer", m_apFileUrl->toString() );
+	m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
 	qDebug() << "First GET";
 	qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 	m_apHttpObj->setHost(  m_apFileUrl->host() );
@@ -89,6 +90,29 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		int iTotal = (int)dResTotal;
 		qDebug() << "emit :DownloadStatus("<< iTotal <<")";  
 		emit DownloadStatus(iTotal) ;
+		m_downloadInfo->bytesReadPreviously =m_downloadInfo->bytesReadCurrent;
+		m_downloadInfo->bytesReadCurrent = done ; 
+		
+		
+		int iBytes =  m_downloadInfo->Diff();
+		qDebug() << "Bytes to write :"<< iBytes;
+		char *buff = new char[iBytes];
+		if( int iBytes2 = m_apHttpObj->read(buff, iBytes) == -1 )
+			DebugUtils::q_Error("ERROR while reading from Http stream ");
+		else
+		{
+			if( !m_apFile->isOpen())
+			{
+				 if( ! m_apFile->open(QIODevice::Append) ) 
+				 	DebugUtils::q_Error("ERROR ..:::DDD");	
+			}
+			if( ! m_apFile->isOpen() )
+				 	DebugUtils::q_Error("ERROR ..:::DDD");				 
+			m_apFile->write(buff,iBytes2);	
+		}
+		delete[] buff;
+		
+		
 		  
 	}
 }
@@ -133,7 +157,7 @@ void QRapidshareDownload::done(const bool & error)
 		m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 		m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
 		m_apHttpRequestHeader->setValue("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, ap//plication/vnd.ms-powerpoint, application/msword, application/x-shockwave-flash, */*" );
-		m_apHttpRequestHeader->setValue("Referer", m_apFileUrl->toString() );
+		m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
 		qDebug() << "Second GET";		
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 		m_apHttpObj->setHost( m_apFileUrl->host() );
@@ -161,7 +185,7 @@ void QRapidshareDownload::done(const bool & error)
 		m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
 		m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
 		m_apHttpRequestHeader->setValue("Content-Length", "16");
-		m_apHttpRequestHeader->setValue("Referrer", "http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar");
+		m_apHttpRequestHeader->setValue("Referrer", m_ReferrerFileAddress);
 		qDebug() << "First post"; 		
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 		m_apHttpObj->setHost( m_apFileUrl->host() );
@@ -182,15 +206,22 @@ void QRapidshareDownload::done(const bool & error)
 		m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
 		m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
 		m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
-		m_apHttpRequestHeader->setValue("Referer", "http://rapidshare.com/files/122321322/Me__su____eyrum_vi__spilum_endalaust.part2.rar");
+		m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
 		qDebug() << "First post"; 
 		m_RSStateMachine = GET_THIRD; 
+		m_apFile->setFileName("kupa.rar.part");
+		if( ! m_apFile->open(QIODevice::WriteOnly) )
+		{
+			DebugUtils::q_Error("Unable to open");
+			return;
+		}
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 		m_apHttpObj->setHost( m_apFileUrl->host() );
 		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{
+ 		m_apFile->close();
  		QByteArray aa = m_apHttpObj->readAll() ;
  		DebugUtils::DumpReponseToFile(aa,"result_rar.rar");
 	}
