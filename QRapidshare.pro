@@ -1,17 +1,18 @@
+HEADERS += src/mainwindow.h \
+ src/Ui_AddDownloadFile.h \
+ src/rapidsharemanager/debugutils.h \
+ src/rapidsharemanager/qrapidsharedownload.h \
+ src/rapidsharemanager/qrapidshareuser.h \
+ src/rapidsharemanager/rapidsharedownloadmanager.h \
+ src/rslogger.h
+SOURCES += src/main.cpp \
+ src/mainwindow.cpp \
+ src/Ui_AddDownloadFile.cpp \
+ src/rapidsharemanager/qrapidsharedownload.cpp \
+ src/rapidsharemanager/qrapidshareuser.cpp \
+ src/rapidsharemanager/rapidsharedownloadmanager.cpp \
+ src/rapidsharemanager/debugutils.cpp \
+ src/rslogger.cpp
+FORMS += ui/adddownload.ui
+QT += network
 TEMPLATE = app
-QT = gui core network
-CONFIG += qt warn_on console debug
-DESTDIR = bin
-OBJECTS_DIR = build
-MOC_DIR = build
-UI_DIR = build
-FORMS = ui/dialog.ui
-HEADERS = src/dialogimpl.h src/qrapidsharedownload.h src/debugutils.h src/qrapidshareuser.h
-SOURCES = src/dialogimpl.cpp src/main.cpp src/qrapidsharedownload.cpp src/debugutils.cpp src/qrapidshareuser.cpp
-CONFIG -= release
-
-LIBS += -L/usr/local/lib/
-SOURCES -= log/rslog.cpp
-
-HEADERS -= log/rslog.h
-
