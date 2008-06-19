@@ -1,4 +1,4 @@
-#include "../src/rapidsharedownloadmanager.h"
+#include "rapidsharedownloadmanager.h"
 
 RapidShareDownloadManager::RapidShareDownloadManager()
 {
@@ -8,5 +8,3 @@ RapidShareDownloadManager::RapidShareDownloadManager()
 RapidShareDownloadManager::~RapidShareDownloadManager()
 {
 }
-
-

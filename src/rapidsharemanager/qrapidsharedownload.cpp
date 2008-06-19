@@ -1,8 +1,9 @@
 #include "qrapidsharedownload.h"
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
 , m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "4625386","WM2FTZgx5Y" ) ), m_apFileUrl( new QUrl() )
-, m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED ), m_downloadInfo(new DownloadInfo() ) 
+, m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED ), m_downloadInfo(new DownloadInfo() )
 {
+	
 	QT_DEBUG_FUNCTION
 	SetUrlFileAddress(_UrlFileAddress);
 	QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
@@ -35,12 +36,13 @@ void QRapidshareDownload::SetUrlFileAddress(const QString & _addr )
 		m_apFileUrl.reset( new QUrl( _addr ) );
 	}
 }
-void QRapidshareDownload::Download(const QString & _addr )
+void QRapidshareDownload::Download(const QString & _addr, const QString & _fileDest )
 {
 	QT_DEBUG_FUNCTION
 	DebugUtils::q_Log( QString(" _addr=") + _addr)	;
 	SetUrlFileAddress( _addr );
 	m_ReferrerFileAddress = _addr;
+	m_fileDestination = _fileDest;
 	emit WhatAmIDoing("Getting first get");
 	m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 	m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
@@ -93,7 +95,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		m_downloadInfo->bytesReadPreviously =m_downloadInfo->bytesReadCurrent;
 		m_downloadInfo->bytesReadCurrent = done ; 
 		
-		
+		/*
 		int iBytes =  m_downloadInfo->Diff();
 		qDebug() << "Bytes to write :"<< iBytes;
 		char *buff = new char[iBytes];
@@ -111,7 +113,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 			m_apFile->write(buff,iBytes2);	
 		}
 		delete[] buff;
-		
+		*/
 		
 		  
 	}
@@ -209,21 +211,19 @@ void QRapidshareDownload::done(const bool & error)
 		m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
 		qDebug() << "First post"; 
 		m_RSStateMachine = GET_THIRD; 
-		m_apFile->setFileName("kupa.rar.part");
-		if( ! m_apFile->open(QIODevice::WriteOnly) )
-		{
-			DebugUtils::q_Error("Unable to open");
-			return;
-		}
-		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
+		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;		
 		m_apHttpObj->setHost( m_apFileUrl->host() );
 		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
+		emit WhatAmIDoing("Downloading");
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{
  		m_apFile->close();
+ 		emit WhatAmIDoing("Writting to file");
  		QByteArray aa = m_apHttpObj->readAll() ;
- 		DebugUtils::DumpReponseToFile(aa,"result_rar.rar");
+ 		DebugUtils::DumpReponseToFile(aa,m_fileDestination);
+ 		emit WhatAmIDoing("Done :) ");
+
 	}
 	qDebug() << "end of";
 };

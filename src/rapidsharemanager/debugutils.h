@@ -7,7 +7,7 @@
 #include <QHttpRequestHeader>
 #include <QFile>
 
-#define QT_DEBUG_FUNCTION qDebug() << __PRETTY_FUNCTION__ << endl;
+#define QT_DEBUG_FUNCTION qDebug() << __PRETTY_FUNCTION__ ;
 
 class DebugUtils  
 {
