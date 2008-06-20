@@ -12,7 +12,7 @@ class Ui_AddDownloadFile : public QDialog
 {
 	Q_OBJECT
 public:
-	Ui_AddDownloadFile( QWidget *parent = 0 );
+	Ui_AddDownloadFile( QWidget *parent = 0 , const QString & pathToFile = QString("") );
 	virtual ~Ui_AddDownloadFile();
 	QUrl GetUrl() const ;
 	QString GetUrlPath() const ;

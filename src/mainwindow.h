@@ -56,18 +56,24 @@ class MainWindow : public QMainWindow
 		{
 			return m_progress;
 		}
+	protected:
+		virtual void keyPressEvent (QKeyEvent *keyEvent);
 	private:
-		void						ConnectActions();
-		void 						SetupUi();
-		QStringList					m_ColumnHeaders;
-		QPointer<DownloadView>		m_DownloadView;
-		QPointer<QMenuBar>			m_MenuBar;
-		QPointer<QMenu>				m_FileMenu;
-		QPointer<QAction>			m_File_NewAction;
-		QPointer<QAction>			m_File_SendToTrayAction;
-		QPointer<QAction>			m_File_ExitAction;
-		int							m_progress;
-		QRapidshareDownload			m_RapidShareDownload;	
+		void							ConnectActions();
+		void 							SetupUi();
+		QStringList						m_ColumnHeaders;
+		QPointer<DownloadView>			m_DownloadView;
+		QPointer<QMenuBar>				m_MenuBar;
+		QPointer<QMenu>					m_FileMenu;
+		QPointer<QAction>				m_File_NewAction;
+		QPointer<QAction>				m_File_SendToTrayAction;
+		QPointer<QAction>				m_File_ExitAction;
+		int								m_progress;
+		//QRapidshareDownload				m_RapidShareDownload;
+		QMap<QTreeWidgetItem*,QRapidshareDownload *> m_RapidsharePool; 
+		bool							addFileToDownload(const QString & fileToDownload = QString(""));
+	
+		QString							TransformUrlPathToLocalPath(const QString & url); 	
 	private slots:
 		void						addNewFile();
 		void 						ChangeProgressName(const QString & name ) ;

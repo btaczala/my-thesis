@@ -28,25 +28,25 @@ public:
 	inline void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index )
 	{
 		if (index.column() != 2) 
-	{
-		QItemDelegate::paint(painter, option, index);
-		return;
-	}
-	QStyleOptionProgressBar progressBarOption;
-	progressBarOption.state = QStyle::State_Enabled;
-	progressBarOption.direction = QApplication::layoutDirection();
-	progressBarOption.rect = option.rect;
-	progressBarOption.fontMetrics = QApplication::fontMetrics();
-	progressBarOption.minimum = 0;
-	progressBarOption.maximum = 100;
-	progressBarOption.textAlignment = Qt::AlignCenter;
-	progressBarOption.textVisible = true;	
-	// Set the progress and text values of the style option.
-	int progress = qobject_cast<MainWindow *>( parent())->GetProgress();
-	progressBarOption.progress = progress < 0 ? 0 : progress;
-	progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
-	//Draw the progress bar onto the view.
-	QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+		{
+			QItemDelegate::paint(painter, option, index);
+			return;
+		}
+		QStyleOptionProgressBar progressBarOption;
+		progressBarOption.state = QStyle::State_Enabled;
+		progressBarOption.direction = QApplication::layoutDirection();
+		progressBarOption.rect = option.rect;
+		progressBarOption.fontMetrics = QApplication::fontMetrics();
+		progressBarOption.minimum = 0;
+		progressBarOption.maximum = 100;
+		progressBarOption.textAlignment = Qt::AlignCenter;
+		progressBarOption.textVisible = true;	
+		// Set the progress and text values of the style option.
+		int progress = qobject_cast<MainWindow *>( parent())->GetProgress();
+		progressBarOption.progress = progress < 0 ? 0 : progress;
+		progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
+		//Draw the progress bar onto the view.
+		QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
 	}
 };
 
@@ -73,6 +73,11 @@ MainWindow::MainWindow(QWidget * parent)
 
 MainWindow::~MainWindow()
 {
+	QMapIterator<QTreeWidgetItem*,QRapidshareDownload *> iter(m_RapidsharePool);
+	while(iter.hasNext())
+	{
+		delete iter.value() ;
+	}
 }
 void MainWindow::ConnectActions()
 {
@@ -90,27 +95,34 @@ void MainWindow::SetupUi()
 	setCentralWidget( m_DownloadView );
 	setMenuBar(m_MenuBar);
 }
-/*
- * 
- * SLOTS
- * 
- */
-void MainWindow::addNewFile()
+bool MainWindow::addFileToDownload(const QString & fileToDownload)
 {
 	QT_DEBUG_FUNCTION
-	Ui_AddDownloadFile *dlg = new Ui_AddDownloadFile(this) ; 
-	if( ! dlg->exec() )
-		return;
-	QUrl FileUrl = dlg->GetUrl();
-	if( FileUrl.path().isEmpty() )
+	QString fileUrl;
+	QString dest;
+	QString baseFileName;
+	QUrl FileUrl;
+	if(fileToDownload.isEmpty())
 	{
-		QMessageBox::warning(this, tr("Error"),
-		tr("The file %1 cannot not be opened/resumed.").arg(FileUrl.toString()));
+		Ui_AddDownloadFile *dlg = new Ui_AddDownloadFile(this, fileToDownload) ; 
+		if( ! dlg->exec() )
+			return 0;
+		FileUrl = dlg->GetUrl();
+		if( FileUrl.path().isEmpty() )
+		{
+			QMessageBox::warning(this, tr("Error"),
+			tr("The file %1 cannot not be opened/resumed.").arg(FileUrl.toString()));
+		}
+		QString dest = dlg->GetDestinationPath();
+		baseFileName = QFileInfo(FileUrl.path()).fileName();	
 	}
-	QString dest = dlg->GetDestinationPath();
-	
+	else
+	{
+		FileUrl = QUrl(fileToDownload);
+		dest = QDir::home().path();
+	}
+	dest += "/";
 	QTreeWidgetItem *item = new QTreeWidgetItem(m_DownloadView);
-	QString baseFileName = QFileInfo(FileUrl.path()).fileName();
 	item->setText(0,FileUrl.path());
 	item->setText(1,dest);
 	item->setText(2,tr("0/0"));
@@ -119,16 +131,54 @@ void MainWindow::addNewFile()
 	item->setFlags(item->flags() & ~Qt::ItemIsEditable);
 	item->setTextAlignment(1, Qt::AlignHCenter);
 	m_DownloadView->setCurrentItem(item);
+	QRapidshareDownload *rsd = new QRapidshareDownload();
+	/*
 	QObject::connect(&m_RapidShareDownload,SIGNAL(WhatAmIDoing( QString )), this, SLOT(	ChangeProgressName( QString )));
 	QObject::connect(&m_RapidShareDownload,SIGNAL(DownloadStatus( int )), this, SLOT(	ChangeProgressValue( int )));
-	QString fileName = FileUrl.path();
-	
-	m_RapidShareDownload.Download(FileUrl.toString(), dest + "\\" + QString( "temp.rar" ) );	
+	*/
+	QObject::connect(rsd,SIGNAL(WhatAmIDoing( QString )), this, SLOT(	ChangeProgressName( QString )));
+	QObject::connect(rsd,SIGNAL(DownloadStatus( int )), this, SLOT(	ChangeProgressValue( int )));
+	QString fileName = dest + TransformUrlPathToLocalPath(FileUrl.path());
+	m_RapidsharePool.insert(item,rsd);
+	rsd->Download(FileUrl.toString(),fileName );
+	return true;
+}
+/*
+ * 
+ * SLOTS
+ * 
+ */
+void MainWindow::addNewFile()
+{
+	QT_DEBUG_FUNCTION
+	addFileToDownload();
 };
+void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
+{
+	if(keyPressed->modifiers() == Qt::ControlModifier)
+	{
+		if ( keyPressed->key() == Qt::Key_V )
+		{
+			// segment for several download files
+			QClipboard *clipboard = QApplication::clipboard ();
+			QString text = clipboard->text(QClipboard::Clipboard);
+			QStringList urls = text.split( QRegExp( "\\s+" ) );
+			qDebug() << urls;
+			foreach(QString one, urls)
+			{
+				if(one.contains("rapidshare"))
+					addFileToDownload(one);	
+			}
+		}
+	}
+}
+
+
 void MainWindow::ChangeProgressName(const QString & name ) 
 {
 	QT_DEBUG_FUNCTION
-	QTreeWidgetItem *hadzia =m_DownloadView->currentItem(); 
+	QRapidshareDownload *tmp = qobject_cast<QRapidshareDownload*>(sender());
+	QTreeWidgetItem *hadzia =m_RapidsharePool.key(tmp); 
 	if(NULL == hadzia)
 		return;
 	else
@@ -138,7 +188,8 @@ void MainWindow::ChangeProgressName(const QString & name )
 void MainWindow::ChangeProgressValue( const int & iPerc ) 
 {
 	QT_DEBUG_FUNCTION
-	QTreeWidgetItem *hadzia =m_DownloadView->currentItem();
+	QRapidshareDownload *tmp = qobject_cast<QRapidshareDownload*>(sender());
+	QTreeWidgetItem *hadzia =m_RapidsharePool.key(tmp); 
 	if( NULL == hadzia ) 
 		return;
 	else
@@ -147,7 +198,15 @@ void MainWindow::ChangeProgressValue( const int & iPerc )
 	}
 	m_progress = iPerc;
 }
-
+QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
+{
+	
+	QString ret = QString(url);
+	ret = ret.remove("/files");
+	// remove /213123123/ <- digits only
+	ret = ret.remove(QRegExp ("/\\d+/") );
+	return ret;
+}
 DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent ) 
 {
 	QT_DEBUG_FUNCTION

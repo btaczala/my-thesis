@@ -1,15 +1,21 @@
 #include "Ui_AddDownloadFile.h"
 
-Ui_AddDownloadFile::Ui_AddDownloadFile(QWidget *parent ) :  QDialog( parent )
+Ui_AddDownloadFile::Ui_AddDownloadFile(QWidget *parent, const QString & pathToFile) :  QDialog( parent )
 {
 	qDebug() << __PRETTY_FUNCTION__;
 	ui.setupUi(this) ;
-	m_qpClipboard = QApplication::clipboard ();
-	QString text = m_qpClipboard->text(QClipboard::Clipboard);
-	if( !text.isEmpty() )
+	if(pathToFile.isEmpty())
 	{
-		ui.DownloadFileUrl->setText(text);
+		m_qpClipboard = QApplication::clipboard ();
+		QString text = m_qpClipboard->text(QClipboard::Clipboard);
+		if( !text.isEmpty() )
+		{
+			ui.DownloadFileUrl->setText(text);
+		}		
 	}
+	else
+		ui.DownloadFileUrl->setText(pathToFile);
+		
 	QObject::connect(ui.browseDestination, SIGNAL(clicked()),this, SLOT(browseForDestination()));
 	QObject::connect(ui.okButton, SIGNAL(clicked()),this, SLOT(ok()));	
 }

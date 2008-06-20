@@ -71,6 +71,7 @@ private:
 	void										TranslateAnswer();
 	QString 									ParsePostReponseAndGetAddress(const QString & resp);
 	void										SetUrlFileAddress(const QString & _addr ) ;
+	QFile 										m_FileLog;
 private slots:
 	void 										requestStarted(const int & idReq) ;
 	void 										requestFinished(const int & idReq, const bool & isFalse) ;
