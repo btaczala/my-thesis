@@ -26,19 +26,9 @@
 #include <QTreeWidget>
 #include <QItemDelegate>
 #include <QtGui>
-#include "ui_AddDownloadFile.h"
+#include "Ui_AddDownloadFile.h"
 #include "rapidsharemanager/qrapidsharedownload.h"
 #include "rapidsharemanager/debugutils.h"
-
-
-QT_BEGIN_NAMESPACE
-class QAction;
-class QCloseEvent;
-class QLabel;
-class QProgressDialog;
-class QSlider;
-QT_END_NAMESPACE
-
 
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>

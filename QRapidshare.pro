@@ -16,3 +16,5 @@ SOURCES += src/main.cpp \
 FORMS += ui/adddownload.ui
 QT += network
 TEMPLATE = app
+INCLUDEPATH += src/
+

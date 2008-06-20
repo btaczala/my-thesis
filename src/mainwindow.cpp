@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include <QtGui>
 #include "mainwindow.h"
-#include "downloadviewdelegate.h"
 
 class DownloadViewDelegate : public QItemDelegate
 {
