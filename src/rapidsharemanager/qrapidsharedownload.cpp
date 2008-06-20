@@ -1,6 +1,6 @@
 #include "qrapidsharedownload.h"
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
-, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser( new QRapidshareUser( "4625386","WM2FTZgx5Y" ) ), m_apFileUrl( new QUrl() )
+, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED ), m_downloadInfo(new DownloadInfo() )
 {
 	
@@ -227,6 +227,11 @@ void QRapidshareDownload::done(const bool & error)
 	}
 	qDebug() << "end of";
 };
+void QRapidshareDownload::stop()
+{
+	QT_DEBUG_FUNCTION
+	m_apHttpObj->abort();
+}
 QString QRapidshareDownload::ParseResponseAndGetNewUrl(const QString & resp)
 {
 	QT_DEBUG_FUNCTION
@@ -334,4 +339,13 @@ QString QRapidshareDownload::ParsePostReponseAndGetAddress( const QString & resp
 	qDebug() << newUrl;
 	return newUrl;
 }
+void QRapidshareDownload::SetUser(const QRapidshareUser & rsUser)
+{
+	
+}
+void QRapidshareDownload::SetUser(const QString& rsName,  const QString& rsPass)
+{
+	SetUser(QRapidshareUser(rsName,rsPass));
+}
+
 

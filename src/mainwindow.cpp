@@ -53,6 +53,7 @@ public:
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent)
 {
+	QT_DEBUG_FUNCTION
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
 	m_DownloadView =  new DownloadView(this) ;
 	m_DownloadView->setItemDelegate( new DownloadViewDelegate(this) );
@@ -73,11 +74,8 @@ MainWindow::MainWindow(QWidget * parent)
 
 MainWindow::~MainWindow()
 {
-	QMapIterator<QTreeWidgetItem*,QRapidshareDownload *> iter(m_RapidsharePool);
-	while(iter.hasNext())
-	{
-		delete iter.value() ;
-	}
+	QT_DEBUG_FUNCTION
+	ClearPool();
 }
 void MainWindow::ConnectActions()
 {
@@ -155,6 +153,7 @@ void MainWindow::addNewFile()
 };
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
+	QT_DEBUG_FUNCTION
 	if(keyPressed->modifiers() == Qt::ControlModifier)
 	{
 		if ( keyPressed->key() == Qt::Key_V )
@@ -172,8 +171,24 @@ void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 		}
 	}
 }
-
-
+void MainWindow::close()
+{
+	QT_DEBUG_FUNCTION
+	ClearPool();
+	QMainWindow::close();
+}
+void MainWindow::ClearPool()
+{
+	QT_DEBUG_FUNCTION
+	QMap<QTreeWidgetItem*,QRapidshareDownload *>::iterator iEnd = m_RapidsharePool.end();
+	QMap<QTreeWidgetItem*,QRapidshareDownload *>::iterator iBegin = m_RapidsharePool.begin();
+	for(;iBegin != iEnd; ++iBegin)
+	{
+		QRapidshareDownload *tmp =iBegin.value(); 
+		if(tmp)
+			tmp->stop();
+	}
+}
 void MainWindow::ChangeProgressName(const QString & name ) 
 {
 	QT_DEBUG_FUNCTION
@@ -200,7 +215,7 @@ void MainWindow::ChangeProgressValue( const int & iPerc )
 }
 QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
 {
-	
+	QT_DEBUG_FUNCTION
 	QString ret = QString(url);
 	ret = ret.remove("/files");
 	// remove /213123123/ <- digits only

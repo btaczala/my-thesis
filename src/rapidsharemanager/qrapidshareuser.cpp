@@ -5,6 +5,10 @@ QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass )
 {
 	QT_DEBUG_FUNCTION
 }
+QRapidshareUser::QRapidshareUser(const &QRapidshareUser _cpy)
+{
+	m_apUserName.reset(new 
+}
 QRapidshareUser::~QRapidshareUser()
 {
 	QT_DEBUG_FUNCTION

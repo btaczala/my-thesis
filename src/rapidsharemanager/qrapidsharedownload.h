@@ -45,13 +45,13 @@ public:
 //	QRapidshareDownload();
 	QRapidshareDownload(const QString & _UrlFileAddress = QString("") );
 	virtual 								~QRapidshareDownload();
-	
+	void									SetUser(const QRapidshareUser & rsUser );
+	void									SetUser(const QString& rsName,  const QString& pass);
 	void 									Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
 	/// ???? implement or not ? 
 	static	void								DownloadFile(const QString & _addr);
-	
+	void										stop();
 private:
-	
 	QString										m_UrlFileAddress;
 	QString										m_ReferrerFileAddress;
 	QString 									m_fileDestination;

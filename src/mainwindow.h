@@ -26,6 +26,7 @@
 #include <QTreeWidget>
 #include <QItemDelegate>
 #include <QtGui>
+#include <QtGlobal>
 #include "Ui_AddDownloadFile.h"
 #include "rapidsharemanager/qrapidsharedownload.h"
 #include "rapidsharemanager/debugutils.h"
@@ -61,6 +62,7 @@ class MainWindow : public QMainWindow
 	private:
 		void							ConnectActions();
 		void 							SetupUi();
+		void							ClearPool();
 		QStringList						m_ColumnHeaders;
 		QPointer<DownloadView>			m_DownloadView;
 		QPointer<QMenuBar>				m_MenuBar;
@@ -69,7 +71,6 @@ class MainWindow : public QMainWindow
 		QPointer<QAction>				m_File_SendToTrayAction;
 		QPointer<QAction>				m_File_ExitAction;
 		int								m_progress;
-		//QRapidshareDownload				m_RapidShareDownload;
 		QMap<QTreeWidgetItem*,QRapidshareDownload *> m_RapidsharePool; 
 		bool							addFileToDownload(const QString & fileToDownload = QString(""));
 	
@@ -78,6 +79,7 @@ class MainWindow : public QMainWindow
 		void						addNewFile();
 		void 						ChangeProgressName(const QString & name ) ;
 		void 						ChangeProgressValue(const int & iPerc);
+		void						close();
 		
 };
 

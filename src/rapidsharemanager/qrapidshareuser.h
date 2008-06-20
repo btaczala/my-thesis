@@ -9,6 +9,7 @@ class QRapidshareUser
 {
 public:
 	QRapidshareUser(const QString &userName, const QString &pass);
+	QRapidshareUser(const &QRapidshareUser _cpy); 
 	~QRapidshareUser();
 	QString	getUserName()
 	{
