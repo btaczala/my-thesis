@@ -9,21 +9,20 @@ class QRapidshareUser
 {
 public:
 	QRapidshareUser(const QString &userName, const QString &pass);
-	QRapidshareUser(const &QRapidshareUser _cpy); 
-	~QRapidshareUser();
-	QString	getUserName()
+	QRapidshareUser(const QRapidshareUser & _cpy);
+	QString	getUserName() const 
 	{
 		QT_DEBUG_FUNCTION
-		return *m_apUserName;
-	}
-	QString	getUserPass()
+		return ( m_apUserName );
+	};
+	QString	getUserPass() const
 	{
 		QT_DEBUG_FUNCTION
-		return *m_apUserPass;
-	}
+		return m_apUserPass;
+	};
 	QString							ComposeCookie();
 private:
-	std::auto_ptr<QString>					m_apUserName;
-	std::auto_ptr<QString>					m_apUserPass;
+	QString					m_apUserName;
+	QString					m_apUserPass;
 };
 #endif

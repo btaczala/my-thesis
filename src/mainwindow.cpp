@@ -51,7 +51,7 @@ public:
 };
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent)
+	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("",""))
 {
 	QT_DEBUG_FUNCTION
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -67,16 +67,45 @@ MainWindow::MainWindow(QWidget * parent)
 	m_File_NewAction = new QAction(tr( "&New" ), m_FileMenu) ;
 	m_File_SendToTrayAction = new QAction(tr( "Send to &Tray" ), m_FileMenu) ;
 	m_File_ExitAction = new QAction(tr( "E&xit" ), m_FileMenu) ;
-	
+	InitializeSystemTray();
 	ConnectActions();
 	SetupUi();
+	SetUser("4625386","WM2FTZgx5Y");
 };
 
 MainWindow::~MainWindow()
 {
 	QT_DEBUG_FUNCTION
 	ClearPool();
+};
+void MainWindow::InitializeSystemTray()
+{
+	QT_DEBUG_FUNCTION
+	if( !QSystemTrayIcon::isSystemTrayAvailable() )
+	{
+		DebugUtils::q_Warn(tr("No systemtray found") );
+		m_apIsSystemTray.reset(new bool(false));
+	}
+	m_SystemTrayIcon = new QSystemTrayIcon(this);
+	m_SystemTrayMenu = new QMenu(this);
+	// actions
+	m_STHideAction = new QAction(tr("&Hide"), this);
+	m_STRestoreAction = new QAction(tr("&Restore"), this);
+	m_STQuitAction = new QAction(tr("&Quit"), this);
+	connect(m_STHideAction, SIGNAL(triggered()), this, SLOT(hide()));
+	connect(m_STRestoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+	connect(m_STQuitAction, SIGNAL(triggered()), this, SLOT(quit()));
+	m_SystemTrayMenu->addAction(m_STHideAction);
+	m_SystemTrayMenu->addAction(m_STRestoreAction);
+	m_SystemTrayMenu->addAction(m_STQuitAction);
+	
+	m_SystemTrayIcon->setContextMenu( m_SystemTrayMenu );
+	m_SystemTrayIcon->setIcon( QIcon( ":/icon_systray.png ") );
+	m_SystemTrayIcon->show();
+	
 }
+
+
 void MainWindow::ConnectActions()
 {
 	QT_DEBUG_FUNCTION
@@ -138,6 +167,8 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
 	QObject::connect(rsd,SIGNAL(DownloadStatus( int )), this, SLOT(	ChangeProgressValue( int )));
 	QString fileName = dest + TransformUrlPathToLocalPath(FileUrl.path());
 	m_RapidsharePool.insert(item,rsd);
+	
+	rsd->SetRapidshareUser( *( m_apRapidshareUser ) );
 	rsd->Download(FileUrl.toString(),fileName );
 	return true;
 }
@@ -177,6 +208,19 @@ void MainWindow::close()
 	ClearPool();
 	QMainWindow::close();
 }
+/// system tray
+void MainWindow::reallyQuit()
+{
+	ClearPool();
+	
+}
+
+
+
+
+
+
+
 void MainWindow::ClearPool()
 {
 	QT_DEBUG_FUNCTION
@@ -241,6 +285,11 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 // 	if (url.isValid() && url.scheme().toLower() == "file"
 // 		   && url.path().toLower().endsWith(".torrent"))
 	event->acceptProposedAction();
+}
+
+void MainWindow::SetUser(const QString & userName, const QString & userPass)
+{
+	m_apRapidshareUser.reset(new QRapidshareUser(userName, userPass));	
 }
 
 #include "mainwindow.moc"

@@ -18,3 +18,5 @@ QT += network
 TEMPLATE = app
 INCLUDEPATH += src/
 
+RESOURCES += resources/main_resources.qrc
+

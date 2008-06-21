@@ -348,4 +348,9 @@ void QRapidshareDownload::SetUser(const QString& rsName,  const QString& rsPass)
 	SetUser(QRapidshareUser(rsName,rsPass));
 }
 
+void QRapidshareDownload::SetRapidshareUser(const QRapidshareUser & _usr)
+{
+	m_apRSUser.reset(new QRapidshareUser(_usr));
+}
+
 
