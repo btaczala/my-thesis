@@ -86,8 +86,8 @@ private slots:
 	void 								readyRead ( const QHttpResponseHeader & resp );
 	
 signals:
-	void									WhatAmIDoing(const QString & what);
-	void									DownloadStatus(const int & istate );
+	void								WhatAmIDoing(const QString & what);
+	void								DownloadStatus(const int & istate );
 		
 };
 #endif

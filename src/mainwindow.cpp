@@ -100,12 +100,10 @@ void MainWindow::InitializeSystemTray()
 	m_SystemTrayMenu->addAction(m_STQuitAction);
 	
 	m_SystemTrayIcon->setContextMenu( m_SystemTrayMenu );
-	m_SystemTrayIcon->setIcon( QIcon( ":/icon_systray.png ") );
+	m_SystemTrayIcon->setIcon( QIcon( "/home/bartek/dev/qrapidshare/resources/icon_systray.png") );
 	m_SystemTrayIcon->show();
 	
 }
-
-
 void MainWindow::ConnectActions()
 {
 	QT_DEBUG_FUNCTION
@@ -212,10 +210,7 @@ void MainWindow::close()
 void MainWindow::reallyQuit()
 {
 	ClearPool();
-	
 }
-
-
 
 
 

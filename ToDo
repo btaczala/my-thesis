@@ -1,0 +1,30 @@
+This is a todo file 
+
+
+0.1: Main application								70 %
+0.1: Progress bar inside view							0  %
+0.1: QSettings - setting implementation						0  %
+	* username, userpass
+	* userpass encryption
+		* support of KWallet
+		* storing pass in memory
+		* storing pass encrypted in file
+	* main password to program
+0.1: QSystray - system tray implementation <- curr
+0.1: Download queue
+0.1: Setting view
+0.1: Interaction with user ( !! ) 
+	* error messages
+	* questions about overwritting
+	
+
+0.2: Pausing/Resuming 
+
+Library
+0.1: writting download chunks into files
+0.1:dev: logging ( !! )
+
+0.5: Interface for other servers
+0.4: Support of free download ( ! ) 
+0.2: emiting download rate ( ! ) 
+
