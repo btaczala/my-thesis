@@ -51,7 +51,7 @@ public:
 };
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("",""))
+	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")), m_bExit(false)
 {
 	QT_DEBUG_FUNCTION
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -59,9 +59,9 @@ MainWindow::MainWindow(QWidget * parent)
 	m_DownloadView->setItemDelegate( new DownloadViewDelegate(this) );
 	m_DownloadView->setHeaderLabels( m_ColumnHeaders );
 	m_DownloadView->setSelectionBehavior( QAbstractItemView::SelectRows );
+	m_DownloadView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	m_DownloadView->setAlternatingRowColors( true );
 	m_DownloadView->setRootIsDecorated( false );
-	
 	m_MenuBar = new QMenuBar(this);
 	m_FileMenu = new QMenu( tr("&File"), m_MenuBar);
 	m_File_NewAction = new QAction(tr( "&New" ), m_FileMenu) ;
@@ -94,7 +94,7 @@ void MainWindow::InitializeSystemTray()
 	m_STQuitAction = new QAction(tr("&Quit"), this);
 	connect(m_STHideAction, SIGNAL(triggered()), this, SLOT(hide()));
 	connect(m_STRestoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-	connect(m_STQuitAction, SIGNAL(triggered()), this, SLOT(quit()));
+	connect(m_STQuitAction, SIGNAL(triggered()), this, SLOT(close()));
 	m_SystemTrayMenu->addAction(m_STHideAction);
 	m_SystemTrayMenu->addAction(m_STRestoreAction);
 	m_SystemTrayMenu->addAction(m_STQuitAction);
@@ -109,12 +109,14 @@ void MainWindow::ConnectActions()
 	QT_DEBUG_FUNCTION
 	QObject::connect(m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
 	QObject::connect(m_File_NewAction, SIGNAL(triggered()), this, SLOT(addNewFile()));
+	QObject::connect(m_File_SendToTrayAction, SIGNAL(triggered()), this, SLOT(hide()));
 }
 void MainWindow::SetupUi()
 {
 	QT_DEBUG_FUNCTION
 	m_FileMenu->addAction( m_File_NewAction );
 	m_FileMenu->addSeparator();
+	m_FileMenu->addAction( m_File_SendToTrayAction );
 	m_FileMenu->addAction( m_File_ExitAction );
 	m_MenuBar->addMenu(m_FileMenu);
 	setCentralWidget( m_DownloadView );
@@ -200,21 +202,22 @@ void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 		}
 	}
 }
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+	QT_DEBUG_FUNCTION
+	qDebug() << m_bExit;
+	if(! m_bExit )
+	{
+		event->ignore();
+		hide();
+	}
+}
 void MainWindow::close()
 {
 	QT_DEBUG_FUNCTION
-	ClearPool();
+	m_bExit = true; // close chłopaku
 	QMainWindow::close();
 }
-/// system tray
-void MainWindow::reallyQuit()
-{
-	ClearPool();
-}
-
-
-
-
 
 void MainWindow::ClearPool()
 {
@@ -286,5 +289,6 @@ void MainWindow::SetUser(const QString & userName, const QString & userPass)
 {
 	m_apRapidshareUser.reset(new QRapidshareUser(userName, userPass));	
 }
+
 
 #include "mainwindow.moc"

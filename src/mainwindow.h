@@ -59,6 +59,7 @@ class MainWindow : public QMainWindow
 		}
 	protected:
 		virtual void keyPressEvent (QKeyEvent *keyEvent);
+		virtual void closeEvent(QCloseEvent *event);
 	private:
 		/// methods !!!! 
 		void						ConnectActions();
@@ -69,6 +70,9 @@ class MainWindow : public QMainWindow
 		void						SetUser(const QString & userName, const QString & userPass ) ;
 		//system tray
 		void 						InitializeSystemTray();
+		
+		// close or just hide
+		bool						m_bExit;
 		
 		
 		/// fields !!!
@@ -99,10 +103,8 @@ class MainWindow : public QMainWindow
 		void 						ChangeProgressValue(const int & iPerc);
 		void						close();
 		// regarding system tray
-		void						reallyQuit();
 		
 };
-
 
 
 
