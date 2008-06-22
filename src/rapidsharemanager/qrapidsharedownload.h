@@ -42,12 +42,11 @@ class QRapidshareDownload : public QObject
 {
 Q_OBJECT
 public:
-//	QRapidshareDownload();
 	QRapidshareDownload(const QString & _UrlFileAddress = QString("") );
-	virtual 								~QRapidshareDownload();
-	void									SetUser(const QRapidshareUser & rsUser );
-	void									SetUser(const QString& rsName,  const QString& pass);
-	void 									Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
+	virtual 							~QRapidshareDownload();
+	void								SetUser(const QRapidshareUser & rsUser );
+	void								SetUser(const QString& rsName,  const QString& pass);
+	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
 	/// ???? implement or not ? 
 	static	void							DownloadFile(const QString & _addr);
 	void								stop();
@@ -84,7 +83,6 @@ private slots:
 	void 								authenticationRequired ( const QString & hostname, quint16 port, QAuthenticator *authenticator );
 	void 								proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator );
 	void 								readyRead ( const QHttpResponseHeader & resp );
-	
 signals:
 	void								WhatAmIDoing(const QString & what);
 	void								DownloadStatus(const int & istate );

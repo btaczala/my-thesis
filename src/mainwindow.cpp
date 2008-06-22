@@ -51,10 +51,11 @@ public:
 };
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")), m_bExit(false)
+	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME))
 {
 	QT_DEBUG_FUNCTION
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
+	m_bExit = false;
 	m_DownloadView =  new DownloadView(this) ;
 	m_DownloadView->setItemDelegate( new DownloadViewDelegate(this) );
 	m_DownloadView->setHeaderLabels( m_ColumnHeaders );
@@ -67,16 +68,20 @@ MainWindow::MainWindow(QWidget * parent)
 	m_File_NewAction = new QAction(tr( "&New" ), m_FileMenu) ;
 	m_File_SendToTrayAction = new QAction(tr( "Send to &Tray" ), m_FileMenu) ;
 	m_File_ExitAction = new QAction(tr( "E&xit" ), m_FileMenu) ;
+	m_SettingsMenu = new QMenu(tr("&Settings"), m_MenuBar);
+	m_Settings_Configure = new QAction(tr("Configure"), m_SettingsMenu);
+	
 	InitializeSystemTray();
 	ConnectActions();
 	SetupUi();
-	SetUser("4625386","WM2FTZgx5Y");
+	ReadSettings();
 };
-
 MainWindow::~MainWindow()
 {
 	QT_DEBUG_FUNCTION
+	WriteSettings();
 	ClearPool();
+	DeInitialize();
 };
 void MainWindow::InitializeSystemTray()
 {
@@ -100,7 +105,7 @@ void MainWindow::InitializeSystemTray()
 	m_SystemTrayMenu->addAction(m_STQuitAction);
 	
 	m_SystemTrayIcon->setContextMenu( m_SystemTrayMenu );
-	m_SystemTrayIcon->setIcon( QIcon( "/home/bartek/dev/qrapidshare/resources/icon_systray.png") );
+	m_SystemTrayIcon->setIcon( QIcon( ":/icon_systray.png") );
 	m_SystemTrayIcon->show();
 	
 }
@@ -110,6 +115,8 @@ void MainWindow::ConnectActions()
 	QObject::connect(m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
 	QObject::connect(m_File_NewAction, SIGNAL(triggered()), this, SLOT(addNewFile()));
 	QObject::connect(m_File_SendToTrayAction, SIGNAL(triggered()), this, SLOT(hide()));
+	QObject::connect(m_Settings_Configure, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+	QObject::connect(m_SystemTrayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ), this, SLOT(Activation( QSystemTrayIcon::ActivationReason )));
 }
 void MainWindow::SetupUi()
 {
@@ -119,6 +126,8 @@ void MainWindow::SetupUi()
 	m_FileMenu->addAction( m_File_SendToTrayAction );
 	m_FileMenu->addAction( m_File_ExitAction );
 	m_MenuBar->addMenu(m_FileMenu);
+	m_SettingsMenu->addAction(m_Settings_Configure);
+	m_MenuBar->addMenu(m_SettingsMenu);
 	setCentralWidget( m_DownloadView );
 	setMenuBar(m_MenuBar);
 }
@@ -182,6 +191,13 @@ void MainWindow::addNewFile()
 	QT_DEBUG_FUNCTION
 	addFileToDownload();
 };
+void MainWindow::showConfigurationDialog()
+{
+	QT_DEBUG_FUNCTION
+	ConfigurationDialog *dialog = new ConfigurationDialog(this);
+	dialog->exec();
+	
+}
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
 	QT_DEBUG_FUNCTION
@@ -212,13 +228,27 @@ void MainWindow::closeEvent(QCloseEvent * event)
 		hide();
 	}
 }
+void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
+{
+	QT_DEBUG_FUNCTION
+	
+	if(reason != QSystemTrayIcon::Context)
+	{
+		if(this->isVisible())
+			hide();
+		else if(this->isHidden())
+			showNormal();
+	}
+	
+}
+
+
 void MainWindow::close()
 {
 	QT_DEBUG_FUNCTION
 	m_bExit = true; // close chłopaku
 	QMainWindow::close();
 }
-
 void MainWindow::ClearPool()
 {
 	QT_DEBUG_FUNCTION
@@ -271,8 +301,6 @@ DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent )
 };
 void DownloadView::dropEvent(QDropEvent *event)
 {
-     // Accept drops if the file has a '.torrent' extension and it
-     // exists.
 	QString fileName = QUrl(event->mimeData()->text()).path();
 	if (QFile::exists(fileName) && fileName.toLower().endsWith(".torrent"))
 		emit fileDropped(fileName);
@@ -287,8 +315,37 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 
 void MainWindow::SetUser(const QString & userName, const QString & userPass)
 {
+	QT_DEBUG_FUNCTION
 	m_apRapidshareUser.reset(new QRapidshareUser(userName, userPass));	
 }
 
+void MainWindow::ReadSettings()
+{
+	QT_DEBUG_FUNCTION
+	QString userName = m_apSettings->value(SET_USERNAME).toString();
+	QString userPass = m_apSettings->value(SET_USERPASSWORD).toString();
+	if( userName.isEmpty() || userPass.isEmpty() )
+	{
+		DebugUtils::q_Error("Unable to read user or password ");
+		// do U want to set it now ? 
+	}
+	
+	SetUser(userName, userPass);
+	
+}
 
+void MainWindow::WriteSettings()
+{
+	QT_DEBUG_FUNCTION
+	m_apSettings->setValue( SET_USERNAME,m_apRapidshareUser->getUserName() );
+	m_apSettings->setValue( SET_USERPASSWORD,m_apRapidshareUser->getUserPass() );
+	m_apSettings->sync();
+}
+void MainWindow::DeInitialize()
+{
+	QT_DEBUG_FUNCTION
+	m_apIsSystemTray.release();
+	m_apRapidshareUser.release();
+	m_apSettings.release();
+}
 #include "mainwindow.moc"
