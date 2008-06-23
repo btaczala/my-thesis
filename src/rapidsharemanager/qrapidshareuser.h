@@ -20,7 +20,7 @@ public:
 		QT_DEBUG_FUNCTION
 		return m_apUserPass;
 	};
-	QString							ComposeCookie();
+	QString					ComposeCookie();
 private:
 	QString					m_apUserName;
 	QString					m_apUserPass;

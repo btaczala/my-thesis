@@ -31,12 +31,14 @@
 #include "Ui_AddDownloadFile.h"
 #include "common.h"
 #include "rapidsharemanager/qrapidsharedownload.h"
+#include "rapidsharemanager/rapidsharedownloadmanager.h"
 #include "rapidsharemanager/debugutils.h"
 #include "configurationdialog.h"
 
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
 */
+typedef QMap< QTreeWidgetItem* ,QRapidshareDownload*  > RSPoolType;
 class DownloadView : public QTreeWidget
 {
 	Q_OBJECT
@@ -62,70 +64,71 @@ class MainWindow : public QMainWindow
 	protected:
 		virtual void keyPressEvent (QKeyEvent *keyEvent);
 		virtual void closeEvent(QCloseEvent *event);
+		virtual void hideEvent(QHideEvent *event);
+		virtual void showEvent(QShowEvent *event);
 	private:
 		/// methods !!!! 
 		void						ConnectActions();
 		// UI
 		void 						SetupUi();
-		void						ClearPool();
 		bool						addFileToDownload(const QString & fileToDownload = QString(""));
 		QString						TransformUrlPathToLocalPath(const QString & url); 
 		void						SetUser(const QString & userName, const QString & userPass ) ;
 		//system tray
 		void 						InitializeSystemTray();
-		
 		// settings
 		void						ReadSettings();
 		void						WriteSettings();
 		void						SaveUiSettings();
+		void						LoadUiSettings();
 		// close or just hide
 		bool						m_bExit;
-		
 		// memory
 		void						DeInitialize();
 		
-		
 		/// fields !!!
 		QStringList					m_ColumnHeaders;
-		QPointer<DownloadView>				m_DownloadView;
+		QPointer<DownloadView>		m_DownloadView;
 		// menu
-		QPointer<QMenuBar>				m_MenuBar;
+		QPointer<QMenuBar>			m_MenuBar;
 		// file menu
-		QPointer<QMenu>					m_FileMenu;
-		QPointer<QAction>				m_File_NewAction;
-		QPointer<QAction>				m_File_SendToTrayAction;
-		QPointer<QAction>				m_File_ExitAction;
+		QPointer<QMenu>				m_FileMenu;
+		QPointer<QAction>			m_File_NewAction;
+		QPointer<QAction>			m_File_SendToTrayAction;
+		QPointer<QAction>			m_File_ExitAction;
 		// settings
-		QPointer<QMenu>					m_SettingsMenu;
-		QPointer<QAction>				m_Settings_Configure;
+		QPointer<QMenu>				m_SettingsMenu;
+		QPointer<QAction>			m_Settings_Configure;
 		
 		// system tray 
-		QPointer<QSystemTrayIcon>			m_SystemTrayIcon;
-		QPointer<QMenu>					m_SystemTrayMenu;
-		QPointer<QAction>				m_STHideAction;
-		QPointer<QAction>				m_STRestoreAction;
-		QPointer<QAction>				m_STPauseAction;
-		QPointer<QAction>				m_STUnPauseAction;
-		QPointer<QAction>				m_STQuitAction;
-		std::auto_ptr<bool>				m_apIsSystemTray;
+		QPointer<QSystemTrayIcon>	m_SystemTrayIcon;
+		QPointer<QMenu>				m_SystemTrayMenu;
+		QPointer<QAction>			m_STHideAction;
+		QPointer<QAction>			m_STRestoreAction;
+		QPointer<QAction>			m_STPauseAction;
+		QPointer<QAction>			m_STUnPauseAction;
+		QPointer<QAction>			m_STQuitAction;
+		std::auto_ptr<bool>			m_apIsSystemTray;
 		// view
-		int						m_progress;
-		QMap<QTreeWidgetItem*,QRapidshareDownload *> 	m_RapidsharePool; 
-		std::auto_ptr<QRapidshareUser>			m_apRapidshareUser;
+		int							m_progress;
+		RSPoolType					m_RapidsharePool; 
+		QList<QTreeWidgetItem*>		m_RapidsharePoolView;
+		std::auto_ptr<RapidShareDownloadManager> m_RapidshareDownloadManager;
+		std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
 		// settings
-		std::auto_ptr<QSettings>			m_apSettings;
+		std::auto_ptr<QSettings>	m_apSettings;
 	private slots:
 		// menu
 		void						addNewFile();
 		void						showConfigurationDialog();
 		// items
-		void 						ChangeProgressName(const QString & name ) ;
-		void 						ChangeProgressValue(const int & iPerc);
+		void 						ChangeProgressName(const unsigned int & at, const QString & name ) ;
+		void 						ChangeProgressValue(const unsigned int & at,  const unsigned int & iPerc);
+		void						DoneDownloading( const unsigned int & at );
 		// application
 		void						close();
 		// regarding system tray
-		void 						Activation( QSystemTrayIcon::ActivationReason reason);
-		
+		void 						Activation( QSystemTrayIcon::ActivationReason reason);	
 };
 #endif
 

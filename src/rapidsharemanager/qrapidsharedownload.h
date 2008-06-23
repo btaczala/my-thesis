@@ -16,12 +16,14 @@
 
 enum RapidShareStateMachine
 {
-	UNINITIALIZED = 0,
+	STOPPED = 0,
 	GET_FIRST,
  	GET_SECOND,
   	POST_FIRST,
-   	GET_THIRD
+   	GET_THIRD,
+   	DONE
 };
+QString StateToString(const RapidShareStateMachine & rsMachineState);
 struct DownloadInfo
 {
 	DownloadInfo()
@@ -42,32 +44,33 @@ class QRapidshareDownload : public QObject
 {
 Q_OBJECT
 public:
-	QRapidshareDownload(const QString & _UrlFileAddress = QString("") );
+	QRapidshareDownload(const QString & _UrlFileAddress = QString(""), const QString & _fileDest = QString("") );
 	virtual 							~QRapidshareDownload();
 	void								SetUser(const QRapidshareUser & rsUser );
 	void								SetUser(const QString& rsName,  const QString& pass);
 	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
 	/// ???? implement or not ? 
-	static	void							DownloadFile(const QString & _addr);
+	static	void						DownloadFile(const QString & _addr);
 	void								stop();
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
+	RapidShareStateMachine				GetState();
 private:
 	QString								m_UrlFileAddress;
 	QString								m_ReferrerFileAddress;
 	QString 							m_fileDestination;
-	std::auto_ptr<QHttp>						m_apHttpObj;
-	std::auto_ptr<QHttpRequestHeader>				m_apHttpRequestHeader;
-	std::auto_ptr<QRapidshareUser>					m_apRSUser;
+	std::auto_ptr<QHttp>				m_apHttpObj;
+	std::auto_ptr<QHttpRequestHeader>	m_apHttpRequestHeader;
+	std::auto_ptr<QRapidshareUser>		m_apRSUser;
 	bool								m_bIsPrepared;
-	std::auto_ptr<QUrl>						m_apFileUrl;
-	std::auto_ptr<QFile>						m_apFile;
-	RapidShareStateMachine						m_RSStateMachine;
-	std::auto_ptr<DownloadInfo>					m_downloadInfo;
+	std::auto_ptr<QUrl>					m_apFileUrl;
+	std::auto_ptr<QFile>				m_apFile;
+	RapidShareStateMachine				m_RSStateMachine;
+	std::auto_ptr<DownloadInfo>			m_downloadInfo;
 	QString								m_HostName;
 	QString								m_PathOnServer;
 	QString								m_RequestType;	
 	QString								ParseResponseAndGetNewUrl(const QString & resp);
-	int								ParseResponseAndGetFileSize(const QString & resp);
+	int									ParseResponseAndGetFileSize(const QString & resp);
 	void								TranslateAnswer();
 	QString 							ParsePostReponseAndGetAddress(const QString & resp);
 	void								SetUrlFileAddress(const QString & _addr ) ;
@@ -84,8 +87,8 @@ private slots:
 	void 								proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator );
 	void 								readyRead ( const QHttpResponseHeader & resp );
 signals:
-	void								WhatAmIDoing(const QString & what);
+	void								WhatAmIDoing(const RapidShareStateMachine & what);
 	void								DownloadStatus(const int & istate );
-		
+	void								Done();
 };
 #endif

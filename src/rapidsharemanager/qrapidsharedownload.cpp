@@ -1,11 +1,30 @@
 #include "qrapidsharedownload.h"
-QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_UrlFileAddress ( "" ) 
-, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
-, m_apFile(new QFile() ), m_RSStateMachine( UNINITIALIZED ), m_downloadInfo(new DownloadInfo() )
+
+QString StateToString(const RapidShareStateMachine & rsMachineState)
 {
-	
+	if(rsMachineState == STOPPED)
+		return QString("Not started");
+	else if( rsMachineState == GET_FIRST )
+		return QString( "Shaking with rapidshare.com" );
+	else if( rsMachineState == GET_SECOND )
+		return QString( "Requesting second GET" );
+	else if( rsMachineState == POST_FIRST )
+		return QString( "Requesting first POST" );
+	else if( rsMachineState == GET_THIRD )
+		return QString( "Downloading data" );
+	else 
+		return QString( "Downloading finished" );
+};
+QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const QString & _fileDest ) : m_UrlFileAddress ( "" ) 
+, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
+, m_apFile(new QFile() ), m_RSStateMachine( STOPPED ), m_downloadInfo(new DownloadInfo() )
+{
 	QT_DEBUG_FUNCTION
 	SetUrlFileAddress(_UrlFileAddress);
+	if( ! _fileDest.isEmpty() )
+		m_fileDestination = _fileDest;
+	if( ! _UrlFileAddress.isEmpty() )
+		m_ReferrerFileAddress = _UrlFileAddress;
 	QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
 	QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
 	QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
@@ -15,8 +34,7 @@ QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress ) : m_
 	QObject::connect( m_apHttpObj.get(), SIGNAL( done( bool ) ), this, SLOT(  done( bool ) ) );
 	QObject::connect( m_apHttpObj.get(), SIGNAL( authenticationRequired(  const QString , quint16 , QAuthenticator *) ), this, SLOT(  authenticationRequired(  const QString , quint16 , QAuthenticator *)  ) );
 	QObject::connect( m_apHttpObj.get(), SIGNAL( proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ), this, SLOT(  proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ) );
-	QObject::connect( m_apHttpObj.get(), SIGNAL( readyRead ( QHttpResponseHeader ) ), this, SLOT(  readyRead ( QHttpResponseHeader ) ) );
-	
+	QObject::connect( m_apHttpObj.get(), SIGNAL( readyRead ( QHttpResponseHeader ) ), this, SLOT(  readyRead ( QHttpResponseHeader ) ) );	
 }
 QRapidshareDownload::~QRapidshareDownload()
 {
@@ -41,9 +59,16 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 	QT_DEBUG_FUNCTION
 	DebugUtils::q_Log( QString(" _addr=") + _addr)	;
 	SetUrlFileAddress( _addr );
-	m_ReferrerFileAddress = _addr;
-	m_fileDestination = _fileDest;
-	emit WhatAmIDoing("Getting first get");
+	if( !_addr.isEmpty() )
+		m_ReferrerFileAddress = _addr;
+	if( !_fileDest.isEmpty() )
+		m_fileDestination = _fileDest;
+		
+		
+	if( m_ReferrerFileAddress.isEmpty() || m_fileDestination.isEmpty() )
+		return ; 
+	m_RSStateMachine = GET_FIRST;
+	emit WhatAmIDoing( m_RSStateMachine );
 	m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 	m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
 	m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
@@ -54,7 +79,6 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 	qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 	m_apHttpObj->setHost(  m_apFileUrl->host() );
 	m_apHttpObj->request( *( m_apHttpRequestHeader ) );
-	m_RSStateMachine = GET_FIRST;
 }
 /********** SLOTS **************/
 
@@ -178,7 +202,7 @@ void QRapidshareDownload::done(const bool & error)
 			return ;
 		}
 		SetUrlFileAddress( newUrl );
-		emit WhatAmIDoing("Posting info");
+		emit WhatAmIDoing( m_RSStateMachine );
 		m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
 		m_apHttpRequestHeader->setRequest("POST", m_apFileUrl->path() );
 		m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
@@ -201,7 +225,7 @@ void QRapidshareDownload::done(const bool & error)
  		DebugUtils::DumpReponseToFile(aa,"post_first");
  		
  		SetUrlFileAddress(newUrlpath);
- 		emit WhatAmIDoing("Last Get! :)");
+ 		emit WhatAmIDoing( m_RSStateMachine );
  		m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
 		m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
 		m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
@@ -214,15 +238,18 @@ void QRapidshareDownload::done(const bool & error)
 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;		
 		m_apHttpObj->setHost( m_apFileUrl->host() );
 		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
-		emit WhatAmIDoing("Downloading");
+		emit WhatAmIDoing( m_RSStateMachine );
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{
  		m_apFile->close();
- 		emit WhatAmIDoing("Writting to file");
+ 		emit WhatAmIDoing( m_RSStateMachine );
  		QByteArray aa = m_apHttpObj->readAll() ;
  		DebugUtils::DumpReponseToFile(aa,m_fileDestination);
- 		emit WhatAmIDoing("Done :) ");
+ 		m_RSStateMachine = DONE;
+ 		emit WhatAmIDoing( m_RSStateMachine );
+ 		emit Done();
+ 		
 
 	}
 	qDebug() << "end of";
@@ -341,16 +368,16 @@ QString QRapidshareDownload::ParsePostReponseAndGetAddress( const QString & resp
 }
 void QRapidshareDownload::SetUser(const QRapidshareUser & rsUser)
 {
-	
+	m_apRSUser.reset(new QRapidshareUser(rsUser));	
 }
 void QRapidshareDownload::SetUser(const QString& rsName,  const QString& rsPass)
 {
 	SetUser(QRapidshareUser(rsName,rsPass));
 }
 
-void QRapidshareDownload::SetRapidshareUser(const QRapidshareUser & _usr)
+RapidShareStateMachine QRapidshareDownload::GetState()
 {
-	m_apRSUser.reset(new QRapidshareUser(_usr));
+	return m_RSStateMachine;
 }
 
 

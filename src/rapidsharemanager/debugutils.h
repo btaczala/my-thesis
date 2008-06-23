@@ -8,6 +8,8 @@
 #include <QFile>
 
 #define QT_DEBUG_FUNCTION qDebug() << __PRETTY_FUNCTION__ ;
+#define QT_DEBUG_EVENT qDebug() <<"Qt Event!"<<  __PRETTY_FUNCTION__ ;
+
 
 class DebugUtils  
 {

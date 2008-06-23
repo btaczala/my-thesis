@@ -51,7 +51,9 @@ public:
 };
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME))
+	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")),
+	m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
+	m_RapidshareDownloadManager(new RapidShareDownloadManager() )
 {
 	QT_DEBUG_FUNCTION
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -70,7 +72,6 @@ MainWindow::MainWindow(QWidget * parent)
 	m_File_ExitAction = new QAction(tr( "E&xit" ), m_FileMenu) ;
 	m_SettingsMenu = new QMenu(tr("&Settings"), m_MenuBar);
 	m_Settings_Configure = new QAction(tr("Configure"), m_SettingsMenu);
-	
 	InitializeSystemTray();
 	ConnectActions();
 	SetupUi();
@@ -80,7 +81,6 @@ MainWindow::~MainWindow()
 {
 	QT_DEBUG_FUNCTION
 	WriteSettings();
-	ClearPool();
 	DeInitialize();
 };
 void MainWindow::InitializeSystemTray()
@@ -112,11 +112,20 @@ void MainWindow::InitializeSystemTray()
 void MainWindow::ConnectActions()
 {
 	QT_DEBUG_FUNCTION
+	
+	// menu actions and slots
 	QObject::connect(m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
 	QObject::connect(m_File_NewAction, SIGNAL(triggered()), this, SLOT(addNewFile()));
 	QObject::connect(m_File_SendToTrayAction, SIGNAL(triggered()), this, SLOT(hide()));
 	QObject::connect(m_Settings_Configure, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+	// system tray actions and slots
 	QObject::connect(m_SystemTrayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ), this, SLOT(Activation( QSystemTrayIcon::ActivationReason )));
+	// RapidshareDownloadManager actions and slots
+	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( DoneDownloading( unsigned int ) ), this, SLOT( DoneDownloading( const unsigned int ) ) );
+	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( ChangedProgress( unsigned int,unsigned int ) ), 
+	this, SLOT( ChangeProgressValue( const unsigned int, const unsigned int  ) ) );
+	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( ChangedName( unsigned int, QString  ) ), 
+	this, SLOT( ChangeProgressName( unsigned int,QString ) ) );
 }
 void MainWindow::SetupUi()
 {
@@ -167,18 +176,9 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
 	item->setFlags(item->flags() & ~Qt::ItemIsEditable);
 	item->setTextAlignment(1, Qt::AlignHCenter);
 	m_DownloadView->setCurrentItem(item);
-	QRapidshareDownload *rsd = new QRapidshareDownload();
-	/*
-	QObject::connect(&m_RapidShareDownload,SIGNAL(WhatAmIDoing( QString )), this, SLOT(	ChangeProgressName( QString )));
-	QObject::connect(&m_RapidShareDownload,SIGNAL(DownloadStatus( int )), this, SLOT(	ChangeProgressValue( int )));
-	*/
-	QObject::connect(rsd,SIGNAL(WhatAmIDoing( QString )), this, SLOT(	ChangeProgressName( QString )));
-	QObject::connect(rsd,SIGNAL(DownloadStatus( int )), this, SLOT(	ChangeProgressValue( int )));
-	QString fileName = dest + TransformUrlPathToLocalPath(FileUrl.path());
-	m_RapidsharePool.insert(item,rsd);
-	
-	rsd->SetRapidshareUser( *( m_apRapidshareUser ) );
-	rsd->Download(FileUrl.toString(),fileName );
+	m_RapidsharePoolView.push_back(item);
+	QString fileName = dest + TransformUrlPathToLocalPath( FileUrl.path() );
+	m_RapidshareDownloadManager->AddDownload(FileUrl.toString(), fileName);
 	return true;
 }
 /*
@@ -200,7 +200,7 @@ void MainWindow::showConfigurationDialog()
 }
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
-	QT_DEBUG_FUNCTION
+	QT_DEBUG_EVENT
 	if(keyPressed->modifiers() == Qt::ControlModifier)
 	{
 		if ( keyPressed->key() == Qt::Key_V )
@@ -220,7 +220,7 @@ void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 }
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-	QT_DEBUG_FUNCTION
+	QT_DEBUG_EVENT
 	qDebug() << m_bExit;
 	if(! m_bExit )
 	{
@@ -228,10 +228,19 @@ void MainWindow::closeEvent(QCloseEvent * event)
 		hide();
 	}
 }
+void MainWindow::hideEvent(QHideEvent *event)
+{
+	QT_DEBUG_EVENT
+	SaveUiSettings();
+}
+void MainWindow::showEvent(QShowEvent *event)
+{
+	QT_DEBUG_EVENT
+	LoadUiSettings();
+};
 void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
 {
 	QT_DEBUG_FUNCTION
-	
 	if(reason != QSystemTrayIcon::Context)
 	{
 		if(this->isVisible())
@@ -239,44 +248,28 @@ void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
 		else if(this->isHidden())
 			showNormal();
 	}
-	
-}
-
-
+};
 void MainWindow::close()
 {
 	QT_DEBUG_FUNCTION
 	m_bExit = true; // close chłopaku
 	QMainWindow::close();
 }
-void MainWindow::ClearPool()
+
+void MainWindow::ChangeProgressName( const unsigned int & at, const QString & name ) 
 {
 	QT_DEBUG_FUNCTION
-	QMap<QTreeWidgetItem*,QRapidshareDownload *>::iterator iEnd = m_RapidsharePool.end();
-	QMap<QTreeWidgetItem*,QRapidshareDownload *>::iterator iBegin = m_RapidsharePool.begin();
-	for(;iBegin != iEnd; ++iBegin)
-	{
-		QRapidshareDownload *tmp =iBegin.value(); 
-		if(tmp)
-			tmp->stop();
-	}
-}
-void MainWindow::ChangeProgressName(const QString & name ) 
-{
-	QT_DEBUG_FUNCTION
-	QRapidshareDownload *tmp = qobject_cast<QRapidshareDownload*>(sender());
-	QTreeWidgetItem *hadzia =m_RapidsharePool.key(tmp); 
+	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at ); 
 	if(NULL == hadzia)
 		return;
 	else
 		hadzia->setText(4,name); 
 	
 }
-void MainWindow::ChangeProgressValue( const int & iPerc ) 
+void MainWindow::ChangeProgressValue(const unsigned int & at ,  const unsigned int & iPerc ) 
 {
 	QT_DEBUG_FUNCTION
-	QRapidshareDownload *tmp = qobject_cast<QRapidshareDownload*>(sender());
-	QTreeWidgetItem *hadzia =m_RapidsharePool.key(tmp); 
+	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at );  
 	if( NULL == hadzia ) 
 		return;
 	else
@@ -284,6 +277,10 @@ void MainWindow::ChangeProgressValue( const int & iPerc )
 		hadzia->setText(2, QString::number(iPerc));
 	}
 	m_progress = iPerc;
+}
+void MainWindow::DoneDownloading(const unsigned int & at )
+{
+	QT_DEBUG_FUNCTION
 }
 QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
 {
@@ -316,7 +313,8 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 void MainWindow::SetUser(const QString & userName, const QString & userPass)
 {
 	QT_DEBUG_FUNCTION
-	m_apRapidshareUser.reset(new QRapidshareUser(userName, userPass));	
+	//m_apRapidshareUser.reset(new );
+	m_RapidshareDownloadManager->SetUser( QRapidshareUser( userName , userPass ) );
 }
 
 void MainWindow::ReadSettings()
@@ -329,17 +327,29 @@ void MainWindow::ReadSettings()
 		DebugUtils::q_Error("Unable to read user or password ");
 		// do U want to set it now ? 
 	}
-	
 	SetUser(userName, userPass);
-	
-}
+	LoadUiSettings();
+};
 
 void MainWindow::WriteSettings()
 {
 	QT_DEBUG_FUNCTION
 	m_apSettings->setValue( SET_USERNAME,m_apRapidshareUser->getUserName() );
 	m_apSettings->setValue( SET_USERPASSWORD,m_apRapidshareUser->getUserPass() );
+	SaveUiSettings();
 	m_apSettings->sync();
+};
+void MainWindow::SaveUiSettings()
+{
+	m_apSettings->setValue(UI_WINDOW_POS, pos());
+	m_apSettings->setValue(UI_WINDOW_SIZE, size());
+}
+void MainWindow::LoadUiSettings()
+{
+	QPoint pos = m_apSettings->value(UI_WINDOW_POS).toPoint();
+	move(pos);
+	QSize size =  m_apSettings->value(UI_WINDOW_SIZE).toSize();
+	resize(size);
 }
 void MainWindow::DeInitialize()
 {
@@ -347,5 +357,7 @@ void MainWindow::DeInitialize()
 	m_apIsSystemTray.release();
 	m_apRapidshareUser.release();
 	m_apSettings.release();
+	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)
+		delete tmp;
 }
 #include "mainwindow.moc"
