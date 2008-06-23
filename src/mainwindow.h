@@ -77,6 +77,7 @@ class MainWindow : public QMainWindow
 		// settings
 		void						ReadSettings();
 		void						WriteSettings();
+		void						SaveUiSettings();
 		// close or just hide
 		bool						m_bExit;
 		
