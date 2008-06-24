@@ -11,10 +11,15 @@
 //
 #ifndef COMMON_H
 #define COMMON_H
+#include <QDir>
+#include <QString>
+
 #define APPLICATION_NAME		"qrapidshare"
 #define SET_USERNAME			"user/username"
 #define SET_USERPASSWORD		"user/userpass"
 #define	UI_WINDOW_SIZE			"mainwindow/size"
 #define	UI_WINDOW_POS			"mainwindow/pos"
+
+#define RS_LOG_PATH				QDir::homePath() + "/.rslogger/"
 
 #endif
