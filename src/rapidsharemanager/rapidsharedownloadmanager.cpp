@@ -56,6 +56,13 @@ void RapidShareDownloadManager::Pause(const QList<int> & listToPause )
 		}
 	}
 }
+QRapidshareUser RapidShareDownloadManager::GetUser()
+{
+	if( m_apRapidshareUser.get() )
+		return *m_apRapidshareUser;
+	else
+		return QRapidshareUser("","");
+}
 void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPoint )
 {
 	if(m_iCurrentDownload == m_iMaxDownload)

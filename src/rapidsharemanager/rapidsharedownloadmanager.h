@@ -18,6 +18,7 @@ public:
 	void							SetUser(const QRapidshareUser & user);
 	void							SetMaxDownloads(const unsigned int & _MaxDownloads);
 	void							Pause(const QList<int> & listToPause = QList<int>() );
+	QRapidshareUser					GetUser();
 private:
 	QList<QRapidshareDownload* >	m_RapidshareDownloads;
 	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;

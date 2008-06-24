@@ -114,7 +114,6 @@ class MainWindow : public QMainWindow
 		RSPoolType					m_RapidsharePool; 
 		QList<QTreeWidgetItem*>		m_RapidsharePoolView;
 		std::auto_ptr<RapidShareDownloadManager> m_RapidshareDownloadManager;
-		std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
 		// settings
 		std::auto_ptr<QSettings>	m_apSettings;
 	private slots:

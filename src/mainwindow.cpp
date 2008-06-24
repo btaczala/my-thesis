@@ -51,8 +51,7 @@ public:
 };
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_apRapidshareUser( new QRapidshareUser("","")),
-	m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
+	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
 	m_RapidshareDownloadManager(new RapidShareDownloadManager() )
 {
 	QT_DEBUG_FUNCTION
@@ -143,6 +142,13 @@ void MainWindow::SetupUi()
 bool MainWindow::addFileToDownload(const QString & fileToDownload)
 {
 	QT_DEBUG_FUNCTION
+	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
+	if( rsUser.getUserName().isEmpty() ||  rsUser.getUserPass().isEmpty() )
+	{
+		DebugUtils::q_Error("RS user not set ! ");
+		return false ;
+	}
+		
 	QString fileUrl;
 	QString dest;
 	QString baseFileName;
@@ -313,7 +319,7 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 void MainWindow::SetUser(const QString & userName, const QString & userPass)
 {
 	QT_DEBUG_FUNCTION
-	//m_apRapidshareUser.reset(new );
+	
 	m_RapidshareDownloadManager->SetUser( QRapidshareUser( userName , userPass ) );
 }
 
@@ -334,8 +340,9 @@ void MainWindow::ReadSettings()
 void MainWindow::WriteSettings()
 {
 	QT_DEBUG_FUNCTION
-	m_apSettings->setValue( SET_USERNAME,m_apRapidshareUser->getUserName() );
-	m_apSettings->setValue( SET_USERPASSWORD,m_apRapidshareUser->getUserPass() );
+	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
+	m_apSettings->setValue( SET_USERNAME,rsUser.getUserName() );
+	m_apSettings->setValue( SET_USERPASSWORD,rsUser.getUserPass() );
 	SaveUiSettings();
 	m_apSettings->sync();
 };
@@ -355,7 +362,6 @@ void MainWindow::DeInitialize()
 {
 	QT_DEBUG_FUNCTION
 	m_apIsSystemTray.release();
-	m_apRapidshareUser.release();
 	m_apSettings.release();
 	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)
 		delete tmp;
