@@ -115,7 +115,7 @@ void RapidShareDownloadManager::Slot_ChangedState( const RapidShareStateMachine 
 };
 void RapidShareDownloadManager::Slot_ChangeProgressValue( int progress )
 {
-	RSDM_LOG_FUNC ;
+	//RSDM_LOG_FUNC ;
 	QRapidshareDownload *rsd = qobject_cast<QRapidshareDownload*>(sender());
 	int iPos = m_RapidshareDownloads.indexOf(rsd);
 	emit ChangedProgress( iPos, progress );
