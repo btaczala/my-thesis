@@ -24,7 +24,7 @@ QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const
 	if( ! _fileDest.isEmpty() )
 	{
 		m_fileDestination = _fileDest;
-		m_apFile->setFileName(m_fileDestination);
+		m_apFile->setFileName(m_fileDestination + ".part");
 	}
 		
 	if( ! _UrlFileAddress.isEmpty() )
@@ -68,11 +68,8 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 	if( !_fileDest.isEmpty() )
 	{
 		m_fileDestination = _fileDest;
-		m_apFile->setFileName(m_fileDestination);
+		m_apFile->setFileName(m_fileDestination + ".part");
 	}
-		
-		
-		
 	if( m_ReferrerFileAddress.isEmpty() || m_fileDestination.isEmpty() )
 		return ; 
 	m_RSStateMachine = GET_FIRST;
@@ -263,10 +260,12 @@ void QRapidshareDownload::done(const bool & error)
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{
- 		m_apFile->close();
+ 		
  		emit WhatAmIDoing( m_RSStateMachine );
- 		//QByteArray aa = m_apHttpObj->readAll() ;
- 		//DebugUtils::DumpReponseToFile(aa,m_fileDestination);
+ 		// change fileName without .part
+ 		m_apFile->close();
+ 		QFile::rename(m_apFile->fileName(), m_fileDestination);
+ 		
  		m_RSStateMachine = DONE;
  		emit WhatAmIDoing( m_RSStateMachine );
  		emit Done();
