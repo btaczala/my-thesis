@@ -22,7 +22,11 @@ QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const
 	QT_DEBUG_FUNCTION
 	SetUrlFileAddress(_UrlFileAddress);
 	if( ! _fileDest.isEmpty() )
+	{
 		m_fileDestination = _fileDest;
+		m_apFile->setFileName(m_fileDestination);
+	}
+		
 	if( ! _UrlFileAddress.isEmpty() )
 		m_ReferrerFileAddress = _UrlFileAddress;
 	QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
@@ -62,7 +66,11 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 	if( !_addr.isEmpty() )
 		m_ReferrerFileAddress = _addr;
 	if( !_fileDest.isEmpty() )
+	{
 		m_fileDestination = _fileDest;
+		m_apFile->setFileName(m_fileDestination);
+	}
+		
 		
 		
 	if( m_ReferrerFileAddress.isEmpty() || m_fileDestination.isEmpty() )
@@ -119,27 +127,40 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		m_downloadInfo->bytesReadPreviously =m_downloadInfo->bytesReadCurrent;
 		m_downloadInfo->bytesReadCurrent = done ; 
 		
-		/*
-		int iBytes =  m_downloadInfo->Diff();
-		qDebug() << "Bytes to write :"<< iBytes;
-		char *buff = new char[iBytes];
-		if( int iBytes2 = m_apHttpObj->read(buff, iBytes) == -1 )
+		qint64 bytes = m_apHttpObj->bytesAvailable();
+		qDebug() << "Bytes to write :"<< bytes;
+		
+		char* buff = new char[bytes];
+		qint64 iBytes2 = m_apHttpObj->read(buff, bytes);
+		if( -1 == iBytes2 )
 			DebugUtils::q_Error("ERROR while reading from Http stream ");
 		else
 		{
+			qDebug() << "readed bytes " << iBytes2;
 			if( !m_apFile->isOpen())
 			{
-				 if( ! m_apFile->open(QIODevice::Append) ) 
-				 	DebugUtils::q_Error("ERROR ..:::DDD");	
+				qDebug() << ("isClosed, open it");
+				if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
+				{
+					DebugUtils::q_Error("ERROR ..:::DDD124");
+					// message = bad
+					// 
+					return ;
+				}
+				else
+					qDebug() << "opened";
 			}
-			if( ! m_apFile->isOpen() )
-				 	DebugUtils::q_Error("ERROR ..:::DDD");				 
-			m_apFile->write(buff,iBytes2);	
+			
+			qint64 btmp = m_apFile->write(buff,iBytes2); 
+			if( -1 == btmp )
+			{
+				DebugUtils::q_Error("write failed");
+				return;
+			}
+			else
+				qDebug() << ("written successful") << btmp;
 		}
 		delete[] buff;
-		*/
-		
-		  
 	}
 }
 void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
@@ -244,8 +265,8 @@ void QRapidshareDownload::done(const bool & error)
  	{
  		m_apFile->close();
  		emit WhatAmIDoing( m_RSStateMachine );
- 		QByteArray aa = m_apHttpObj->readAll() ;
- 		DebugUtils::DumpReponseToFile(aa,m_fileDestination);
+ 		//QByteArray aa = m_apHttpObj->readAll() ;
+ 		//DebugUtils::DumpReponseToFile(aa,m_fileDestination);
  		m_RSStateMachine = DONE;
  		emit WhatAmIDoing( m_RSStateMachine );
  		emit Done();
