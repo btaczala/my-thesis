@@ -200,7 +200,8 @@ void MainWindow::addNewFile()
 void MainWindow::showConfigurationDialog()
 {
 	QT_DEBUG_FUNCTION
-	ConfigurationDialog *dialog = new ConfigurationDialog(this);
+	//ConfigurationDialog *dialog = new ConfigurationDialog(this);
+	Ui_UserSettingsImpl *dialog = new Ui_UserSettingsImpl(m_RapidshareDownloadManager->GetUser().getUserName(), m_RapidshareDownloadManager->GetUser().getUserPass());
 	dialog->exec();
 	
 }

@@ -1,4 +1,4 @@
-#include "Ui_AddDownloadFile.h"
+#include "Ui_AddDownloadFileImpl.h"
 
 Ui_AddDownloadFile::Ui_AddDownloadFile(QWidget *parent, const QString & pathToFile) :  QDialog( parent )
 {

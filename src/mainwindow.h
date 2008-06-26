@@ -28,12 +28,13 @@
 #include <QtGui>
 #include <QtGlobal>
 #include <QSettings>
-#include "Ui_AddDownloadFile.h"
+#include "Ui_AddDownloadFileImpl.h"
 #include "common.h"
 #include "rapidsharemanager/qrapidsharedownload.h"
 #include "rapidsharemanager/rapidsharedownloadmanager.h"
 #include "rapidsharemanager/debugutils.h"
 #include "configurationdialog.h"
+#include "Ui_UserSettingsImpl.h"
 
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
