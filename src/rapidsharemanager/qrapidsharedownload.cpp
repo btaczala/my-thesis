@@ -17,7 +17,7 @@ QString StateToString(const RapidShareStateMachine & rsMachineState)
 };
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const QString & _fileDest ) : m_UrlFileAddress ( "" ) 
 , m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
-, m_apFile(new QFile() ), m_RSStateMachine( STOPPED ), m_downloadInfo(new DownloadInfo() )
+, m_apFile(new QFile() ), m_RSStateMachine( STOPPED ), m_downloadInfo(new DownloadInfo() ), m_timerId(0),m_readedBytes(0)
 {
 	QT_DEBUG_FUNCTION
 	SetUrlFileAddress(_UrlFileAddress);
@@ -125,8 +125,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		m_downloadInfo->bytesReadCurrent = done ; 
 		
 		qint64 bytes = m_apHttpObj->bytesAvailable();
-		qDebug() << "Bytes to write :"<< bytes;
-		
+		m_readedBytes+=bytes;
 		char* buff = new char[bytes];
 		qint64 iBytes2 = m_apHttpObj->read(buff, bytes);
 		if( -1 == iBytes2 )
@@ -257,6 +256,9 @@ void QRapidshareDownload::done(const bool & error)
 		m_apHttpObj->setHost( m_apFileUrl->host() );
 		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
 		emit WhatAmIDoing( m_RSStateMachine );
+		
+		m_timerId = startTimer(1000);
+		m_readedBytes = 0;
  	}
  	else if( m_RSStateMachine == GET_THIRD )
  	{
@@ -270,7 +272,7 @@ void QRapidshareDownload::done(const bool & error)
  		emit WhatAmIDoing( m_RSStateMachine );
  		emit Done();
  		
-
+ 		killTimer(m_timerId);
 	}
 	qDebug() << "end of";
 };
@@ -400,4 +402,9 @@ RapidShareStateMachine QRapidshareDownload::GetState()
 	return m_RSStateMachine;
 }
 
+void QRapidshareDownload::timerEvent(QTimerEvent *event)
+{
+	emit(downloadRate(QString("%1").arg((double) m_readedBytes / 1024),0, 'f',2)); 
+	m_readedBytes = 0;
+}
 

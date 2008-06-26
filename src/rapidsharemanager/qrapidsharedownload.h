@@ -54,6 +54,15 @@ public:
 	void								stop();
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
 	RapidShareStateMachine				GetState();
+	
+private:
+	void								timerEvent(QTimerEvent *event);	
+	QString								ParseResponseAndGetNewUrl(const QString & resp);
+	int									ParseResponseAndGetFileSize(const QString & resp);
+	void								TranslateAnswer();
+	QString 							ParsePostReponseAndGetAddress(const QString & resp);
+	void								SetUrlFileAddress(const QString & _addr ) ;
+	
 private:
 	QString								m_UrlFileAddress;
 	QString								m_ReferrerFileAddress;
@@ -69,12 +78,10 @@ private:
 	QString								m_HostName;
 	QString								m_PathOnServer;
 	QString								m_RequestType;	
-	QString								ParseResponseAndGetNewUrl(const QString & resp);
-	int									ParseResponseAndGetFileSize(const QString & resp);
-	void								TranslateAnswer();
-	QString 							ParsePostReponseAndGetAddress(const QString & resp);
-	void								SetUrlFileAddress(const QString & _addr ) ;
 	QFile 								m_FileLog;
+	int 								m_timerId;
+	qint64								m_readedBytes;
+	
 private slots:
 	void 								requestStarted(const int & idReq) ;
 	void 								requestFinished(const int & idReq, const bool & isFalse) ;
@@ -90,5 +97,6 @@ signals:
 	void								WhatAmIDoing(const RapidShareStateMachine & what);
 	void								DownloadStatus(const int & istate );
 	void								Done();
+	void								downloadRate(QString);
 };
 #endif
