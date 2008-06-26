@@ -328,6 +328,8 @@ void MainWindow::ReadSettings()
 	QT_DEBUG_FUNCTION
 	QString userName = m_apSettings->value(SET_USERNAME).toString();
 	QString userPass = m_apSettings->value(SET_USERPASSWORD).toString();
+	bool bOk;
+	int 	maxDownl = m_apSettings->value(RSM_MAX_DOWNLOAD).toInt(&bOk);
 	if( userName.isEmpty() || userPass.isEmpty() )
 	{
 		DebugUtils::q_Error("Unable to read user or password ");
@@ -335,6 +337,10 @@ void MainWindow::ReadSettings()
 	}
 	SetUser(userName, userPass);
 	LoadUiSettings();
+	if(bOk && maxDownl != 0)
+		m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
+	else
+		m_RapidshareDownloadManager->SetMaxDownloads(3);
 };
 
 void MainWindow::WriteSettings()
@@ -344,6 +350,7 @@ void MainWindow::WriteSettings()
 	m_apSettings->setValue( SET_USERNAME,rsUser.getUserName() );
 	m_apSettings->setValue( SET_USERPASSWORD,rsUser.getUserPass() );
 	SaveUiSettings();
+	m_apSettings->setValue( RSM_MAX_DOWNLOAD,m_RapidshareDownloadManager->GetMaxDownloads() );
 	m_apSettings->sync();
 };
 void MainWindow::SaveUiSettings()

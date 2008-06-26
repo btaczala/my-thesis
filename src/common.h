@@ -19,6 +19,7 @@
 #define SET_USERPASSWORD		"user/userpass"
 #define	UI_WINDOW_SIZE			"mainwindow/size"
 #define	UI_WINDOW_POS			"mainwindow/pos"
+#define RSM_MAX_DOWNLOAD		"manager/max_downloads"
 
 #define RS_LOG_PATH				QDir::homePath() + "/.rslogger/"
 
