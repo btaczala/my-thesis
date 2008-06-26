@@ -19,19 +19,18 @@ This is a todo file
 	* window properties									100 %
 0.1: QSystray - system tray implementation 				100 %
 0.1: Download queue
-	* implement real download pool						70 % 
-		* add some moving downloads up and down
+	* implement real download pool						80  % 
+	* add some moving downloads up and down 
 0.1: Setting view
 0.1: Interaction with user ( !! ) 
 	* error messages
 	* questions about overwritting
-
 0.2: Pausing/Resuming 
 
 Library
-0.1: writting download chunks into files
+0.1: writting download chunks into files				100 % ( tdubik@gmail.com )
 0.1:dev: logging ( !! )
 
 0.5: Interface for other servers
 0.4: Support of free download ( ! ) 
-0.2: emiting download rate ( ! ) 
+0.2: emiting download rate ( ! ) 						20 %  ( tdubik@gmail.com ) 
