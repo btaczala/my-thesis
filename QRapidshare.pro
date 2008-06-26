@@ -1,4 +1,5 @@
-HEADERS += src/Ui_AddDownloadFileImpl.h \
+HEADERS += src/downloaddelegate.h \
+    src/Ui_AddDownloadFileImpl.h \
     src/Ui_UserSettingsImpl.h \
     src/mainwindow.h \
     src/rapidsharemanager/debugutils.h \
@@ -9,7 +10,8 @@ HEADERS += src/Ui_AddDownloadFileImpl.h \
     src/configurationdialog.h \
     src/pages.h \
     src/rapidsharemanager/rslogger.h
-SOURCES += src/Ui_AddDownloadFileImpl.cpp \
+SOURCES += src/downloaddelegate.cpp \
+    src/Ui_AddDownloadFileImpl.cpp \
     src/Ui_UserSettingsImpl.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
@@ -21,7 +23,7 @@ SOURCES += src/Ui_AddDownloadFileImpl.cpp \
     src/pages.cpp \
     src/rapidsharemanager/rslogger.cpp
 FORMS += ui/usersettings.ui \
-    ui/adddownload.ui 
+    ui/adddownload.ui
 QT += network
 TEMPLATE = app
 INCLUDEPATH += src/

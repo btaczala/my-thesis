@@ -19,9 +19,6 @@
  ***************************************************************************/
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-
-
 #include <QMainWindow>
 #include <QTreeWidget>
 #include <QItemDelegate>
@@ -35,6 +32,7 @@
 #include "rapidsharemanager/debugutils.h"
 #include "configurationdialog.h"
 #include "Ui_UserSettingsImpl.h"
+#include "downloaddelegate.h"
 
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
@@ -90,6 +88,7 @@ class MainWindow : public QMainWindow
 		/// fields !!!
 		QStringList					m_ColumnHeaders;
 		QPointer<DownloadView>		m_DownloadView;
+		std::auto_ptr<DownloadViewDelegate>	m_apDownloadDelegate;
 		// menu
 		QPointer<QMenuBar>			m_MenuBar;
 		// file menu
@@ -125,6 +124,7 @@ class MainWindow : public QMainWindow
 		void 						ChangeProgressName(const unsigned int & at, const QString & name ) ;
 		void 						ChangeProgressValue(const unsigned int & at,  const unsigned int & iPerc);
 		void						DoneDownloading( const unsigned int & at );
+		void 						DowloadRateChanged(const unsigned int & at, const QString & rate);
 		// application
 		void						close();
 		// regarding system tray

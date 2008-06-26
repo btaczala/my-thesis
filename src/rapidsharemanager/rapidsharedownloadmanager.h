@@ -32,13 +32,16 @@ private:
 public slots:
 	void							Slot_DoneDownloadingOne();
 	void							Slot_ChangedState( const RapidShareStateMachine & );
-	void							Slot_ChangeProgressValue( int ); 
+	void							Slot_ChangeProgressValue( int );
+	void							Slot_DownloadRateChanged(const QString & rate) ;
 signals:
 	void							DoneDownloading( unsigned int at);
 	void							DoneDownloadingAll( );
 	void							ChangedProgress(unsigned int at, unsigned int progress ) ;
 	void							ChangedName(unsigned int at, QString desc ) ;
-	void							Swaped(unsigned int from , unsigned int to ) ; 
+	void							Swaped(unsigned int from , unsigned int to ) ;
+	void							DownloadRateChanged(unsigned int at, const QString & rate);
+	
 };
 
 #endif

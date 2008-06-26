@@ -17,38 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <QtGui>
 #include "mainwindow.h"
-
-class DownloadViewDelegate : public QItemDelegate
-{
-	Q_OBJECT
-public:
-	inline DownloadViewDelegate(MainWindow* parent) : QItemDelegate(parent){};
-	inline void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index )
-	{
-		if (index.column() != 2) 
-		{
-			QItemDelegate::paint(painter, option, index);
-			return;
-		}
-		QStyleOptionProgressBar progressBarOption;
-		progressBarOption.state = QStyle::State_Enabled;
-		progressBarOption.direction = QApplication::layoutDirection();
-		progressBarOption.rect = option.rect;
-		progressBarOption.fontMetrics = QApplication::fontMetrics();
-		progressBarOption.minimum = 0;
-		progressBarOption.maximum = 100;
-		progressBarOption.textAlignment = Qt::AlignCenter;
-		progressBarOption.textVisible = true;	
-		// Set the progress and text values of the style option.
-		int progress = qobject_cast<MainWindow *>( parent())->GetProgress();
-		progressBarOption.progress = progress < 0 ? 0 : progress;
-		progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
-		//Draw the progress bar onto the view.
-		QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
-	}
-};
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
@@ -58,7 +27,8 @@ MainWindow::MainWindow(QWidget * parent)
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
 	m_bExit = false;
 	m_DownloadView =  new DownloadView(this) ;
-	m_DownloadView->setItemDelegate( new DownloadViewDelegate(this) );
+	m_apDownloadDelegate.reset( new DownloadViewDelegate(m_DownloadView));
+	m_DownloadView->setItemDelegate(m_apDownloadDelegate.get());
 	m_DownloadView->setHeaderLabels( m_ColumnHeaders );
 	m_DownloadView->setSelectionBehavior( QAbstractItemView::SelectRows );
 	m_DownloadView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -125,6 +95,8 @@ void MainWindow::ConnectActions()
 	this, SLOT( ChangeProgressValue( const unsigned int, const unsigned int  ) ) );
 	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( ChangedName( unsigned int, QString  ) ), 
 	this, SLOT( ChangeProgressName( unsigned int,QString ) ) );
+	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( DownloadRateChanged( unsigned int , const QString ) ), 
+	this, SLOT( DowloadRateChanged( unsigned int , const QString  ) ) );
 }
 void MainWindow::SetupUi()
 {
@@ -289,6 +261,16 @@ void MainWindow::DoneDownloading(const unsigned int & at )
 {
 	QT_DEBUG_FUNCTION
 }
+void MainWindow::DowloadRateChanged(const unsigned int & at, const QString & rate)
+{
+	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at );  
+	if( NULL == hadzia ) 
+		return;
+	else
+	{
+		hadzia->setText(3, rate);
+	}
+}
 QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
 {
 	QT_DEBUG_FUNCTION
@@ -373,5 +355,6 @@ void MainWindow::DeInitialize()
 	m_apSettings.release();
 	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)
 		delete tmp;
+	m_apDownloadDelegate.release();
 }
-#include "mainwindow.moc"
+

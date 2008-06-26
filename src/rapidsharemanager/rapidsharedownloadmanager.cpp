@@ -30,14 +30,17 @@ void RapidShareDownloadManager::AddDownload(const QString & toDownload,const QSt
 	m_Logger.Write("Adding download with toDownload: " + toDownload + " and where : " + where  );
 	while( whereFile.exists() )
 	{
-		where2 = where2 + QString::number( qrand() );
-		AddDownload(toDownload, where2); // recursion 
+		//TODO: check if file exist
+		//where2 = where2 + QString::number( qrand() );
+		//AddDownload(toDownload, where2); // recursion 
 	}
 	QRapidshareDownload *rsd = new QRapidshareDownload( toDownload, where );
 	rsd->SetUser( *m_apRapidshareUser );
 	QObject::connect( rsd,SIGNAL( WhatAmIDoing(  const RapidShareStateMachine )), this, SLOT( Slot_ChangedState( const RapidShareStateMachine ) ) );
 	QObject::connect( rsd,SIGNAL( DownloadStatus( int )), this, SLOT( Slot_ChangeProgressValue( int ) ) );
 	QObject::connect( rsd,SIGNAL( Done() ), this, SLOT( Slot_DoneDownloadingOne() ) );
+	QObject::connect( rsd,SIGNAL( downloadRate(const QString ) ), this, SLOT( Slot_DownloadRateChanged(const QString) ) );
+	
 	m_RapidshareDownloads.push_back(rsd);
 	DownloadAsManyAsCan();
 	mutex.unlock();
@@ -140,4 +143,14 @@ void RapidShareDownloadManager::Slot_ChangeProgressValue( int progress )
 	int iPos = m_RapidshareDownloads.indexOf(rsd);
 	emit ChangedProgress( iPos, progress );
 };
+void RapidShareDownloadManager::Slot_DownloadRateChanged(const QString & rate) 
+{
+	RSDM_LOG_FUNC ;
+	QRapidshareDownload *rsd = qobject_cast<QRapidshareDownload*>(sender());
+	if(rsd)
+	{
+		int iPos = m_RapidshareDownloads.indexOf(rsd);
+		emit DownloadRateChanged(iPos, rate);
+	}
+}
 

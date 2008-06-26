@@ -404,7 +404,7 @@ RapidShareStateMachine QRapidshareDownload::GetState()
 
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {
-	emit(downloadRate(QString("%1").arg((double) m_readedBytes / 1024),0, 'f',2)); 
+	emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
 	m_readedBytes = 0;
 }
 

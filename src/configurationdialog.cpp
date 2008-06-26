@@ -16,9 +16,9 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent )
 {
 	contentsWidget = new QListWidget;
 	contentsWidget->setViewMode(QListView::IconMode);
-	contentsWidget->setIconSize(QSize(96, 84));
+	contentsWidget->setIconSize(QSize(300, 300));
 	contentsWidget->setMovement(QListView::Static);
-	contentsWidget->setMaximumWidth(128);
+	contentsWidget->setMaximumWidth(300);
 	contentsWidget->setSpacing(12);
 
 	pagesWidget = new QStackedWidget;
@@ -54,8 +54,8 @@ ConfigurationDialog::ConfigurationDialog(QWidget *parent )
 void ConfigurationDialog::createIcons()
 {
 	QListWidgetItem *configButton = new QListWidgetItem(contentsWidget);
-	configButton->setIcon(QIcon(":/configure.png"));
-	configButton->setText(tr("Configuration"));
+	configButton->setIcon(QIcon(":/user.png"));
+	configButton->setText(tr("User Configuration"));
 	configButton->setTextAlignment(Qt::AlignHCenter);
 	configButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 

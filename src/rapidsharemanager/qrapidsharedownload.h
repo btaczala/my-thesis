@@ -97,6 +97,6 @@ signals:
 	void								WhatAmIDoing(const RapidShareStateMachine & what);
 	void								DownloadStatus(const int & istate );
 	void								Done();
-	void								downloadRate(QString);
+	void								downloadRate(const QString & dwnlRate);
 };
 #endif
