@@ -27,14 +27,11 @@ private:
 	unsigned int					m_iMaxDownload;
 	unsigned int					m_iCurrentDownload;
 	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
-	QPointer<QTimer>				m_qpDownloadTimer;
 	RSLogger						m_Logger;
 public slots:
 	void							Slot_DoneDownloadingOne();
 	void							Slot_ChangedState( const RapidShareStateMachine & );
 	void							Slot_ChangeProgressValue( int ); 
-private slots:
-	void							Slot_Timer();
 signals:
 	void							DoneDownloading( unsigned int at);
 	void							DoneDownloadingAll( );

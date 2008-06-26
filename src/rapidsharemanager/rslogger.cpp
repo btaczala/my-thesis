@@ -6,6 +6,7 @@ RSLogger::RSLogger( const QString & fileName ) : m_fileMutex( new QMutex() )
 	{
 		SetFile( fileName ) ;
 	}
+	m_NumberOfLogs = 0;
 }
 RSLogger::~RSLogger()
 {
@@ -22,6 +23,12 @@ void RSLogger::Write( const QString & toLog )
 	QString logString = timeString + toLog; 
 	m_fileLogger->write( logString.toStdString().c_str(), logString.size() );
 	m_fileLogger->write("\n");
+	++m_NumberOfLogs;
+	if( m_NumberOfLogs >= MAX_NONFLUSHED_LOGS )
+	{
+			m_NumberOfLogs = 0;
+			m_fileLogger->flush();
+	}
 	m_fileMutex->unlock();
 };
 void RSLogger::SetFile(const QString & fileName ) 
@@ -31,6 +38,10 @@ void RSLogger::SetFile(const QString & fileName )
 		dir.mkpath(dir.path());
 	QString filePath = dir.path() + "/" + fileName; 
 	m_fileLogger.reset( new QFile( filePath ) );
-	if(m_fileLogger->open( QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append ))
-			DebugUtils::q_Error("Unable to open log file " + filePath);		
+	if( ! m_fileLogger->open( QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append ))
+	{
+			DebugUtils::q_Error("Unable to open log file " + filePath);
+			return;
+	}
+	m_fileLogger->write("-----NEW LOG ----- \n");
 }

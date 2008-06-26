@@ -9,6 +9,7 @@
 #include "debugutils.h"
 #include "../common.h"
 //
+#define MAX_NONFLUSHED_LOGS 10
 class RSLogger  
 {
 public:
@@ -19,6 +20,7 @@ public:
 private:
 	std::auto_ptr<QFile>	m_fileLogger;
 	std::auto_ptr<QMutex>	m_fileMutex;
+	int						m_NumberOfLogs;
 	
 };
 #endif

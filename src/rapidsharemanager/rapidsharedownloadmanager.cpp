@@ -5,9 +5,6 @@ RapidShareDownloadManager::RapidShareDownloadManager() : m_Logger("RapidshareDow
 	RSDM_LOG_FUNC ;
 	m_iMaxDownload = 3;
 	m_iCurrentDownload = 0;
-	m_qpDownloadTimer = new QTimer( this );
-	connect( m_qpDownloadTimer, SIGNAL( timeout()), this, SLOT( Slot_Timer() ) );
-	m_qpDownloadTimer->start( 10000 );
 }
 RapidShareDownloadManager::~RapidShareDownloadManager()
 {
@@ -21,18 +18,30 @@ RapidShareDownloadManager::~RapidShareDownloadManager()
 		}
 	}
 	m_apRapidshareUser.release();
-	delete m_qpDownloadTimer;
 };
 void RapidShareDownloadManager::AddDownload(const QString & toDownload,const QString & where )
 {
 	RSDM_LOG_FUNC ;
+	QMutex mutex;
+	QString where2 = where ; 
+	QFile whereFile (where2);
+	m_Logger.Write("Mutex::Lock");
+	mutex.lock();
 	m_Logger.Write("Adding download with toDownload: " + toDownload + " and where : " + where  );
+	while( whereFile.exists() )
+	{
+		where2 = where2 + QString::number( qrand() );
+		AddDownload(toDownload, where2); // recursion 
+	}
 	QRapidshareDownload *rsd = new QRapidshareDownload( toDownload, where );
 	rsd->SetUser( *m_apRapidshareUser );
 	QObject::connect( rsd,SIGNAL( WhatAmIDoing(  const RapidShareStateMachine )), this, SLOT( Slot_ChangedState( const RapidShareStateMachine ) ) );
 	QObject::connect( rsd,SIGNAL( DownloadStatus( int )), this, SLOT( Slot_ChangeProgressValue( int ) ) );
 	QObject::connect( rsd,SIGNAL( Done() ), this, SLOT( Slot_DoneDownloadingOne() ) );
 	m_RapidshareDownloads.push_back(rsd);
+	DownloadAsManyAsCan();
+	mutex.unlock();
+	m_Logger.Write("Mutex::UnLock");
 };
 void RapidShareDownloadManager::SetUser(const QRapidshareUser & user)
 {
@@ -77,6 +86,7 @@ QRapidshareUser RapidShareDownloadManager::GetUser()
 void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPoint )
 {
 	RSDM_LOG_FUNC ;
+	m_Logger.Write( QString("With startpoint=%1,m_iCurrentDownload=%2, m_iMaxDownload=%3 ").arg(startPoint).arg(m_iCurrentDownload).arg(m_iMaxDownload) );
 	if(m_iCurrentDownload == m_iMaxDownload)
 		return;
 	
@@ -86,11 +96,13 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 		if( m_iCurrentDownload == m_iMaxDownload)
 			break;
 		rsd = m_RapidshareDownloads.at(k);
-		if(rsd)
+		if( rsd )
 		{
-			if(rsd->GetState() == STOPPED )
+			if( rsd->GetState() == STOPPED )
+			{
 				rsd->Download() ;
-				++m_iCurrentDownload;
+				++m_iCurrentDownload ;
+			}
 		}
 	}
 }
@@ -100,11 +112,14 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 void RapidShareDownloadManager::Slot_DoneDownloadingOne()
 {
 	RSDM_LOG_FUNC ;
+	QMutex mutex;
+	mutex.lock();
 	QRapidshareDownload *rsd = qobject_cast<QRapidshareDownload*>(sender());
 	int iPos = m_RapidshareDownloads.indexOf(rsd);
 	-- m_iCurrentDownload;
+	mutex.unlock();
 	emit DoneDownloading(iPos);
-	DownloadAsManyAsCan(iPos);
+	DownloadAsManyAsCan(0);
 };
 void RapidShareDownloadManager::Slot_ChangedState( const RapidShareStateMachine & state)
 {
@@ -120,8 +135,4 @@ void RapidShareDownloadManager::Slot_ChangeProgressValue( int progress )
 	int iPos = m_RapidshareDownloads.indexOf(rsd);
 	emit ChangedProgress( iPos, progress );
 };
-void RapidShareDownloadManager::Slot_Timer()
-{
-	RSDM_LOG_FUNC ;
-	DownloadAsManyAsCan(0);
-};	
+
