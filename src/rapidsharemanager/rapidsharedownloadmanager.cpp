@@ -56,6 +56,11 @@ void RapidShareDownloadManager::SetMaxDownloads(const unsigned int & _MaxDownloa
 	m_Logger.Write(log);
 	m_iMaxDownload = _MaxDownloads;
 };
+const unsigned int RapidShareDownloadManager::GetMaxDownloads()
+{
+	RSDM_LOG_FUNC ;
+	return m_iMaxDownload;
+}
 void RapidShareDownloadManager::Pause(const QList<int> & listToPause ) 
 {
 	RSDM_LOG_FUNC ;

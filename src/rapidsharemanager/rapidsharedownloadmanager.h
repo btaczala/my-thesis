@@ -19,6 +19,7 @@ public:
 	void							RemoveAt(unsigned int iPos );
 	void							SetUser(const QRapidshareUser & user);
 	void							SetMaxDownloads(const unsigned int & _MaxDownloads);
+	const unsigned int 				GetMaxDownloads();
 	void							Pause(const QList<int> & listToPause = QList<int>() );
 	QRapidshareUser					GetUser();
 private:
