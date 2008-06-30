@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
 	m_RapidshareDownloadManager(new RapidShareDownloadManager() )
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
 	m_bExit = false;
 	m_DownloadView =  new DownloadView(this) ;
@@ -62,13 +62,13 @@ MainWindow::MainWindow(QWidget * parent)
 };
 MainWindow::~MainWindow()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	WriteSettings();
 	DeInitialize();
 };
 void MainWindow::InitializeSystemTray()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	if( !QSystemTrayIcon::isSystemTrayAvailable() )
 	{
 		DebugUtils::q_Warn(tr("No systemtray found") );
@@ -94,7 +94,7 @@ void MainWindow::InitializeSystemTray()
 }
 void MainWindow::ConnectActions()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	
 	// menu actions and slots
 	QObject::connect( m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
@@ -116,7 +116,7 @@ void MainWindow::ConnectActions()
 }
 void MainWindow::SetupUi()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	m_FileMenu->addAction( m_File_NewAction );
 	m_FileMenu->addSeparator();
 	m_FileMenu->addAction( m_File_SendToTrayAction );
@@ -132,7 +132,7 @@ void MainWindow::SetupUi()
 }
 bool MainWindow::addFileToDownload(const QString & fileToDownload)
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
 	if( rsUser.getUserName().isEmpty() ||  rsUser.getUserPass().isEmpty() )
 	{
@@ -185,21 +185,23 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
  */
 void MainWindow::addNewFile()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	addFileToDownload();
 };
 void MainWindow::showConfigurationDialog()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	//ConfigurationDialog *dialog = new ConfigurationDialog(this);
 	Ui_UserSettingsImpl *dialog = new Ui_UserSettingsImpl( m_apSettings.get() );
 	dialog->exec();
-	if( dialog->result() == QDialog::Accepted)
+	if( dialog->result() == QDialog::Accepted )
 	{
+		qDebug () << "Accepted " ;
 		m_DefaultDirPath = dialog->GetDefaultPath();
 		SetUser(dialog->GetUser(), dialog->GetPassword());
 		bool bOk;
 		int 	maxDownl = dialog->GetMaxDownloadsNumber();
+		qDebug() << "maxDownl=" << maxDownl;
 		if(bOk && maxDownl != 0)
 			m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
 		else
@@ -257,7 +259,7 @@ void MainWindow::showEvent(QShowEvent *event)
 };
 void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	if(reason != QSystemTrayIcon::Context)
 	{
 		if(this->isVisible())
@@ -268,14 +270,14 @@ void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
 };
 void MainWindow::close()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	m_bExit = true; // close chłopaku
 	QMainWindow::close();
 }
 
 void MainWindow::ChangeProgressName( const unsigned int & at, const QString & name ) 
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at ); 
 	if(NULL == hadzia)
 		return;
@@ -285,7 +287,7 @@ void MainWindow::ChangeProgressName( const unsigned int & at, const QString & na
 }
 void MainWindow::ChangeProgressValue(const unsigned int & at ,  const unsigned int & iPerc ) 
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at );  
 	if( NULL == hadzia ) 
 		return;
@@ -297,7 +299,7 @@ void MainWindow::ChangeProgressValue(const unsigned int & at ,  const unsigned i
 }
 void MainWindow::DoneDownloading(const unsigned int & at )
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 }
 void MainWindow::DowloadRateChanged(const unsigned int & at, const QString & rate)
 {
@@ -311,7 +313,7 @@ void MainWindow::DowloadRateChanged(const unsigned int & at, const QString & rat
 }
 QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QString ret = QString(url);
 	ret = ret.remove("/files");
 	// remove /213123123/ <- digits only
@@ -320,7 +322,7 @@ QString MainWindow::TransformUrlPathToLocalPath(const QString & url)
 }
 DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent ) 
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	setAcceptDrops(true);
 };
 void DownloadView::dropEvent(QDropEvent *event)
@@ -339,14 +341,14 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 
 void MainWindow::SetUser(const QString & userName, const QString & userPass)
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	
 	m_RapidshareDownloadManager->SetUser( QRapidshareUser( userName , userPass ) );
 }
 
 void MainWindow::ReadSettings()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QString userName = m_apSettings->value(SET_USERNAME).toString();
 	QString userPass = m_apSettings->value(SET_USERPASSWORD).toString();
 	bool bOk;
@@ -369,7 +371,7 @@ void MainWindow::ReadSettings()
 
 void MainWindow::WriteSettings()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
 	m_apSettings->setValue( SET_USERNAME,rsUser.getUserName() );
 	m_apSettings->setValue( SET_USERPASSWORD,rsUser.getUserPass() );
@@ -393,7 +395,7 @@ void MainWindow::LoadUiSettings()
 }
 void MainWindow::DeInitialize()
 {
-	QT_DEBUG_FUNCTION
+	LOG_FUNC_TO_OUT ;
 	m_apIsSystemTray.release();
 	m_apSettings.release();
 	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)

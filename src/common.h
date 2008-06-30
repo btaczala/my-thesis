@@ -13,6 +13,9 @@
 #define COMMON_H
 #include <QDir>
 #include <QString>
+#include <QDateTime>
+#include <QDebug>
+QString TimeToString();
 
 #define APPLICATION_NAME		"qrapidshare"
 #define SET_USERNAME			"user/username"
@@ -24,5 +27,6 @@
 
 
 #define RS_LOG_PATH				QDir::homePath() + "/.rslogger/"
+#define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __PRETTY_FUNCTION__ 
 
 #endif
