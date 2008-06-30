@@ -27,7 +27,8 @@ public:
 public slots:
 	void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 private:
-	void 			createIcons();
+	
+	void 				createIcons();
 	QListWidget 		*contentsWidget;
 	QStackedWidget		*pagesWidget;
 };

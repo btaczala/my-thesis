@@ -28,7 +28,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox" >
      <property name="title" >
-      <string>User name &amp; password settings</string>
+      <string>Settings</string>
      </property>
      <layout class="QGridLayout" >
       <property name="margin" >
@@ -44,8 +44,15 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="3" >
-       <widget class="QLineEdit" name="UserLabel" />
+      <item row="1" column="1" colspan="3" >
+       <widget class="QLineEdit" name="passwordLabel" >
+        <property name="focusPolicy" >
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="inputMask" >
+         <string/>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0" >
        <widget class="QLabel" name="label" >
@@ -54,13 +61,33 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" colspan="3" >
-       <widget class="QLineEdit" name="passwordLabel" >
-        <property name="focusPolicy" >
-         <enum>Qt::StrongFocus</enum>
+      <item row="0" column="1" colspan="3" >
+       <widget class="QLineEdit" name="UserLabel" />
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="text" >
+         <string>Default directory</string>
         </property>
-        <property name="inputMask" >
-         <string/>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QLineEdit" name="defaultDirectoryEdit" />
+      </item>
+      <item row="3" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="text" >
+         <string>Max parallel downloads</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="2" >
+       <widget class="QLineEdit" name="maxParallelDownloadsEdit" />
+      </item>
+      <item row="2" column="3" >
+       <widget class="QPushButton" name="browseDirectory" >
+        <property name="text" >
+         <string>Browse</string>
         </property>
        </widget>
       </item>
@@ -91,7 +118,7 @@
      <item>
       <widget class="QPushButton" name="okButton" >
        <property name="enabled" >
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="text" >
         <string>&amp;OK</string>

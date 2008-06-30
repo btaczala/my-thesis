@@ -119,6 +119,8 @@ class MainWindow : public QMainWindow
 		std::auto_ptr<RapidShareDownloadManager> m_RapidshareDownloadManager;
 		// settings
 		std::auto_ptr<QSettings>	m_apSettings;
+		QString						m_DefaultDirPath;
+		
 	private slots:
 		// menu
 		void						addNewFile();

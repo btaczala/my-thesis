@@ -8,9 +8,9 @@
 class DownloadViewDelegate : public QItemDelegate
 {
 	Q_OBJECT
-protected:
+public:
 	DownloadViewDelegate(QObject * parent);
+protected:
 	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index );
 };
-
 #endif /*DOWNLOADDELEGATE_H_*/

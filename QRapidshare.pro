@@ -28,3 +28,9 @@ QT += network
 TEMPLATE = app
 INCLUDEPATH += src/
 RESOURCES += resources/main_resources.qrc
+DESTDIR = bin
+OBJECTS_DIR = build
+MOC_DIR = build
+UI_DIR = build
+CONFIG +=console
+

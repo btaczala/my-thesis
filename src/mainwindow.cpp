@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget * parent)
 	ConnectActions();
 	SetupUi();
 	ReadSettings();
+	
 };
 MainWindow::~MainWindow()
 {
@@ -160,7 +161,7 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
 	else
 	{
 		FileUrl = QUrl(fileToDownload);
-		dest = QDir::home().path();
+		dest = m_DefaultDirPath;
 	}
 	dest += "/";
 	QTreeWidgetItem *item = new QTreeWidgetItem(m_DownloadView);
@@ -191,9 +192,20 @@ void MainWindow::showConfigurationDialog()
 {
 	QT_DEBUG_FUNCTION
 	//ConfigurationDialog *dialog = new ConfigurationDialog(this);
-	Ui_UserSettingsImpl *dialog = new Ui_UserSettingsImpl(m_RapidshareDownloadManager->GetUser().getUserName(), m_RapidshareDownloadManager->GetUser().getUserPass());
+	Ui_UserSettingsImpl *dialog = new Ui_UserSettingsImpl( m_apSettings.get() );
 	dialog->exec();
-	
+	if( dialog->result() == QDialog::Accepted)
+	{
+		m_DefaultDirPath = dialog->GetDefaultPath();
+		SetUser(dialog->GetUser(), dialog->GetPassword());
+		bool bOk;
+		int 	maxDownl = dialog->GetMaxDownloadsNumber();
+		if(bOk && maxDownl != 0)
+			m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
+		else
+			m_RapidshareDownloadManager->SetMaxDownloads(3);
+		WriteSettings();
+	}
 };
 void MainWindow::AboutQR()
 {
@@ -350,6 +362,9 @@ void MainWindow::ReadSettings()
 		m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
 	else
 		m_RapidshareDownloadManager->SetMaxDownloads(3);
+	m_DefaultDirPath = m_apSettings->value(RSM_DEF_DOWNLOADS_PATH).toString();
+	if(m_DefaultDirPath.isEmpty())
+		m_DefaultDirPath = QDir::homePath();
 };
 
 void MainWindow::WriteSettings()
@@ -360,6 +375,8 @@ void MainWindow::WriteSettings()
 	m_apSettings->setValue( SET_USERPASSWORD,rsUser.getUserPass() );
 	SaveUiSettings();
 	m_apSettings->setValue( RSM_MAX_DOWNLOAD,m_RapidshareDownloadManager->GetMaxDownloads() );
+	m_apSettings->setValue( RSM_DEF_DOWNLOADS_PATH,m_DefaultDirPath );
+	
 	m_apSettings->sync();
 };
 void MainWindow::SaveUiSettings()
