@@ -96,10 +96,13 @@ class MainWindow : public QMainWindow
 		QPointer<QAction>			m_File_NewAction;
 		QPointer<QAction>			m_File_SendToTrayAction;
 		QPointer<QAction>			m_File_ExitAction;
-		// settings
+		// settings menu
 		QPointer<QMenu>				m_SettingsMenu;
 		QPointer<QAction>			m_Settings_Configure;
-		
+		// about menu
+		QPointer<QMenu>				m_AboutMenu;
+		QPointer<QAction>			m_AboutQtAction;
+		QPointer<QAction>			m_AboutQRapidshareAction;
 		// system tray 
 		QPointer<QSystemTrayIcon>	m_SystemTrayIcon;
 		QPointer<QMenu>				m_SystemTrayMenu;
@@ -120,7 +123,9 @@ class MainWindow : public QMainWindow
 		// menu
 		void						addNewFile();
 		void						showConfigurationDialog();
-		// items
+		void						AboutQR();
+		void						AboutQt();
+		// items 
 		void 						ChangeProgressName(const unsigned int & at, const QString & name ) ;
 		void 						ChangeProgressValue(const unsigned int & at,  const unsigned int & iPerc);
 		void						DoneDownloading( const unsigned int & at );
@@ -128,7 +133,8 @@ class MainWindow : public QMainWindow
 		// application
 		void						close();
 		// regarding system tray
-		void 						Activation( QSystemTrayIcon::ActivationReason reason);	
+		void 						Activation( QSystemTrayIcon::ActivationReason reason);
+		
 };
 #endif
 

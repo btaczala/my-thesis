@@ -35,12 +35,25 @@ MainWindow::MainWindow(QWidget * parent)
 	m_DownloadView->setAlternatingRowColors( true );
 	m_DownloadView->setRootIsDecorated( false );
 	m_MenuBar = new QMenuBar(this);
+	/*
+	 * File menu
+	 */
 	m_FileMenu = new QMenu( tr("&File"), m_MenuBar);
 	m_File_NewAction = new QAction(tr( "&New" ), m_FileMenu) ;
 	m_File_SendToTrayAction = new QAction(tr( "Send to &Tray" ), m_FileMenu) ;
 	m_File_ExitAction = new QAction(tr( "E&xit" ), m_FileMenu) ;
+	/*
+	 * Settings menu 
+	 */
 	m_SettingsMenu = new QMenu(tr("&Settings"), m_MenuBar);
 	m_Settings_Configure = new QAction(tr("Configure"), m_SettingsMenu);
+	/*
+	 * about menu
+	 */
+	m_AboutMenu = new QMenu( tr("&About"), m_MenuBar);
+	m_AboutQtAction = new QAction(tr("About Qt"), m_AboutMenu );
+	m_AboutQRapidshareAction =new QAction(tr("About QRapidshare"), m_AboutMenu ); 
+	
 	InitializeSystemTray();
 	ConnectActions();
 	SetupUi();
@@ -83,10 +96,12 @@ void MainWindow::ConnectActions()
 	QT_DEBUG_FUNCTION
 	
 	// menu actions and slots
-	QObject::connect(m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
-	QObject::connect(m_File_NewAction, SIGNAL(triggered()), this, SLOT(addNewFile()));
-	QObject::connect(m_File_SendToTrayAction, SIGNAL(triggered()), this, SLOT(hide()));
-	QObject::connect(m_Settings_Configure, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+	QObject::connect( m_File_ExitAction, SIGNAL(triggered()), this, SLOT(close() ) );
+	QObject::connect( m_File_NewAction, SIGNAL(triggered()), this, SLOT(addNewFile()));
+	QObject::connect( m_File_SendToTrayAction, SIGNAL(triggered()), this, SLOT(hide()));
+	QObject::connect( m_Settings_Configure, SIGNAL(triggered()), this, SLOT(showConfigurationDialog()));
+	QObject::connect( m_AboutQtAction, SIGNAL(triggered()), this, SLOT(AboutQt()));
+	QObject::connect( m_AboutQRapidshareAction, SIGNAL(triggered()), this, SLOT(AboutQR()));
 	// system tray actions and slots
 	QObject::connect(m_SystemTrayIcon,SIGNAL( activated( QSystemTrayIcon::ActivationReason ) ), this, SLOT(Activation( QSystemTrayIcon::ActivationReason )));
 	// RapidshareDownloadManager actions and slots
@@ -108,6 +123,9 @@ void MainWindow::SetupUi()
 	m_MenuBar->addMenu(m_FileMenu);
 	m_SettingsMenu->addAction(m_Settings_Configure);
 	m_MenuBar->addMenu(m_SettingsMenu);
+	m_AboutMenu->addAction(m_AboutQtAction);
+	m_AboutMenu->addAction(m_AboutQRapidshareAction);
+	m_MenuBar->addMenu(m_AboutMenu);
 	setCentralWidget( m_DownloadView );
 	setMenuBar(m_MenuBar);
 }
@@ -176,6 +194,14 @@ void MainWindow::showConfigurationDialog()
 	Ui_UserSettingsImpl *dialog = new Ui_UserSettingsImpl(m_RapidshareDownloadManager->GetUser().getUserName(), m_RapidshareDownloadManager->GetUser().getUserPass());
 	dialog->exec();
 	
+};
+void MainWindow::AboutQR()
+{
+	QMessageBox::aboutQt(this);
+}
+void MainWindow::AboutQt()
+{
+	QMessageBox::aboutQt(this);
 }
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
@@ -356,5 +382,9 @@ void MainWindow::DeInitialize()
 	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)
 		delete tmp;
 	m_apDownloadDelegate.release();
+	
+	delete m_AboutQRapidshareAction;
+	delete m_AboutQtAction;
+	delete m_AboutMenu;
 }
 

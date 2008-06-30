@@ -4,12 +4,13 @@
 #include <QItemDelegate>
 #include <QtGui>
 #include <QtDebug>
+
 class DownloadViewDelegate : public QItemDelegate
 {
 	Q_OBJECT
-public:
+protected:
 	DownloadViewDelegate(QObject * parent);
-	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index );
+	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index );
 };
 
 #endif /*DOWNLOADDELEGATE_H_*/

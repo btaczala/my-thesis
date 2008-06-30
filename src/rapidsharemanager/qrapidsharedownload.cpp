@@ -136,7 +136,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 			if( !m_apFile->isOpen())
 			{
 				qDebug() << ("isClosed, open it");
-				if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
+				if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) ) // TODO: think about it.. 
 				{
 					DebugUtils::q_Error("ERROR ..:::DDD124");
 					// message = bad
