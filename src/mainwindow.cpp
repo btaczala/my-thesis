@@ -26,6 +26,9 @@ MainWindow::MainWindow(QWidget * parent)
 	LOG_FUNC_TO_OUT ;
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
 	m_bExit = false;
+	/*
+		View
+	*/
 	m_DownloadView =  new DownloadView(this) ;
 	m_apDownloadDelegate.reset( new DownloadViewDelegate(m_DownloadView));
 	m_DownloadView->setItemDelegate(m_apDownloadDelegate.get());
@@ -33,7 +36,9 @@ MainWindow::MainWindow(QWidget * parent)
 	m_DownloadView->setSelectionBehavior( QAbstractItemView::SelectRows );
 	m_DownloadView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	m_DownloadView->setAlternatingRowColors( true );
-	m_DownloadView->setRootIsDecorated( false );
+	m_DownloadView->setRootIsDecorated( false );	
+	
+	
 	m_MenuBar = new QMenuBar(this);
 	/*
 	 * File menu
@@ -199,13 +204,11 @@ void MainWindow::showConfigurationDialog()
 		qDebug () << "Accepted " ;
 		m_DefaultDirPath = dialog->GetDefaultPath();
 		SetUser(dialog->GetUser(), dialog->GetPassword());
-		bool bOk;
 		int 	maxDownl = dialog->GetMaxDownloadsNumber();
 		qDebug() << "maxDownl=" << maxDownl;
-		if(bOk && maxDownl != 0)
-			m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
-		else
-			m_RapidshareDownloadManager->SetMaxDownloads(3);
+		m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
+		
+			
 		WriteSettings();
 	}
 };
@@ -234,6 +237,16 @@ void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 				if(one.contains("rapidshare"))
 					addFileToDownload(one);	
 			}
+		}
+	}
+	if( keyPressed->key() == Qt::Key_Delete )
+	{
+		QList<QTreeWidgetItem * > selected = m_DownloadView->selectedItems();
+		foreach(QTreeWidgetItem *item, selected)
+		{
+			qDebug() << item;
+			m_RapidsharePoolView.removeAll( item );
+			m_DownloadView->removeItemWidget(item,0);
 		}
 	}
 }
@@ -278,6 +291,8 @@ void MainWindow::close()
 void MainWindow::ChangeProgressName( const unsigned int & at, const QString & name ) 
 {
 	LOG_FUNC_TO_OUT ;
+	if( at >= m_RapidsharePoolView.size())
+		return;
 	QTreeWidgetItem *hadzia = m_RapidsharePoolView.at( at ); 
 	if(NULL == hadzia)
 		return;

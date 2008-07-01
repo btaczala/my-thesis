@@ -12,8 +12,9 @@
 #include <QFile>
 #include "debugutils.h"
 #include "qrapidshareuser.h"
+#include "rslogger.h"
 
-
+#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ ) 
 enum RapidShareStateMachine
 {
 	STOPPED = 0,
@@ -21,7 +22,8 @@ enum RapidShareStateMachine
  	GET_SECOND,
   	POST_FIRST,
    	GET_THIRD,
-   	DONE
+   	DONE,
+   	FAILED
 };
 QString StateToString(const RapidShareStateMachine & rsMachineState);
 struct DownloadInfo
@@ -81,6 +83,7 @@ private:
 	QFile 								m_FileLog;
 	int 								m_timerId;
 	qint64								m_readedBytes;
+	RSLogger							m_Logger;
 	
 private slots:
 	void 								requestStarted(const int & idReq) ;

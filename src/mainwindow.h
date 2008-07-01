@@ -114,9 +114,10 @@ class MainWindow : public QMainWindow
 		std::auto_ptr<bool>			m_apIsSystemTray;
 		// view
 		int							m_progress;
-		RSPoolType					m_RapidsharePool; 
 		QList<QTreeWidgetItem*>		m_RapidsharePoolView;
 		std::auto_ptr<RapidShareDownloadManager> m_RapidshareDownloadManager;
+		QPointer<QShortcut>			m_DeleteShortcut;
+		
 		// settings
 		std::auto_ptr<QSettings>	m_apSettings;
 		QString						m_DefaultDirPath;
@@ -134,6 +135,8 @@ class MainWindow : public QMainWindow
 		void 						DowloadRateChanged(const unsigned int & at, const QString & rate);
 		// application
 		void						close();
+		// view
+		//void						DeleteKeyPressed();
 		// regarding system tray
 		void 						Activation( QSystemTrayIcon::ActivationReason reason);
 		

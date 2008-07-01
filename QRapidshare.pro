@@ -9,7 +9,7 @@ HEADERS += src/downloaddelegate.h \
  src/common.h \
  src/configurationdialog.h \
  src/pages.h \
- src/rapidsharemanager/rslogger.h
+ src/rapidsharemanager/rslogger.h 
 SOURCES += src/downloaddelegate.cpp \
  src/Ui_AddDownloadFileImpl.cpp \
  src/Ui_UserSettingsImpl.cpp \
@@ -22,7 +22,7 @@ SOURCES += src/downloaddelegate.cpp \
  src/configurationdialog.cpp \
  src/pages.cpp \
  src/rapidsharemanager/rslogger.cpp \
- src/common.cpp
+ src/common.cpp 
 FORMS += ui/usersettings.ui ui/adddownload.ui
 QT += network
 TEMPLATE = app

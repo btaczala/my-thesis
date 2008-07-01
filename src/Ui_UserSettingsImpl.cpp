@@ -68,9 +68,11 @@ QString Ui_UserSettingsImpl::GetDefaultPath()
 int Ui_UserSettingsImpl::GetMaxDownloadsNumber()
 {
 	LOG_FUNC_TO_OUT ;
+	bool bOk = false;
+	int t = 0;
 	if( m_MaxDownloads.get() )
-		return m_MaxDownloads->toInt();
-	return 3;
+		t = m_MaxDownloads->toInt(&bOk);
+	return (bOk && t) ? t : 3;
 };
 void Ui_UserSettingsImpl::browseForDirectory()
 {

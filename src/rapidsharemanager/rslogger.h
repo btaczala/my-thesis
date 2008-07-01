@@ -17,9 +17,16 @@ public:
 	~RSLogger();
 	void		Write( const QString & toLog ) ;
 	void		SetFile(const QString & fileName ) ;
+	void		Error (const QString & toLog );
+	RSLogger &operator<<(const QString & toLog);
+	RSLogger &operator<<(const int & toLog);  
 private:
-	std::auto_ptr<QFile>	m_fileLogger;
+	bool					OpenFile();
 	std::auto_ptr<QMutex>	m_fileMutex;
+	std::auto_ptr<QString>	m_fileName;
+	std::auto_ptr<QFile>	m_fileLogger;
+	
 	int						m_NumberOfLogs;
 };
+
 #endif
