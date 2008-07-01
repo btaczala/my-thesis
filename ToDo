@@ -19,7 +19,7 @@ This is a todo file
 	* window properties									100 %
 0.1: QSystray - system tray implementation 				100 %
 0.1: Download queue
-	* implement real download pool						80  % 
+	* implement real download pool						100  % 
 	* add some moving downloads up and down 
 0.1: Setting view
 0.1: Interaction with user ( !! ) 
