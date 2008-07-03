@@ -98,10 +98,19 @@ private:
 	static const unsigned int sm_MaxNonFlushedLogs = 10;
 	static const  char* const  sm_TimeFormat;
 };
+/**
+	\class ILogable - interface to enable class logging
+*/
 class ILogable 
 {
 	public:
+		/**
+			Only one ctor
+		*/
 		ILogable(const QString & fileName ) ;
+		/**
+			virtual dctor
+		*/
 		virtual ~ILogable(){};
 	protected:
 		RSLogger		m_Logger;
