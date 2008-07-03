@@ -8,7 +8,7 @@ Ui_UserSettingsImpl::Ui_UserSettingsImpl(QSettings * pSettings, QWidget * parent
 	connect(ui.browseDirectory, SIGNAL(pressed()), this, SLOT( browseForDirectory() ) ) ;
 	m_pSettings = const_cast< QSettings* >( pSettings );
 	ReadSettings();
-	m_DefaultPath.reset( new QString( m_pSettings->value( RSM_DEF_DOWNLOADS_PATH ).toString() ) );
+	m_DefaultPath.reset( new QString( m_pSettings->value( scSettingsPath_DefaultPath ).toString() ) );
 	setWindowIcon(QIcon(":/configure.png"));
 	
 }
@@ -23,14 +23,14 @@ Ui_UserSettingsImpl::~Ui_UserSettingsImpl()
 void Ui_UserSettingsImpl::ReadSettings()
 {
 	LOG_FUNC_TO_OUT ;
-	ui.passwordLabel->insert( m_pSettings->value(SET_USERPASSWORD).toString() );
-	ui.UserLabel->insert( m_pSettings->value(SET_USERNAME).toString() );
-	QString max = m_pSettings->value(RSM_MAX_DOWNLOAD).toString();
+	ui.passwordLabel->insert( m_pSettings->value( scSettingsPath_UserPass ).toString() );
+	ui.UserLabel->insert( m_pSettings->value( scSettingsPath_UserName ).toString() );
+	QString max = m_pSettings->value( scSettingsPath_MaxDownloads ).toString();
 	if(max.isEmpty())
 		ui.maxParallelDownloadsEdit->insert(QString::number(3));
 	else
 		ui.maxParallelDownloadsEdit->insert( max );
-	max = m_pSettings->value( RSM_DEF_DOWNLOADS_PATH ).toString();
+	max = m_pSettings->value( scSettingsPath_DefaultPath ).toString();
 	if(max.isEmpty())
 		ui.defaultDirectoryEdit->insert( QDir::homePath() );
 	else

@@ -360,10 +360,10 @@ void MainWindow::SetUser(const QString & userName, const QString & userPass)
 void MainWindow::ReadSettings()
 {
 	RSDM_LOG_FUNC ;
-	QString userName = m_apSettings->value(SET_USERNAME).toString();
-	QString userPass = m_apSettings->value(SET_USERPASSWORD).toString();
+	QString userName = m_apSettings->value( scSettingsPath_UserName ).toString();
+	QString userPass = m_apSettings->value( scSettingsPath_UserPass ).toString();
 	bool bOk;
-	int 	maxDownl = m_apSettings->value(RSM_MAX_DOWNLOAD).toInt(&bOk);
+	int 	maxDownl = m_apSettings->value( scSettingsPath_MaxDownloads ).toInt(&bOk);
 	if( userName.isEmpty() || userPass.isEmpty() )
 	{
 		DebugUtils::q_Error("Unable to read user or password ");
@@ -375,7 +375,7 @@ void MainWindow::ReadSettings()
 		m_RapidshareDownloadManager->SetMaxDownloads(maxDownl);
 	else
 		m_RapidshareDownloadManager->SetMaxDownloads(3);
-	m_DefaultDirPath = m_apSettings->value(RSM_DEF_DOWNLOADS_PATH).toString();
+	m_DefaultDirPath = m_apSettings->value( scSettingsPath_DefaultPath ).toString();
 	if(m_DefaultDirPath.isEmpty())
 		m_DefaultDirPath = QDir::homePath();
 };
@@ -384,11 +384,11 @@ void MainWindow::WriteSettings()
 {
 	RSDM_LOG_FUNC ;
 	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
-	m_apSettings->setValue( SET_USERNAME,rsUser.getUserName() );
-	m_apSettings->setValue( SET_USERPASSWORD,rsUser.getUserPass() );
+	m_apSettings->setValue( scSettingsPath_UserName ,rsUser.getUserName() );
+	m_apSettings->setValue( scSettingsPath_UserPass ,rsUser.getUserPass() );
 	SaveUiSettings();
-	m_apSettings->setValue( RSM_MAX_DOWNLOAD,m_RapidshareDownloadManager->GetMaxDownloads() );
-	m_apSettings->setValue( RSM_DEF_DOWNLOADS_PATH,m_DefaultDirPath );
+	m_apSettings->setValue( scSettingsPath_MaxDownloads ,m_RapidshareDownloadManager->GetMaxDownloads() );
+	m_apSettings->setValue( scSettingsPath_DefaultPath ,m_DefaultDirPath );
 	m_Logger << "Syncing settings ";
 	m_apSettings->sync();
 };

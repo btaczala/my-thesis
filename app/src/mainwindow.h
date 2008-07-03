@@ -27,10 +27,11 @@
 #include <QSettings>
 #include "Ui_AddDownloadFileImpl.h"
 #include "common.h"
-#include "rapidsharemanager/qrapidsharedownload.h"
-#include "rapidsharemanager/rapidsharedownloadmanager.h"
-#include "rapidsharemanager/debugutils.h"
-#include "rapidsharemanager/rslogger.h"
+/// RSDM include files
+#include "qrapidsharedownload.h"
+#include "rapidsharedownloadmanager.h"
+#include "debugutils.h"
+#include "rslogger.h"
 #include "configurationdialog.h"
 #include "Ui_UserSettingsImpl.h"
 #include "downloaddelegate.h"
