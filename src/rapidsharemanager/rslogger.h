@@ -8,7 +8,8 @@
 #include <QDateTime>
 #include "debugutils.h"
 #include "../common.h"
-//
+
+#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ )
 #define MAX_NONFLUSHED_LOGS 10
 class RSLogger  
 {

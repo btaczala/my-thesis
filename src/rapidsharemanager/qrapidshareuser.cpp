@@ -1,20 +1,21 @@
 #include "qrapidshareuser.h"
 //
 QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass ) 
- : m_apUserName( QString(userName) ), m_apUserPass(QString ( pass ) )
+ : m_apUserName( QString(userName) ), m_apUserPass(QString ( pass ) ), m_Logger("qrapidshareuser")
 {
-	QT_DEBUG_FUNCTION
+	RSDM_LOG_FUNC ;
 };
+ 
 QRapidshareUser::QRapidshareUser(const QRapidshareUser & _cpy)
 {
-	
+	RSDM_LOG_FUNC ;
  	m_apUserName = _cpy.getUserName();
  	m_apUserPass = _cpy.getUserPass();
 
 }
 QString QRapidshareUser::ComposeCookie()
 {
-	QT_DEBUG_FUNCTION
+	RSDM_LOG_FUNC ;
 	QString cookie="user=";
 	cookie += getUserName();
 	cookie +="-";

@@ -1,8 +1,25 @@
+/***************************************************************************
+ *   Copyright (C) 2008 by Bartek Tacza³a 								   *
+ *   b@kontrasty.szczecin.pl   											   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
 #ifndef QRAPIDSHAREDOWNLOAD_H
 #define QRAPIDSHAREDOWNLOAD_H
-//
-
-//
+// qrapidsharedownload - representing one download from rapidshare server
 #include <QString>
 #include <QHttp>
 #include <QHttpRequestHeader>
@@ -14,7 +31,11 @@
 #include "qrapidshareuser.h"
 #include "rslogger.h"
 
-#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ ) 
+#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ )
+/*! \enum RapidShareStateMachine
+ * \brief hold state machine state. 
+ * 
+ */
 enum RapidShareStateMachine
 {
 	STOPPED = 0,
@@ -25,7 +46,12 @@ enum RapidShareStateMachine
    	DONE,
    	FAILED
 };
+//! \fn StateToString - translating RapidShareStateMachine into QString 
 QString StateToString(const RapidShareStateMachine & rsMachineState);
+
+/*! \struct DownloadInfo
+ * \brief Holds information about bytes read. 
+ */
 struct DownloadInfo
 {
 	DownloadInfo()
@@ -33,7 +59,9 @@ struct DownloadInfo
 		bytesReadCurrent = 0;
 		bytesReadPreviously = 0;
 	}
+	//! bytesReadCurrent - number of read bytes in current cicle
 	int bytesReadCurrent;
+	//! bytesReadPreviously - number of read bytes in previous cicle
 	int bytesReadPreviously;
 	int Diff()
 	{
@@ -42,23 +70,50 @@ struct DownloadInfo
 	}
 };
 
+/*! \class QRapidshareDownload - representing one download
+ * \brief Class for downloading from rapidshare. Set filePath in constructor, or in Download.  
+ * 
+ */
 class QRapidshareDownload : public QObject
 {
 Q_OBJECT
 public:
+	// Ctors:
+	//! Ctor
+	/*!
+	 * \brief One, and only one ctor 
+	 * \param _UrlFileAddress an QString argument, holding address of file on rapidshare server
+	 * \param _fileDest an QString argument, holding destination of local drive
+	 */
 	QRapidshareDownload(const QString & _UrlFileAddress = QString(""), const QString & _fileDest = QString("") );
+	// DCtors:
+	//! DCtor
 	virtual 							~QRapidshareDownload();
+	
+	//public methods:
+	//!SetUser - set a RSUser
+	/*!
+	 * \param rsUser as QRapidshareUser. Sets user as rsUser, or if rsUser = EMPTY , does nothing
+	 */
 	void								SetUser(const QRapidshareUser & rsUser );
+	//!SetUser - set a RSUser with given username and pass
+	/*!
+	 * \param rsName as QString - username
+	 * \param pass as QString - user password
+	 */
 	void								SetUser(const QString& rsName,  const QString& pass);
+	//!Download - begin download from RS server
+	/*!
+	 * \param _addr as QString - same as ctor _UrlFileAddress
+	 * \param _fileDest as QString - same as ctor _fileDest
+	 */
 	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
-	/// ???? implement or not ? 
-	static	void						DownloadFile(const QString & _addr);
 	void								stop();
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
 	RapidShareStateMachine				GetState();
 	
 private:
-	void								timerEvent(QTimerEvent *event);	
+	virtual void						timerEvent(QTimerEvent *event);	
 	QString								ParseResponseAndGetNewUrl(const QString & resp);
 	int									ParseResponseAndGetFileSize(const QString & resp);
 	void								TranslateAnswer();

@@ -5,6 +5,8 @@
 #include <QString>
 #include <QDebug>
 #include "debugutils.h"
+#include "rslogger.h"
+#include "common.h"
 class QRapidshareUser  
 {
 public:
@@ -12,17 +14,18 @@ public:
 	QRapidshareUser(const QRapidshareUser & _cpy);
 	QString	getUserName() const 
 	{
-		QT_DEBUG_FUNCTION
+		//RSDM_LOG_FUNC ;
 		return ( m_apUserName );
 	};
-	QString	getUserPass() const
+	QString	getUserPass() const 
 	{
-		QT_DEBUG_FUNCTION
+		//RSDM_LOG_FUNC ;
 		return m_apUserPass;
 	};
 	QString					ComposeCookie();
 private:
 	QString					m_apUserName;
 	QString					m_apUserPass;
+	RSLogger				m_Logger;
 };
 #endif

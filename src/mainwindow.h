@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Taczała   *
- *   b@kontrasty.szczecin.pl   *
+ *   Copyright (C) 2008 by Bartek Taczała 								   *
+ *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,6 +30,7 @@
 #include "rapidsharemanager/qrapidsharedownload.h"
 #include "rapidsharemanager/rapidsharedownloadmanager.h"
 #include "rapidsharemanager/debugutils.h"
+#include "rapidsharemanager/rslogger.h"
 #include "configurationdialog.h"
 #include "Ui_UserSettingsImpl.h"
 #include "downloaddelegate.h"
@@ -65,6 +66,7 @@ class MainWindow : public QMainWindow
 		virtual void closeEvent(QCloseEvent *event);
 		virtual void hideEvent(QHideEvent *event);
 		virtual void showEvent(QShowEvent *event);
+		virtual void contextMenuEvent(QContextMenuEvent *event);
 	private:
 		/// methods !!!! 
 		void						ConnectActions();
@@ -89,7 +91,8 @@ class MainWindow : public QMainWindow
 		QStringList					m_ColumnHeaders;
 		QPointer<DownloadView>		m_DownloadView;
 		std::auto_ptr<DownloadViewDelegate>	m_apDownloadDelegate;
-		// menu
+		
+		////////////////// menu ///////////////////////////////////
 		QPointer<QMenuBar>			m_MenuBar;
 		// file menu
 		QPointer<QMenu>				m_FileMenu;
@@ -103,6 +106,13 @@ class MainWindow : public QMainWindow
 		QPointer<QMenu>				m_AboutMenu;
 		QPointer<QAction>			m_AboutQtAction;
 		QPointer<QAction>			m_AboutQRapidshareAction;
+		
+		////////////////// context menu ///////////////////////////////////
+		QPointer<QMenu>				m_qpContextMenu;
+		QPointer<QAction>			m_qpContextStopAction;
+		
+		
+		
 		// system tray 
 		QPointer<QSystemTrayIcon>	m_SystemTrayIcon;
 		QPointer<QMenu>				m_SystemTrayMenu;
@@ -121,6 +131,8 @@ class MainWindow : public QMainWindow
 		// settings
 		std::auto_ptr<QSettings>	m_apSettings;
 		QString						m_DefaultDirPath;
+		
+		RSLogger					m_Logger;
 		
 	private slots:
 		// menu

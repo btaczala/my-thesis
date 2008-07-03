@@ -13,9 +13,12 @@ RSLogger::RSLogger( const QString & fileName ) : m_fileMutex( new QMutex() ), m_
 }
 RSLogger::~RSLogger()
 {
-	if( m_fileLogger->isOpen() )
+	if(m_fileLogger.get() != NULL )
 	{
-		m_fileLogger->close();
+		if( m_fileLogger->isOpen() )
+		{
+			m_fileLogger->close();
+		}
 	}
 	m_fileLogger.release();
 	m_fileMutex.release();
@@ -84,7 +87,6 @@ void RSLogger::SetFile(const QString & fileName )
 		dir.mkpath(dir.path());
 	QString filePath = dir.path() + "/" + fileName;
 	m_fileName.reset(new QString( filePath ) ) ;
-	
 	m_fileLogger.reset( new QFile( filePath ) );
 	
 }

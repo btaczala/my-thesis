@@ -9,6 +9,7 @@ Ui_UserSettingsImpl::Ui_UserSettingsImpl(QSettings * pSettings, QWidget * parent
 	m_pSettings = const_cast< QSettings* >( pSettings );
 	ReadSettings();
 	m_DefaultPath.reset( new QString( m_pSettings->value( RSM_DEF_DOWNLOADS_PATH ).toString() ) );
+	setWindowIcon(QIcon(":/configure.png"));
 	
 }
 Ui_UserSettingsImpl::~Ui_UserSettingsImpl()
