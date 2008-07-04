@@ -17,16 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
+#ifdef WIN32
+#define CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif // WIN32
 
 #include <QCoreApplication>
 #include "mainwindow.h"
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
-	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
-	return app.exec();
+	
+	{
+		QApplication app(argc, argv);
+		Q_INIT_RESOURCE(main_resources);
+		MainWindow window;
+		window.show();
+		app.exec();
+	
+	}
+	int z = 0;
+	z++;
+	int * zz = new int;
+	delete zz;
+	_CrtDumpMemoryLeaks();
+	return 1;
 };
 

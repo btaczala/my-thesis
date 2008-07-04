@@ -1,6 +1,6 @@
 find_package(Qt4 REQUIRED )
 if(WIN32)
-ADD_DEFINITIONS( -Wall )
+ADD_DEFINITIONS(  )
 else(WIN32)
 ADD_DEFINITIONS( -Wall -O2 )
 endif(WIN32)

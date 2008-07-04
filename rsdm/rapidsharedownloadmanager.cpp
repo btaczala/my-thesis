@@ -23,16 +23,17 @@ void RapidShareDownloadManager::AddDownload(const QString & toDownload,const QSt
 {
 	RSDM_LOG_FUNC ;
 	QMutex mutex;
-	QString where2 = where ; 
+	QString where2 = where +".part"; 
 	QFile whereFile (where2);
 	m_Logger.Write("Mutex::Lock");
 	mutex.lock();
 	m_Logger.Write("Adding download with toDownload: " + toDownload + " and where : " + where  );
-	while( whereFile.exists() )
+	if( whereFile.exists() )
 	{
-		//TODO: check if file exist
-		//where2 = where2 + QString::number( qrand() );
-		//AddDownload(toDownload, where2); // recursion 
+		if(whereFile.remove())
+			m_Logger << "File " << whereFile.fileName() << "removed";
+		else
+			m_Logger << "File " << whereFile.fileName() << "not removed";
 	}
 	QRapidshareDownload *rsd = new QRapidshareDownload( toDownload, where );
 	rsd->SetUser( *m_apRapidshareUser );

@@ -83,9 +83,9 @@ void MainWindow::InitializeSystemTray()
 	m_SystemTrayIcon = new QSystemTrayIcon(this);
 	m_SystemTrayMenu = new QMenu(this);
 	// actions
-	m_STHideAction = new QAction(tr("&Hide"), this);
-	m_STRestoreAction = new QAction(tr("&Restore"), this);
-	m_STQuitAction = new QAction(tr("&Quit"), this);
+	m_STHideAction = new QAction(tr("&Hide"), m_SystemTrayMenu);
+	m_STRestoreAction = new QAction(tr("&Restore"), m_SystemTrayMenu);
+	m_STQuitAction = new QAction(tr("&Quit"), m_SystemTrayMenu);
 	connect(m_STHideAction, SIGNAL(triggered()), this, SLOT(hide()));
 	connect(m_STRestoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 	connect(m_STQuitAction, SIGNAL(triggered()), this, SLOT(close()));
@@ -135,6 +135,11 @@ void MainWindow::SetupUi()
 	m_MenuBar->addMenu(m_AboutMenu);
 	setCentralWidget( m_DownloadView );
 	setMenuBar(m_MenuBar);
+	QSize iconSize = this->iconSize();
+	iconSize.setWidth(iconSize.width() + 10 );
+	iconSize.setHeight(iconSize.height() + 10 );
+	setIconSize(iconSize);
+	setWindowIcon(QIcon(":/data_transfer.png"));
 }
 bool MainWindow::addFileToDownload(const QString & fileToDownload)
 {
@@ -181,6 +186,17 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
 	m_DownloadView->setCurrentItem(item);
 	m_RapidsharePoolView.push_back(item);
 	QString fileName = dest + TransformUrlPathToLocalPath( FileUrl.path() );
+	//TODO: check if file exist. If yes, show some dialog box
+	QString fileNamePart = fileName + ".part";
+	if(QFile(fileNamePart).exists())
+	{
+		int ret = QMessageBox::information(this,tr("Remove file"),tr("File exist, do you really want to remove it"), 
+		QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+		if( ret != QMessageBox::Yes ) 
+			return false;
+	}
+
+
 	m_RapidshareDownloadManager->AddDownload(FileUrl.toString(), fileName);
 	return true;
 }
@@ -418,6 +434,11 @@ void MainWindow::DeInitialize()
 	delete m_AboutQRapidshareAction;
 	delete m_AboutQtAction;
 	delete m_AboutMenu;
+	delete m_MenuBar;
+	delete m_SystemTrayIcon;
+	delete m_SystemTrayMenu;
+	int z = 0;
+	z++;
 }
 
 DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent ) 
