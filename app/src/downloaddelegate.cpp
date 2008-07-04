@@ -1,9 +1,10 @@
 #include "downloaddelegate.h"
+#include "mainwindow.h"
 DownloadViewDelegate::DownloadViewDelegate(QObject *parent) :  QItemDelegate(parent)
 {
 	;
 }
-void DownloadViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index )
+void DownloadViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
 	qDebug() << __FUNCTION_NAME__ ;
 	if (index.column() != 2) 
@@ -20,10 +21,14 @@ void DownloadViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	progressBarOption.maximum = 100;
 	progressBarOption.textAlignment = Qt::AlignCenter;
 	progressBarOption.textVisible = true;	
+	int iRow = index.row();
+	int progress = qobject_cast<MainWindow * >(parent())->GetRapidshareDownloadProgressAt(iRow);
+	if(progress == -1 )
+		progress = 0;
+
 	// Set the progress and text values of the style option.
-	//int progress = qobject_cast<MainWindow *>( parent())->GetProgress();
-	//progressBarOption.progress = progress < 0 ? 0 : progress;
-	//progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
+	progressBarOption.progress = progress < 0 ? 0 : progress;
+	progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
 	//Draw the progress bar onto the view.
-	//QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+	QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
 };

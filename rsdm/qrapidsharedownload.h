@@ -111,6 +111,7 @@ public:
 	void								stop();
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
 	RapidShareStateMachine				GetState();
+	unsigned int						GetProgress() const ;
 	
 private:
 	virtual void						timerEvent(QTimerEvent *event);	
@@ -139,6 +140,7 @@ private:
 	int 								m_timerId;
 	qint64								m_readedBytes;
 	RSLogger							m_Logger;
+	unsigned int						m_Progress;
 	
 private slots:
 	void 								requestStarted(const int & idReq) ;

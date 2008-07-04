@@ -40,7 +40,9 @@ int main(int argc, char *argv[])
 	z++;
 	int * zz = new int;
 	delete zz;
+#ifdef WIN32
 	_CrtDumpMemoryLeaks();
+#endif // WIN32
 	return 1;
 };
 

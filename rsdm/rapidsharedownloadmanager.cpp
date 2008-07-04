@@ -81,9 +81,17 @@ void RapidShareDownloadManager::Pause(const QList<int> & listToPause )
 		foreach(int iter, listToPause) 
 		{
 			QRapidshareDownload *rsd = m_RapidshareDownloads.at( iter );
-			rsd->stop();	
+			rsd->stop();
 		}
 	}
+}
+const QRapidshareDownload * RapidShareDownloadManager::GetAt(const unsigned int & at ) 
+{
+	int iSize =m_RapidshareDownloads.size();
+	if( at > iSize || iSize == 0 )
+		return NULL;
+	const QRapidshareDownload *ret = m_RapidshareDownloads.at(at); 
+	return ret;
 }
 QRapidshareUser RapidShareDownloadManager::GetUser()
 {

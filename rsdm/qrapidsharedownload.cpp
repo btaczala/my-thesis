@@ -22,7 +22,7 @@ QString StateToString(const RapidShareStateMachine & rsMachineState)
 QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const QString & _fileDest ) : m_UrlFileAddress ( "" ) 
 , m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() ), m_RSStateMachine( STOPPED ), m_downloadInfo(new DownloadInfo() ), m_timerId(0),m_readedBytes(0)
-, m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) )
+, m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) ), m_Progress(0)
 
 {
 	RSDM_LOG_FUNC ;
@@ -124,9 +124,9 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		double dTotal = total;
 		double dResTotal = dDone / dTotal;
 		dResTotal *= 100;
-		int iTotal = (int)dResTotal;
-		m_Logger << "emit :DownloadStatus("<< iTotal <<")";  
-		emit DownloadStatus(iTotal) ;
+		m_Progress = (int)dResTotal;
+		m_Logger << "emit :DownloadStatus("<< m_Progress <<")";  
+		emit DownloadStatus(m_Progress) ;
 		m_downloadInfo->bytesReadPreviously =m_downloadInfo->bytesReadCurrent;
 		m_downloadInfo->bytesReadCurrent = done ; 
 		
@@ -412,7 +412,10 @@ RapidShareStateMachine QRapidshareDownload::GetState()
 {
 	return m_RSStateMachine;
 }
-
+unsigned int QRapidshareDownload::GetProgress() const 
+{
+	return m_Progress;
+}
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {
 	emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 

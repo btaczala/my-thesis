@@ -56,6 +56,8 @@ public:
 		\param listToPause as QList<int> - list of id to dowload 
 	*/
 	void							Pause(const QList<int> & listToPause = QList<int>() );
+
+	const QRapidshareDownload*		GetAt(const unsigned int & pos ) ;
 private:
 	QList<QRapidshareDownload* >	m_RapidshareDownloads;
 	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;

@@ -62,6 +62,7 @@ class MainWindow : public QMainWindow
 		{
 			return m_progress;
 		}
+		unsigned int GetRapidshareDownloadProgressAt(const unsigned int & at ) ;
 	protected:
 		virtual void keyPressEvent (QKeyEvent *keyEvent);
 		virtual void closeEvent(QCloseEvent *event);
@@ -91,7 +92,7 @@ class MainWindow : public QMainWindow
 		/// fields !!!
 		QStringList					m_ColumnHeaders;
 		QPointer<DownloadView>		m_DownloadView;
-		std::auto_ptr<DownloadViewDelegate>	m_apDownloadDelegate;
+		//std::auto_ptr<DownloadViewDelegate>	m_apDownloadDelegate;
 		
 		////////////////// menu ///////////////////////////////////
 		QPointer<QMenuBar>			m_MenuBar;
@@ -132,7 +133,6 @@ class MainWindow : public QMainWindow
 		// settings
 		std::auto_ptr<QSettings>	m_apSettings;
 		QString						m_DefaultDirPath;
-		
 		RSLogger					m_Logger;
 		
 	private slots:

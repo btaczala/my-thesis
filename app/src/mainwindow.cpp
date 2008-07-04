@@ -30,8 +30,8 @@ MainWindow::MainWindow(QWidget * parent)
 		View
 	*/
 	m_DownloadView =  new DownloadView(this) ;
-	m_apDownloadDelegate.reset( new DownloadViewDelegate(m_DownloadView));
-	m_DownloadView->setItemDelegate(m_apDownloadDelegate.get());
+	//m_apDownloadDelegate.reset( new DownloadViewDelegate(m_DownloadView));
+	m_DownloadView->setItemDelegate(new DownloadViewDelegate(this));
 	m_DownloadView->setHeaderLabels( m_ColumnHeaders );
 	m_DownloadView->setSelectionBehavior( QAbstractItemView::SelectRows );
 	m_DownloadView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -72,6 +72,14 @@ MainWindow::~MainWindow()
 	WriteSettings();
 	DeInitialize();
 };
+unsigned int MainWindow::GetRapidshareDownloadProgressAt(const unsigned int & at ) 
+{
+	const QRapidshareDownload* pRSDonwload = m_RapidshareDownloadManager->GetAt(at);
+	if(pRSDonwload == NULL ) 
+		return -1;
+	int iRet = pRSDonwload->GetProgress();
+	return iRet;
+}
 void MainWindow::InitializeSystemTray()
 {
 	RSDM_LOG_FUNC ;
@@ -429,7 +437,7 @@ void MainWindow::DeInitialize()
 	m_apSettings.release();
 	foreach(QTreeWidgetItem* tmp, m_RapidsharePoolView)
 		delete tmp;
-	m_apDownloadDelegate.release();
+//	m_apDownloadDelegate.release();
 	
 	delete m_AboutQRapidshareAction;
 	delete m_AboutQtAction;
@@ -443,7 +451,6 @@ void MainWindow::DeInitialize()
 
 DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent ) 
 {
-	
 	setAcceptDrops(true);
 };
 void DownloadView::dropEvent(QDropEvent *event)
