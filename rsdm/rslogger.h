@@ -28,7 +28,7 @@
 #include "debugutils.h"
 #include "rscommon.h"
 
-#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ )
+#define RSDM_LOG_FUNC 	m_Logger.Write( __FUNCTION_NAME__ )
 
 /*! \class RSLogger 
 	\brief Class to log to files

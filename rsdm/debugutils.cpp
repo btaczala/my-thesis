@@ -44,10 +44,10 @@ void DebugUtils::DumpReponseToFile(const QByteArray & byteArray, const QString &
 	file.setFileName( fileName );
 	if( ! file.open( QIODevice::WriteOnly ) )
 	{
-		DebugUtils::q_Error("Unable to open file",__PRETTY_FUNCTION__);
+		DebugUtils::q_Error("Unable to open file",__FUNCTION_NAME__);
 	}
 	if(byteArray.isEmpty())
-		DebugUtils::q_Error("Response Error" + fileName,__PRETTY_FUNCTION__);
+		DebugUtils::q_Error("Response Error" + fileName,__FUNCTION_NAME__);
 	file.write( byteArray );
 	file.close();
 	

@@ -2,7 +2,7 @@
 
 Ui_AddDownloadFile::Ui_AddDownloadFile(QWidget *parent, const QString & pathToFile) :  QDialog( parent )
 {
-	qDebug() << __PRETTY_FUNCTION__;
+	qDebug() << __FUNCTION_NAME__;
 	ui.setupUi(this) ;
 	if(pathToFile.isEmpty())
 	{
@@ -24,7 +24,7 @@ Ui_AddDownloadFile::~Ui_AddDownloadFile()
 }
 void Ui_AddDownloadFile::browseForDestination()
 {
-	qDebug() << __PRETTY_FUNCTION__;
+	qDebug() << __FUNCTION_NAME__;
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose a destination directory"), QDir::home().path());
 	if (dir.isEmpty())
 		 return;
@@ -33,7 +33,7 @@ void Ui_AddDownloadFile::browseForDestination()
 };
 void Ui_AddDownloadFile::ok()
 {
-	qDebug() << __PRETTY_FUNCTION__;
+	qDebug() << __FUNCTION_NAME__;
 	m_UrlPathToFile = ui.DownloadFileUrl->text();
 	m_DestinationPath = ui.destinationFolder->text();
 	QDialog::accept();

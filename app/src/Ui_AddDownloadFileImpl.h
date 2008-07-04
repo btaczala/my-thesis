@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QUrl>
 #include "ui_adddownload.h"
+#include "common.h"
 class Ui_AddDownloadFile : public QDialog
 {
 	Q_OBJECT

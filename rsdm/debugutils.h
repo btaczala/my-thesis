@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QHttpRequestHeader>
 #include <QFile>
+#include "rscommon.h"
 
 class DebugUtils  
 {

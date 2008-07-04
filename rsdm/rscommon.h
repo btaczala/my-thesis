@@ -23,6 +23,11 @@
 #include <QString>
 #include <QDateTime>
 #include <QDebug>
+#ifdef WIN32
+#define __FUNCTION_NAME__ __FUNCSIG__
+#else
+#define __FUNCTION_NAME__ __PRETTY_FUNCTION__
+#endif //WIN32
 QString TimeToString();
 static const QString s_RSDMLogPath = QString(QDir::homePath() + "/.rslogger/");
 static const QString scLibraryName = QString("RapidshareDownloadManager");
@@ -31,5 +36,5 @@ static const QString scSettingsPath_UserPass = QString("user/userpass");
 static const QString scSettingsPath_MaxDownloads = QString("manager/max_downloads");
 static const QString scSettingsPath_DefaultPath = QString("manager/default_path");
 
-#define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __PRETTY_FUNCTION__ 
+#define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
 #endif //RSCOMMON_H

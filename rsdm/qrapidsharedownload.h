@@ -31,7 +31,7 @@
 #include "qrapidshareuser.h"
 #include "rslogger.h"
 
-#define RSDM_LOG_FUNC 	m_Logger.Write(__PRETTY_FUNCTION__ )
+#define RSDM_LOG_FUNC 	m_Logger.Write(__FUNCTION_NAME__ )
 /*! \enum RapidShareStateMachine
  * \brief hold state machine state. 
  * 

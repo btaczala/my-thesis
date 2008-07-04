@@ -95,11 +95,11 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 
 void QRapidshareDownload::requestStarted(const int & idReq)
 {
-	m_Logger << __PRETTY_FUNCTION__<< "idReq =  " << idReq ;
+	m_Logger << __FUNCTION_NAME__<< "idReq =  " << idReq ;
 }
 void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
 {	
-	m_Logger << __PRETTY_FUNCTION__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
+	m_Logger << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
 	m_apFile->close();
 	if( isFalse )
 	{
@@ -109,15 +109,15 @@ void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFals
 }
 void QRapidshareDownload::stateChanged(const int & iState)
 {	
-	m_Logger << __PRETTY_FUNCTION__<< "iState =  " << iState ;
+	m_Logger << __FUNCTION_NAME__<< "iState =  " << iState ;
 }
 void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
 {	
-	m_Logger << __PRETTY_FUNCTION__<< "done =  " << done << "total=" << total ;
+	m_Logger << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
 }
 void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 {
-	m_Logger << __PRETTY_FUNCTION__<< "done =  " << done << "total=" << total ;
+	m_Logger << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
 	if( m_RSStateMachine == GET_THIRD ) 
 	{
 		double dDone = done;
@@ -167,15 +167,15 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 }
 void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
 {
-	m_Logger << __PRETTY_FUNCTION__<< "hostname =  " << hostname << "port=" << port ;
+	m_Logger << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
 }
 void QRapidshareDownload::proxyAuthenticationRequired(const QNetworkProxy & proxy, QAuthenticator * authenticator)
 {
-	m_Logger << __PRETTY_FUNCTION__;
+	m_Logger << __FUNCTION_NAME__;
 }
 void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
 {
-	m_Logger << __PRETTY_FUNCTION__;
+	m_Logger << __FUNCTION_NAME__;
 }
 
 void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)

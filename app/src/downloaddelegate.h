@@ -4,6 +4,7 @@
 #include <QItemDelegate>
 #include <QtGui>
 #include <QtDebug>
+#include "common.h"
 
 class DownloadViewDelegate : public QItemDelegate
 {

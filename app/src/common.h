@@ -15,6 +15,13 @@
 #include <QString>
 #include <QDateTime>
 #include <QDebug>
+#ifdef WIN32
+#define __FUNCTION_NAME__ __FUNCSIG__
+#else
+#define __FUNCTION_NAME__ __PRETTY_FUNCTION__
+#endif //WIN32
+
+
 QString TimeToString();
 
 #define APPLICATION_NAME		"qrapidshare"
