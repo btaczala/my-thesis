@@ -21,7 +21,7 @@
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
-	m_RapidshareDownloadManager(new RapidShareDownloadManager() ), m_Logger(" mainwindow ")
+	m_RapidshareDownloadManager(new RapidShareDownloadManager() ), m_Logger(" mainwindow "), m_ContextMenuOnItem(0)
 {
 	RSDM_LOG_FUNC ;
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -59,6 +59,12 @@ MainWindow::MainWindow(QWidget * parent)
 	m_AboutMenu = new QMenu( tr("&About"), m_MenuBar);
 	m_AboutQtAction = new QAction(tr("About Qt"), m_AboutMenu );
 	m_AboutQRapidshareAction =new QAction(tr("About QRapidshare"), m_AboutMenu ); 
+	
+	/*
+	 * context menu
+	 */
+	m_qpContextMenu = new QMenu ( tr("Context menu"), this);
+	m_qpContextRemoveAction = new QAction(tr("Stop & Remove"), m_qpContextMenu);
 	
 	InitializeSystemTray();
 	ConnectActions();
@@ -127,6 +133,9 @@ void MainWindow::ConnectActions()
 	this, SLOT( ChangeProgressName( unsigned int,QString ) ) );
 	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( DownloadRateChanged( unsigned int , const QString ) ), 
 	this, SLOT( DowloadRateChanged( unsigned int , const QString  ) ) );
+	
+	////////////////////////////////////context menu ///////////////////////////////////////
+	QObject::connect(m_qpContextRemoveAction, SIGNAL(triggered()), this, SLOT());
 }
 void MainWindow::SetupUi()
 {
@@ -148,6 +157,8 @@ void MainWindow::SetupUi()
 	iconSize.setHeight(iconSize.height() + 10 );
 	setIconSize(iconSize);
 	setWindowIcon(QIcon(":/data_transfer.png"));
+	
+	m_qpContextMenu->addAction(m_qpContextRemoveAction );
 }
 bool MainWindow::addFileToDownload(const QString & fileToDownload)
 {
@@ -301,10 +312,12 @@ void MainWindow::contextMenuEvent(QContextMenuEvent * event)
 {
 	RSDM_LOG_FUNC ;
 	QTreeWidgetItem *pItem = m_DownloadView->itemAt(event->pos());
+	int iPos = m_RapidsharePoolView.indexOf(pItem);
+	m_ContextMenuOnItem = iPos;
 	if( NULL != pItem)
 	{
-		QMenu menu(this);
-		menu.exec(event->globalPos());
+		const QPoint globalPos = event->globalPos();
+		m_qpContextMenu->exec(globalPos);
 	}
 }
 
@@ -319,6 +332,10 @@ void MainWindow::Activation(QSystemTrayIcon::ActivationReason reason)
 			showNormal();
 	}
 };
+void MainWindow::ContextMenuRemove()
+{
+	
+}
 void MainWindow::close()
 {
 	RSDM_LOG_FUNC ;
@@ -466,3 +483,5 @@ void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 // 		   && url.path().toLower().endsWith(".torrent"))
 	event->acceptProposedAction();
 }
+
+

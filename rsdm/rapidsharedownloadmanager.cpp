@@ -88,7 +88,7 @@ void RapidShareDownloadManager::Pause(const QList<int> & listToPause )
 const QRapidshareDownload * RapidShareDownloadManager::GetAt(const unsigned int & at ) 
 {
 	int iSize =m_RapidshareDownloads.size();
-	if( at > iSize || iSize == 0 )
+	if( at > (iSize -1) || iSize == 0 )
 		return NULL;
 	const QRapidshareDownload *ret = m_RapidshareDownloads.at(at); 
 	return ret;
@@ -162,5 +162,24 @@ void RapidShareDownloadManager::Slot_DownloadRateChanged(const QString & rate)
 		int iPos = m_RapidshareDownloads.indexOf(rsd);
 		emit DownloadRateChanged( (unsigned int)iPos, rate);
 	}
+}
+
+void RapidShareDownloadManager::RemoveAt(unsigned int iPos)
+{
+	RSDM_LOG_FUNC ;
+	int iSize = m_RapidshareDownloads.size();
+	if( iPos > iSize -1 || iSize == 0)
+	{
+		m_Logger << "Item not found ";
+		return;
+	}
+	
+	QRapidshareDownload* pRSDownload = m_RapidshareDownloads.at(iPos);
+	RapidShareStateMachine rssmState = pRSDownload->GetState() ;
+	if( rssmState!=STOPPED && rssmState != DONE && rssmState != FAILED )
+		pRSDownload->stop();
+	m_Logger << "Removing item with iPos = " << iPos;
+	m_RapidshareDownloads.removeAt(iPos);
+	delete pRSDownload;
 }
 

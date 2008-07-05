@@ -47,7 +47,6 @@ public:
 	DownloadView(QWidget *parent = 0 ) ;
 signals:
 	void fileDropped(const QString &fileName);
-
 protected:
 	void dragMoveEvent(QDragMoveEvent *event);
 	void dropEvent(QDropEvent *event);
@@ -111,7 +110,8 @@ class MainWindow : public QMainWindow
 		
 		////////////////// context menu ///////////////////////////////////
 		QPointer<QMenu>				m_qpContextMenu;
-		QPointer<QAction>			m_qpContextStopAction;
+		QPointer<QAction>			m_qpContextRemoveAction;
+		int					m_ContextMenuOnItem;
 		
 		
 		
@@ -152,6 +152,8 @@ class MainWindow : public QMainWindow
 		//void						DeleteKeyPressed();
 		// regarding system tray
 		void 						Activation( QSystemTrayIcon::ActivationReason reason);
+		/////////////////////////context menu ///////////////////////////////
+		void						ContextMenuRemove();
 		
 };
 #endif

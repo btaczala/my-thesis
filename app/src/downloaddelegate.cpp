@@ -6,7 +6,6 @@ DownloadViewDelegate::DownloadViewDelegate(QObject *parent) :  QItemDelegate(par
 }
 void DownloadViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-	qDebug() << __FUNCTION_NAME__ ;
 	if (index.column() != 2) 
 	{
 		QItemDelegate::paint(painter, option, index);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza³a 								   *
+ *   Copyright (C) 2008 by Bartek Taczaï¿½a 								   *
  *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -30,8 +30,6 @@
 #include "debugutils.h"
 #include "qrapidshareuser.h"
 #include "rslogger.h"
-
-#define RSDM_LOG_FUNC 	m_Logger.Write(__FUNCTION_NAME__ )
 /*! \enum RapidShareStateMachine
  * \brief hold state machine state. 
  * 
