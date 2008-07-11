@@ -78,9 +78,10 @@ QString RSLogger::createLogEntry(const QString & toLog)
 }
 void RSLogger::writeToFile( const QString & toLog )
 {
-	const char *logString = toLog.toStdString().c_str();
-	const int size =  toLog.size();
-	m_fileLogger->write( logString, size );
+
+	QByteArray log ;
+	log.append(toLog);
+	m_fileLogger->write( log );
 	m_fileLogger->write("\n");
 	++m_NumberOfLogs;
 	if( m_NumberOfLogs >= sm_MaxNonFlushedLogs )

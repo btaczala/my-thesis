@@ -49,11 +49,13 @@ QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const
 QRapidshareDownload::~QRapidshareDownload()
 {
 	RSDM_LOG_FUNC ;
+	m_apHttpObj.get()->disconnect();
 	m_apHttpObj.release();
 	m_apHttpRequestHeader.release();
 	m_apRSUser.release();
 	m_apFileUrl.release() ; 
 	m_downloadInfo.release() ;
+	m_apFile.release();
 }
 void QRapidshareDownload::SetUrlFileAddress(const QString & _addr )
 {
@@ -86,11 +88,12 @@ void QRapidshareDownload::Download(const QString & _addr, const QString & _fileD
 	m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
 	m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
 	m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
-	m_Logger << "First GET";
+	m_Logger << QString("First GET");
 	m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
 	m_apHttpObj->setHost(  m_apFileUrl->host() );
 	m_apHttpObj->request( *( m_apHttpRequestHeader ) );
-}
+};
+
 /********** SLOTS **************/
 
 void QRapidshareDownload::requestStarted(const int & idReq)
@@ -276,7 +279,7 @@ void QRapidshareDownload::done(const bool & error)
  		m_apFile->close();
  		QFile::rename(m_apFile->fileName(), m_fileDestination);
  		
- 		m_RSStateMachine = DONE;
+ 		m_RSStateMachine = DONE ;
  		emit WhatAmIDoing( m_RSStateMachine );
  		emit Done();
  		killTimer(m_timerId);
@@ -286,7 +289,16 @@ void QRapidshareDownload::done(const bool & error)
 void QRapidshareDownload::stop()
 {
 	RSDM_LOG_FUNC ;
+	m_RSStateMachine = STOPPED ;
 	m_apHttpObj->abort();
+	emit WhatAmIDoing(m_RSStateMachine);
+}
+void QRapidshareDownload::abort()
+{
+	RSDM_LOG_FUNC ;
+	m_RSStateMachine = STOPPED;
+	m_apHttpObj->abort();
+	// do not emit, cause it will be removed from list. 
 }
 QString QRapidshareDownload::ParseResponseAndGetNewUrl(const QString & resp)
 {

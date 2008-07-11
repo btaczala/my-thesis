@@ -20,7 +20,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-#include <QTreeWidget>
 #include <QItemDelegate>
 #include <QtGui>
 #include <QtGlobal>
@@ -32,6 +31,8 @@
 #include "rapidsharedownloadmanager.h"
 #include "debugutils.h"
 #include "rslogger.h"
+
+#include "DownloadView.h"
 #include "configurationdialog.h"
 #include "Ui_UserSettingsImpl.h"
 #include "downloaddelegate.h"
@@ -40,23 +41,12 @@
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
 */
 typedef QMap< QTreeWidgetItem* ,QRapidshareDownload*  > RSPoolType;
-class DownloadView : public QTreeWidget
-{
-	Q_OBJECT
-public:
-	DownloadView(QWidget *parent = 0 ) ;
-signals:
-	void fileDropped(const QString &fileName);
-protected:
-	void dragMoveEvent(QDragMoveEvent *event);
-	void dropEvent(QDropEvent *event);
-};
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 	public:
 		MainWindow(QWidget * parent = 0);
-		~MainWindow();
+		~MainWindow() throw(); 
 		int GetProgress() const 
 		{
 			return m_progress;
@@ -71,6 +61,7 @@ class MainWindow : public QMainWindow
 	private:
 		/// methods !!!! 
 		void						ConnectActions();
+		void						DisConnectActions() throw () ; // cannot throw since dctor calls this function
 		// UI
 		void 						SetupUi();
 		bool						addFileToDownload(const QString & fileToDownload = QString(""));
@@ -80,18 +71,17 @@ class MainWindow : public QMainWindow
 		void 						InitializeSystemTray();
 		// settings
 		void						ReadSettings();
-		void						WriteSettings();
+		void						WriteSettings() throw(); // cannot throw since dctor calls this function 
 		void						SaveUiSettings();
 		void						LoadUiSettings();
 		// close or just hide
 		bool						m_bExit;
 		// memory
-		void						DeInitialize();
+		void						DeInitialize() throw (); // cannot throw. 
 		
 		/// fields !!!
 		QStringList					m_ColumnHeaders;
 		QPointer<DownloadView>		m_DownloadView;
-		//std::auto_ptr<DownloadViewDelegate>	m_apDownloadDelegate;
 		
 		////////////////// menu ///////////////////////////////////
 		QPointer<QMenuBar>			m_MenuBar;
@@ -100,6 +90,16 @@ class MainWindow : public QMainWindow
 		QPointer<QAction>			m_File_NewAction;
 		QPointer<QAction>			m_File_SendToTrayAction;
 		QPointer<QAction>			m_File_ExitAction;
+		// edit menu
+		QPointer<QMenu>				m_EditMenu;
+		QPointer<QAction>			m_Edit_StopAction;
+		QPointer<QAction>			m_Edit_DeleteAction;
+		QPointer<QAction>			m_Edit_RedownloadAction;
+		QPointer<QAction>			m_Edit_ResumeAction;
+
+		QPointer<QAction>			m_Edit_MoveUpAction;
+		QPointer<QAction>			m_Edit_MoveDownAction;
+		
 		// settings menu
 		QPointer<QMenu>				m_SettingsMenu;
 		QPointer<QAction>			m_Settings_Configure;
@@ -111,7 +111,7 @@ class MainWindow : public QMainWindow
 		////////////////// context menu ///////////////////////////////////
 		QPointer<QMenu>				m_qpContextMenu;
 		QPointer<QAction>			m_qpContextRemoveAction;
-		int					m_ContextMenuOnItem;
+		int							m_ContextMenuOnItem;
 		
 		
 		
@@ -126,7 +126,7 @@ class MainWindow : public QMainWindow
 		std::auto_ptr<bool>			m_apIsSystemTray;
 		// view
 		int							m_progress;
-		QList<QTreeWidgetItem*>		m_RapidsharePoolView;
+		//QList<QTreeWidgetItem*>		m_RapidsharePoolView;
 		std::auto_ptr<RapidShareDownloadManager> m_RapidshareDownloadManager;
 		QPointer<QShortcut>			m_DeleteShortcut;
 		
@@ -141,6 +141,13 @@ class MainWindow : public QMainWindow
 		void						showConfigurationDialog();
 		void						AboutQR();
 		void						AboutQt();
+
+		void						Slot_EditMenu_MoveUp();
+		void						Slot_EditMenu_MoveDown();
+		void						Slot_EditMenu_Stop();
+		void						Slot_EditMenu_Delete();
+		void						Slot_EditMenu_Redownload();
+		void						Slot_EditMenu_Resume();
 		// items 
 		void 						ChangeProgressName(const unsigned int & at, const QString & name ) ;
 		void 						ChangeProgressValue(const unsigned int & at,  const unsigned int & iPerc);

@@ -29,6 +29,7 @@
 #define __FUNCTION_NAME__ __PRETTY_FUNCTION__
 #endif //WIN32
 QString TimeToString();
+
 static const QString s_RSDMLogPath = QString(QDir::homePath() + "/.rslogger/");
 static const QString scLibraryName = QString("RapidshareDownloadManager");
 static const QString scSettingsPath_UserName = QString("user/username");

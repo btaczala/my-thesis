@@ -94,20 +94,42 @@ public:
 	 * \param rsUser as QRapidshareUser. Sets user as rsUser, or if rsUser = EMPTY , does nothing
 	 */
 	void								SetUser(const QRapidshareUser & rsUser );
+
 	//!SetUser - set a RSUser with given username and pass
 	/*!
 	 * \param rsName as QString - username
 	 * \param pass as QString - user password
 	 */
 	void								SetUser(const QString& rsName,  const QString& pass);
+
 	//!Download - begin download from RS server
 	/*!
 	 * \param _addr as QString - same as ctor _UrlFileAddress
 	 * \param _fileDest as QString - same as ctor _fileDest
 	 */
 	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
+
+	//!
+	/*!
+	 * stop - stops download. Download is able to resume
+	*/
 	void								stop();
+	//!
+	/*
+	 * abort - aborts http request. Download is not able to resume. 
+	 *
+	 */
+	void								abort();
+	/*!
+	 * SetRapidshareUser - set rapidshare user for download
+	 * \param _usr as QRapidskareUser - set rapidshare user for download
+	*/
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
+
+	/*!
+	 * GetState - Return state of download
+	 * \return RapidShareStateMachine - state of RapidShareStateMachine
+	*/
 	RapidShareStateMachine				GetState();
 	unsigned int						GetProgress() const ;
 	
@@ -139,7 +161,6 @@ private:
 	qint64								m_readedBytes;
 	RSLogger							m_Logger;
 	unsigned int						m_Progress;
-	
 private slots:
 	void 								requestStarted(const int & idReq) ;
 	void 								requestFinished(const int & idReq, const bool & isFalse) ;

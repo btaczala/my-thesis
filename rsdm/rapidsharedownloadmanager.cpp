@@ -1,10 +1,8 @@
 #include "rapidsharedownloadmanager.h"
 
-RapidShareDownloadManager::RapidShareDownloadManager() : m_Logger("RapidshareDownloadManager.log")
+RapidShareDownloadManager::RapidShareDownloadManager() : m_Logger("RapidshareDownloadManager.log"), m_iMaxDownload(3), m_iCurrentDownload(0)
 {	
 	RSDM_LOG_FUNC ;
-	m_iMaxDownload = 3;
-	m_iCurrentDownload = 0;
 }
 RapidShareDownloadManager::~RapidShareDownloadManager()
 {
@@ -14,7 +12,7 @@ RapidShareDownloadManager::~RapidShareDownloadManager()
 		if(rsd)
 		{
 			rsd->stop();
-			delete rsd;	
+			delete rsd;
 		}
 	}
 	m_apRapidshareUser.release();
@@ -78,20 +76,48 @@ void RapidShareDownloadManager::Pause(const QList<int> & listToPause )
 	}
 	else
 	{
-		foreach(int iter, listToPause) 
+		foreach(int iter, listToPause)
 		{
 			QRapidshareDownload *rsd = m_RapidshareDownloads.at( iter );
 			rsd->stop();
 		}
 	}
+};
+void RapidShareDownloadManager::stopAt(const unsigned int & at )
+{
+	RSDM_LOG_FUNC ;
+	unsigned int iSize =m_RapidshareDownloads.size();
+	if( at > (iSize - 1) || iSize == 0 )
+		return ;
+	QRapidshareDownload * pDownload = m_RapidshareDownloads.at(at);
+	if( pDownload )
+		pDownload->stop();
+
+}
+void RapidShareDownloadManager::stopAll()
+{
+	foreach(QRapidshareDownload *pDownload, m_RapidshareDownloads )
+	{
+		pDownload->stop();
+	}
 }
 const QRapidshareDownload * RapidShareDownloadManager::GetAt(const unsigned int & at ) 
 {
-	int iSize =m_RapidshareDownloads.size();
+	unsigned int iSize =m_RapidshareDownloads.size();
 	if( at > (iSize -1) || iSize == 0 )
 		return NULL;
 	const QRapidshareDownload *ret = m_RapidshareDownloads.at(at); 
 	return ret;
+};
+void RapidShareDownloadManager::swap(const unsigned int & one, const unsigned int & two )
+{
+	if( one > ( unsigned int ) (m_RapidshareDownloads.size() -1)  || two > (unsigned int ) (m_RapidshareDownloads.size() - 1 )  || m_RapidshareDownloads.size() == 0 )
+		return;
+	QRapidshareDownload * qrsdOne = m_RapidshareDownloads.at( one );
+	QRapidshareDownload * qrsdTwo = m_RapidshareDownloads.at( two );
+	QRapidshareDownload * temp = qrsdOne ;
+	qrsdOne = qrsdTwo;
+	qrsdTwo = temp;
 }
 QRapidshareUser RapidShareDownloadManager::GetUser()
 {
@@ -164,22 +190,26 @@ void RapidShareDownloadManager::Slot_DownloadRateChanged(const QString & rate)
 	}
 }
 
-void RapidShareDownloadManager::RemoveAt(unsigned int iPos)
+void RapidShareDownloadManager::RemoveAt(const unsigned int & iPos)
 {
 	RSDM_LOG_FUNC ;
-	int iSize = m_RapidshareDownloads.size();
+	unsigned int iSize = m_RapidshareDownloads.size();
 	if( iPos > iSize -1 || iSize == 0)
 	{
 		m_Logger << "Item not found ";
 		return;
 	}
-	
 	QRapidshareDownload* pRSDownload = m_RapidshareDownloads.at(iPos);
 	RapidShareStateMachine rssmState = pRSDownload->GetState() ;
 	if( rssmState!=STOPPED && rssmState != DONE && rssmState != FAILED )
-		pRSDownload->stop();
+	{
+		pRSDownload->abort();
+		--m_iCurrentDownload;
+		
+	}
 	m_Logger << "Removing item with iPos = " << iPos;
 	m_RapidshareDownloads.removeAt(iPos);
 	delete pRSDownload;
+	DownloadAsManyAsCan( 0 );
 }
 

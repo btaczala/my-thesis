@@ -35,7 +35,7 @@ public:
 	 *	RemoveAt - removes download from iPos position
 	 *	\param iPos as unsigned int - position of removed item in pool
 	*/
-	void							RemoveAt(unsigned int iPos );
+	void							RemoveAt(const unsigned int & iPos );
 	/*!
 		SetUser - sets user for downloading. If user is unset, download will fail. 
 		\param user as QRapidshareUser - user
@@ -50,24 +50,35 @@ public:
 		Return user
 		\return QRapidshareUser - *(m_apRapidshareUser.get());
 	*/
-	QRapidshareUser						GetUser();
+	QRapidshareUser					GetUser();
 	/*! 
 		Return number of max parallel downloads
 		\return unsigned int - m_iMaxDownload 
 	*/
-	const unsigned int 					GetMaxDownloads();
+	const unsigned int 				GetMaxDownloads();
 	/*! 
 		Pause - pauses downloads with id form QList<int> listToPause
 		\param listToPause as QList<int> - list of id to dowload 
 	*/
 	void							Pause(const QList<int> & listToPause = QList<int>() );
+	/*!
+	* stopAt - stops download at "at" position. Download is not removed from queue, so signals are emited.  
+	* \param at as unsigned int - position to be stopped
+	*/
+	void							stopAt(const unsigned int & at ) ;
+	/*!
+		Stop All - 
+	*/
+	void							stopAll();
 
-	const QRapidshareDownload*				GetAt(const unsigned int & pos ) ;
+
+	const QRapidshareDownload*		GetAt(const unsigned int & pos ) ;
+	void							swap(const unsigned int & one, const unsigned int & two );
 private:
-	QList<QRapidshareDownload* >				m_RapidshareDownloads;
-	std::auto_ptr<QRapidshareUser>				m_apRapidshareUser;
-	unsigned int						m_iMaxDownload;
-	unsigned int						m_iCurrentDownload;
+	QList<QRapidshareDownload* >	m_RapidshareDownloads;
+	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
+	unsigned int					m_iMaxDownload;
+	unsigned int					m_iCurrentDownload;
 	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
 	RSLogger						m_Logger;
 public slots:
