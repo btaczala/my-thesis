@@ -9,7 +9,7 @@ SET( APP_SRCS
     mainwindow.cpp
     pages.cpp
     downloadview.cpp
-    downloaditem.cpp
+    downloadItem.cpp
     Ui_AddDownloadFileImpl.cpp
     Ui_UserSettingsImpl.cpp
 )
@@ -22,7 +22,7 @@ SET( APP_HDRS
     Ui_UserSettingsImpl.h
 	common.h
 	downloadview.h
-	downloaditem.h
+	downloadItem.h
 )
 SET( APP_MOC_HDRS
     configurationdialog.h
@@ -30,7 +30,7 @@ SET( APP_MOC_HDRS
     mainwindow.h
     pages.h
     downloadview.h
-    downloaditem.h
+    downloadItem.h
     Ui_AddDownloadFileImpl.h
     Ui_UserSettingsImpl.h
 )
