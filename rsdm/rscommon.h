@@ -36,6 +36,7 @@ static const QString scSettingsPath_UserName = QString("user/username");
 static const QString scSettingsPath_UserPass = QString("user/userpass");
 static const QString scSettingsPath_MaxDownloads = QString("manager/max_downloads");
 static const QString scSettingsPath_DefaultPath = QString("manager/default_path");
-
+#ifndef LOG_FUNC_TO_OUT
 #define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
+#endif
 #endif //RSCOMMON_H

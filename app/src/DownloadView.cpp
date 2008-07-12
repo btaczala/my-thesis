@@ -3,7 +3,7 @@ DownloadView::DownloadView(QWidget * parent) : QTreeWidget( parent )
 {
 	setAcceptDrops(true);
 };
-DownloadView::~DownloadView()
+DownloadView::~DownloadView() throw ()
 {
 	
 }
@@ -16,7 +16,7 @@ void DownloadView::dropEvent(QDropEvent *event)
 void DownloadView::dragMoveEvent(QDragMoveEvent * event)
 {
 	QUrl url(event->mimeData()->text());
-	// 	if (url.isValid() && url.scheme().toLower() == "file"
+	// 	if (url.isValid() && url.scheme().toLower() == "file"s
 	// 		   && url.path().toLower().endsWith(".torrent"))
 	event->acceptProposedAction();
 };
@@ -48,7 +48,6 @@ QList<int> DownloadView::StopDownloads(const QList<QTreeWidgetItem *> & toStop )
 {
 	QList<int> toRet;
 	int iPos;
-	DownloadItem *pDownloadItem;
 	foreach(QTreeWidgetItem * pItem, toStop)
 	{
 		iPos = indexOfTopLevelItem(pItem);

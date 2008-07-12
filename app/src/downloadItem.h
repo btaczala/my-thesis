@@ -1,5 +1,5 @@
 /***************************************************************************
-*   Copyright (C) 2008 by Bartek Tacza³a 								   *
+*   Copyright (C) 2008 by Bartek Taczaï¿½a 								   *
 *   b@kontrasty.szczecin.pl   											   *
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *

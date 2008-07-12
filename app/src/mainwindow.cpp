@@ -80,12 +80,12 @@ MainWindow::MainWindow(QWidget * parent)
 	ConnectActions();
 	SetupUi();
 	ReadSettings();
+	setWindowTitle( APPLICATION_NAME );
 	
 };
-MainWindow::~MainWindow()
+MainWindow::~MainWindow() throw ()
 {
 	RSDM_LOG_FUNC ;
-	// Disconnect actions 
 	WriteSettings();
 	DisConnectActions();
 
@@ -161,7 +161,7 @@ void MainWindow::ConnectActions()
 	////////////////////////////////////context menu ///////////////////////////////////////
 //	QObject::connect(m_qpContextRemoveAction, SIGNAL(triggered()), this, SLOT());
 }
-void MainWindow::DisConnectActions()
+void MainWindow::DisConnectActions() throw ()
 {
 	m_File_ExitAction->disconnect();
 	m_File_NewAction->disconnect();
@@ -540,7 +540,7 @@ void MainWindow::ReadSettings()
 	if(m_DefaultDirPath.isEmpty())
 		m_DefaultDirPath = QDir::homePath();
 };
-void MainWindow::WriteSettings()
+void MainWindow::WriteSettings() throw ()
 {
 	RSDM_LOG_FUNC ;
 	QRapidshareUser rsUser = m_RapidshareDownloadManager->GetUser();
@@ -566,7 +566,7 @@ void MainWindow::LoadUiSettings()
 	QSize size =  m_apSettings->value(UI_WINDOW_SIZE).toSize();
 	resize(size);
 };
-void MainWindow::DeInitialize()
+void MainWindow::DeInitialize() throw () 
 {
 	RSDM_LOG_FUNC ;
 	m_apIsSystemTray.release();

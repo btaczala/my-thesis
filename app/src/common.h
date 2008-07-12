@@ -20,8 +20,6 @@
 #else
 #define __FUNCTION_NAME__ __PRETTY_FUNCTION__
 #endif //WIN32
-
-
 QString TimeToString();
 
 #define APPLICATION_NAME		"qrapidshare"
@@ -29,6 +27,7 @@ QString TimeToString();
 #define	UI_WINDOW_SIZE			"mainwindow/size"
 #define	UI_WINDOW_POS			"mainwindow/pos"
 
+#ifndef LOG_FUNC_TO_OUT
 #define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __PRETTY_FUNCTION__ 
-
+#endif
 #endif
