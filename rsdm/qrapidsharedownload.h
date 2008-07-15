@@ -50,22 +50,45 @@ QString StateToString(const RapidShareStateMachine & rsMachineState);
 /*! \struct DownloadInfo
  * \brief Holds information about bytes read. 
  */
-struct DownloadInfo
+class DownloadInfo
 {
-	DownloadInfo()
+public:
+	DownloadInfo() : m_bytesToRead(0), m_bytesRead(0)
 	{
 		bytesReadCurrent = 0;
 		bytesReadPreviously = 0;
+
 	}
 	//! bytesReadCurrent - number of read bytes in current cicle
-	int bytesReadCurrent;
+	int						bytesReadCurrent;
 	//! bytesReadPreviously - number of read bytes in previous cicle
-	int bytesReadPreviously;
+	int						bytesReadPreviously;
 	int Diff()
 	{
 		int ret  = bytesReadCurrent - bytesReadPreviously;
 		return (ret > 0 ) ? ret : -1 ; 
 	}
+	unsigned long BytesToRead() const 
+	{ 
+		return m_bytesToRead; 
+	}
+	void BytesToRead(const unsigned long & val) 
+	{ 
+		m_bytesToRead = val; 
+	}
+	unsigned long BytesRead() const 
+	{ 
+		return m_bytesRead; 
+	}	
+	void BytesRead(const unsigned long & val) 
+	{ 
+		m_bytesRead = val; 
+	}
+private:
+	unsigned long			m_bytesToRead;
+	unsigned long			m_bytesRead;
+	
+
 };
 
 /*! \class QRapidshareDownload - representing one download
@@ -132,6 +155,8 @@ public:
 	*/
 	RapidShareStateMachine				GetState();
 	unsigned int						GetProgress() const ;
+
+	QString								ToString() const ;
 	
 private:
 	virtual void						timerEvent(QTimerEvent *event);	

@@ -111,12 +111,12 @@ class MainWindow : public QMainWindow
 		////////////////// context menu ///////////////////////////////////
 		QPointer<QMenu>				m_qpContextMenu;
 		QPointer<QAction>			m_qpContextRemoveAction;
-		int					m_ContextMenuOnItem;
+		int							m_ContextMenuOnItem;
 		
 		
 		
 		// system tray 
-		QPointer<QSystemTrayIcon>		m_SystemTrayIcon;
+		QPointer<QSystemTrayIcon>	m_SystemTrayIcon;
 		QPointer<QMenu>				m_SystemTrayMenu;
 		QPointer<QAction>			m_STHideAction;
 		QPointer<QAction>			m_STRestoreAction;

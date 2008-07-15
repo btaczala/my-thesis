@@ -130,6 +130,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 		m_Progress = (int)dResTotal;
 		m_Logger << "emit :DownloadStatus("<< m_Progress <<")";  
 		emit DownloadStatus(m_Progress) ;
+		
 		m_downloadInfo->bytesReadPreviously =m_downloadInfo->bytesReadCurrent;
 		m_downloadInfo->bytesReadCurrent = done ; 
 		
@@ -250,7 +251,7 @@ void QRapidshareDownload::done(const bool & error)
 	else if( m_RSStateMachine == POST_FIRST)
 	{
  		QByteArray aa = m_apHttpObj->readAll() ;
- 		QString newUrlpath = ParsePostReponseAndGetAddress(QString(aa));
+ 		QString newUrlpath = ParsePostReponseAndGetAddress( QString( aa ) );
  		DebugUtils::DumpReponseToFile(aa,"post_first");
  		
  		SetUrlFileAddress(newUrlpath);
@@ -427,6 +428,16 @@ RapidShareStateMachine QRapidshareDownload::GetState()
 unsigned int QRapidshareDownload::GetProgress() const 
 {
 	return m_Progress;
+}
+QString QRapidshareDownload::ToString() const 
+{
+	QString toRet ; 
+	toRet  = m_UrlFileAddress + "__;;__ ";
+	toRet += m_fileDestination + "__;;__ "; 
+	toRet += QString::number(m_Progress) + "__;;__ ";
+	toRet += QString ( StateToString(m_RSStateMachine) ) ; 
+
+	return toRet;
 }
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {

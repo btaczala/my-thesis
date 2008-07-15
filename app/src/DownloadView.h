@@ -31,13 +31,21 @@ class DownloadView : public QTreeWidget
 	Q_OBJECT
 public:
 	DownloadView(QWidget *parent = 0) ;
-	~DownloadView() throw ();
 	void						AddToDownload(const QString & urlPath, const QString & fileDest);
 	QList<int>					DeleteDownloads(const QList<QTreeWidgetItem*> & toDelete) ;
 	QList<int>					StopDownloads(const QList<QTreeWidgetItem *> & toStop ) ;
 	void						swap(const QTreeWidgetItem * what, const QTreeWidgetItem * where );
+
+
+	void						UpdateProgress(const unsigned int & at, const unsigned int & percentage);
+	void						UpdateStatus(const unsigned int & at, const QString & status);
 private:
-	//QList< DownloadItem * >		m_DownloadList;	
+	void						ChangeColumn(const unsigned int & at, const unsigned int & columnID, const QString & toChange );
+	const static unsigned int 	ProgressColumnID;
+	const static unsigned int 	StatusColumnID;
+	const static unsigned int 	UrlPathColumnID;
+	const static unsigned int 	FilePathColumnID;
+	const static unsigned int 	DownloadRateColumnID;
 signals:
 	void						fileDropped(const QString &fileName);
 protected:

@@ -39,7 +39,7 @@ SET( APP_UI_FORMS
     ui/usersettings.ui
     )
 SET(APP_RSC resources/main_resources.qrc )
-ADD_DEFINITIONS(-Wall)
+#ADD_DEFINITIONS( -Wall )
 find_package(Qt4 REQUIRED )
 INCLUDE( ${QT_USE_FILE})
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})

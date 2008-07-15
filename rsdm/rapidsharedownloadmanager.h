@@ -70,17 +70,32 @@ public:
 		Stop All - 
 	*/
 	void							stopAll();
-
-
+	/*!
+	 *	GetAt - directly get to QRapidshareDownload
+	 *	\param pos as unsigned int 
+	 */
 	const QRapidshareDownload*		GetAt(const unsigned int & pos ) ;
+	/*!
+	 *	swap - swap downloads
+	 *	\param one as unsigned int - position of first element to swap 
+	 *	\param two as unsigned int - position of second element to swap 
+	 */
 	void							swap(const unsigned int & one, const unsigned int & two );
+	
+	void							SyncQueueWithLocalFile();
 private:
 	QList<QRapidshareDownload* >	m_RapidshareDownloads;
 	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
 	unsigned int					m_iMaxDownload;
 	unsigned int					m_iCurrentDownload;
-	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
 	RSLogger						m_Logger;
+	bool							m_bIsSynced;
+
+	void							SaveStateToFile(const QString & fileName ) ;
+	void							LoadStataFromFile(const QString & fileName ) ;
+
+	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
+
 public slots:
 	void							Slot_DoneDownloadingOne();
 	void							Slot_ChangedState( const RapidShareStateMachine & );
@@ -93,7 +108,6 @@ signals:
 	void							ChangedName(unsigned int at, QString desc ) ;
 	void							Swaped(unsigned int from , unsigned int to ) ;
 	void							DownloadRateChanged(unsigned int at, const QString & rate);
-	
 };
 
 #endif

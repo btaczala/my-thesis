@@ -258,19 +258,7 @@ bool MainWindow::addFileToDownload(const QString & fileToDownload)
 		dest = m_DefaultDirPath;
 	}
 	dest += "/";
-	/*
-	QTreeWidgetItem *item = new QTreeWidgetItem(m_DownloadView);
-	item->setText(0,FileUrl.path());
-	item->setText(1,dest);
-	item->setText(2,tr("0/0"));
-	item->setText(3,tr("0 kBps"));
-	item->setText(4,tr("Stopped"));
-	item->setFlags(item->flags() & ~Qt::ItemIsEditable);
-	item->setTextAlignment(1, Qt::AlignHCenter);
-	m_DownloadView->setCurrentItem(item);
-	*/
 	QString fileName = dest + TransformUrlPathToLocalPath( FileUrl.path() );
-	//TODO: check if file exist. If yes, show some dialog box
 	QString fileNamePart = fileName + ".part";
 	if(QFile(fileNamePart).exists())
 	{

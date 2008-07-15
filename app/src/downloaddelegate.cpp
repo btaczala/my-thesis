@@ -24,10 +24,9 @@ void DownloadViewDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	int progress = qobject_cast<MainWindow * >(parent())->GetRapidshareDownloadProgressAt(iRow);
 	if(progress == -1 )
 		progress = 0;
-
 	// Set the progress and text values of the style option.
 	progressBarOption.progress = progress < 0 ? 0 : progress;
 	progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
-	//Draw the progress bar onto the view.
+	// Draw the progress bar onto the view.
 	QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
 };
