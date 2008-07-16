@@ -87,10 +87,7 @@ public:
 private:
 	unsigned long			m_bytesToRead;
 	unsigned long			m_bytesRead;
-	
-
 };
-
 /*! \class QRapidshareDownload - representing one download
  * \brief Class for downloading from rapidshare. Set filePath in constructor, or in Download.  
  * 
@@ -153,8 +150,8 @@ public:
 	 * GetState - Return state of download
 	 * \return RapidShareStateMachine - state of RapidShareStateMachine
 	*/
-	RapidShareStateMachine				GetState();
-	unsigned int						GetProgress() const ;
+	RapidShareStateMachine						GetState() const ;
+	unsigned int							GetProgress() const ;
 
 	QString								ToString() const ;
 	

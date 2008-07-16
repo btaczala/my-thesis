@@ -31,26 +31,43 @@ class DownloadView : public QTreeWidget
 	Q_OBJECT
 public:
 	DownloadView(QWidget *parent = 0) ;
+	/**
+	 * AddToDownloads
+	 * @param urlPath 
+	 * @param fileDest 
+	 */
 	void						AddToDownload(const QString & urlPath, const QString & fileDest);
+	/**
+	 * DeleteDownloads
+	 * @param toDelete 
+	 * @return 
+	 */
 	QList<int>					DeleteDownloads(const QList<QTreeWidgetItem*> & toDelete) ;
+	/**
+	 * StopDownloads
+	 * @param toStop 
+	 * @return 
+	 */
 	QList<int>					StopDownloads(const QList<QTreeWidgetItem *> & toStop ) ;
+	/**
+	 * swap
+	 * @param what 
+	 * @param where 
+	 */
 	void						swap(const QTreeWidgetItem * what, const QTreeWidgetItem * where );
-
-
 	void						UpdateProgress(const unsigned int & at, const unsigned int & percentage);
 	void						UpdateStatus(const unsigned int & at, const QString & status);
 private:
 	void						ChangeColumn(const unsigned int & at, const unsigned int & columnID, const QString & toChange );
-	const static unsigned int 	ProgressColumnID;
-	const static unsigned int 	StatusColumnID;
-	const static unsigned int 	UrlPathColumnID;
-	const static unsigned int 	FilePathColumnID;
-	const static unsigned int 	DownloadRateColumnID;
+	const static unsigned int 			ProgressColumnID;
+	const static unsigned int 			StatusColumnID;
+	const static unsigned int 			UrlPathColumnID;
+	const static unsigned int 			FilePathColumnID;
+	const static unsigned int 			DownloadRateColumnID;
 signals:
 	void						fileDropped(const QString &fileName);
 protected:
 	void						dragMoveEvent(QDragMoveEvent *event);
 	void						dropEvent(QDropEvent *event);
-
 };
 #endif //DOWNLOADVIEW_H

@@ -25,6 +25,7 @@
 #include <QDir>
 #include <QMutex>
 #include <QDateTime>
+#include <memory>
 #include "debugutils.h"
 #include "rscommon.h"
 

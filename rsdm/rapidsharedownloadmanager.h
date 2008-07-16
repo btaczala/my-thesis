@@ -83,19 +83,24 @@ public:
 	void							swap(const unsigned int & one, const unsigned int & two );
 	
 	void							SyncQueueWithLocalFile();
+	void							setSyncFileName( const QString & _fileName );
 private:
-	QList<QRapidshareDownload* >	m_RapidshareDownloads;
-	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
-	unsigned int					m_iMaxDownload;
-	unsigned int					m_iCurrentDownload;
+	QList<QRapidshareDownload* >				m_RapidshareDownloads;
+	std::auto_ptr<QRapidshareUser>				m_apRapidshareUser;
+	unsigned int						m_iMaxDownload;
+	unsigned int						m_iCurrentDownload;
 	RSLogger						m_Logger;
 	bool							m_bIsSynced;
-
-	void							SaveStateToFile(const QString & fileName ) ;
-	void							LoadStataFromFile(const QString & fileName ) ;
-
+	std::auto_ptr<QString>					m_SyncFileName ;
+	/**
+	 * SaveStateToFile - saves object to File with all downloads in it. 
+	 */
+	void							SaveStateToFile() ;
+	/**
+	 * LoadStateFromFile - reads object from file. 
+	 */
+	void							LoadStateFromFile() ;
 	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
-
 public slots:
 	void							Slot_DoneDownloadingOne();
 	void							Slot_ChangedState( const RapidShareStateMachine & );
@@ -108,6 +113,7 @@ signals:
 	void							ChangedName(unsigned int at, QString desc ) ;
 	void							Swaped(unsigned int from , unsigned int to ) ;
 	void							DownloadRateChanged(unsigned int at, const QString & rate);
+	//void							AddedDownload();
 };
 
 #endif

@@ -421,7 +421,7 @@ void QRapidshareDownload::SetUser(const QString& rsName,  const QString& rsPass)
 	SetUser(QRapidshareUser(rsName,rsPass));
 }
 
-RapidShareStateMachine QRapidshareDownload::GetState()
+RapidShareStateMachine QRapidshareDownload::GetState() const 
 {
 	return m_RSStateMachine;
 }
@@ -436,7 +436,6 @@ QString QRapidshareDownload::ToString() const
 	toRet += m_fileDestination + "__;;__ "; 
 	toRet += QString::number(m_Progress) + "__;;__ ";
 	toRet += QString ( StateToString(m_RSStateMachine) ) ; 
-
 	return toRet;
 }
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
