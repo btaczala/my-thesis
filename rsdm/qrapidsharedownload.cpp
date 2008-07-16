@@ -435,12 +435,18 @@ QString QRapidshareDownload::ToString() const
 	toRet  = m_UrlFileAddress + "__;;__ ";
 	toRet += m_fileDestination + "__;;__ "; 
 	toRet += QString::number(m_Progress) + "__;;__ ";
-	toRet += QString ( StateToString(m_RSStateMachine) ) ; 
+	toRet += QString ( StateToString(m_RSStateMachine) ) ;
+	toRet +="\n";
 	return toRet;
 }
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {
 	emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
 	m_readedBytes = 0;
+}
+
+QString QRapidshareDownload::GetUrlFileAddress() const
+{
+	return m_UrlFileAddress ; 	
 }
 

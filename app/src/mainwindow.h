@@ -65,6 +65,7 @@ class MainWindow : public QMainWindow
 		// UI
 		void 						SetupUi();
 		bool						addFileToDownload(const QString & fileToDownload = QString(""));
+		bool						addFileToDownload(QRapidshareDownload *pItem ) ;
 		QString						TransformUrlPathToLocalPath(const QString & url); 
 		void						SetUser(const QString & userName, const QString & userPass ) ;
 		//system tray
@@ -112,7 +113,6 @@ class MainWindow : public QMainWindow
 		QPointer<QMenu>				m_qpContextMenu;
 		QPointer<QAction>			m_qpContextRemoveAction;
 		int							m_ContextMenuOnItem;
-		
 		
 		
 		// system tray 

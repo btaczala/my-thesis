@@ -21,7 +21,7 @@
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,"fsf", APPLICATION_NAME)),
-	m_RapidshareDownloadManager(new RapidShareDownloadManager() ), m_Logger(" mainwindow "), m_ContextMenuOnItem(0)
+	m_RapidshareDownloadManager( NULL ), m_Logger(" mainwindow "), m_ContextMenuOnItem(0)
 {
 	RSDM_LOG_FUNC ;
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -77,9 +77,11 @@ MainWindow::MainWindow(QWidget * parent)
 	m_qpContextRemoveAction = new QAction(tr("Stop & Remove"), m_qpContextMenu);
 	
 	InitializeSystemTray();
+	m_RapidshareDownloadManager.reset( new RapidShareDownloadManager( ) ) ;
 	ConnectActions();
 	SetupUi();
 	ReadSettings();
+	
 	setWindowTitle( APPLICATION_NAME );
 	
 };
@@ -370,6 +372,9 @@ void MainWindow::Slot_EditMenu_Resume()
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
 	RSDM_LOG_FUNC ;
+	
+
+
 	if(keyPressed->modifiers() == Qt::ControlModifier)
 	{
 		if ( keyPressed->key() == Qt::Key_V )
@@ -527,6 +532,17 @@ void MainWindow::ReadSettings()
 	m_DefaultDirPath = m_apSettings->value( scSettingsPath_DefaultPath ).toString();
 	if(m_DefaultDirPath.isEmpty())
 		m_DefaultDirPath = QDir::homePath();
+
+	// reads download list 
+	QRapidshareDownload *pItem ;
+	int iListSize = m_apSettings->value(scSettingsPath_DownloadlistSize, 0 ).toInt(&bOk) ; 
+	QString indexName ;
+	for( int i = 0; i<iListSize ; ++i ) 
+	{
+		indexName = scSettingsPath_Downloadlist + "download" + QString::number( i ) + "/";
+		m_apSettings->beginGroup(scSettingsPath_Downloadlist);
+		QStringList keys = m_apSettings->allKeys();
+	};
 };
 void MainWindow::WriteSettings() throw ()
 {
@@ -537,6 +553,17 @@ void MainWindow::WriteSettings() throw ()
 	SaveUiSettings();
 	m_apSettings->setValue( scSettingsPath_MaxDownloads ,m_RapidshareDownloadManager->GetMaxDownloads() );
 	m_apSettings->setValue( scSettingsPath_DefaultPath ,m_DefaultDirPath );
+	int iRapidshareListSize = m_RapidshareDownloadManager->size() ; 
+	QString indexName ;
+	for( int i = 0 ; i< iRapidshareListSize ; ++ i ) 
+	{
+		indexName = QString::number( i );
+		const QRapidshareDownload *pItem = m_RapidshareDownloadManager->GetAt( i ) ;
+		if( pItem != NULL ) 
+		{
+			m_apSettings->setValue(scSettingsPath_DownloadUrlFilePath.arg( i ), pItem->GetUrlFileAddress());
+		}
+	}
 	m_Logger << "Syncing settings ";
 	m_apSettings->sync();
 };

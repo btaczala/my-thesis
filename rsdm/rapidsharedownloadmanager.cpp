@@ -1,16 +1,13 @@
 #include "rapidsharedownloadmanager.h"
 
-RapidShareDownloadManager::RapidShareDownloadManager() : m_Logger("RapidshareDownloadManager.log"), m_iMaxDownload(3), m_iCurrentDownload(0), m_bIsSynced(false),
-m_SyncFileName(0)
+RapidShareDownloadManager::RapidShareDownloadManager( ) : m_Logger("RapidshareDownloadManager.log"), m_iMaxDownload(3), m_iCurrentDownload(0)
 {	
 	RSDM_LOG_FUNC ;
-	//SyncQueueWithLocalFile();
-	LoadStateFromFile( QString("") );
+	
 }
 RapidShareDownloadManager::~RapidShareDownloadManager()
 {
 	RSDM_LOG_FUNC ;
-	SaveStateToFile( QString ( "" ) ) ;
 	foreach(QRapidshareDownload *rsd, m_RapidshareDownloads)
 	{
 		if(rsd)
@@ -212,37 +209,9 @@ void RapidShareDownloadManager::RemoveAt(const unsigned int & iPos)
 	m_RapidshareDownloads.removeAt(iPos);
 	delete pRSDownload;
 	DownloadAsManyAsCan( 0 );
-}
-void RapidShareDownloadManager::SaveStateToFile()
-{
-	RSDM_LOG_FUNC ;
-	if( m_SyncFileName.get() == NULL  ) 
-		return ;
-	QFile config;
-	QByteArray byteArray;
-	config.setFileName( m_SyncFileName );
-	if(config.open(QIODevice::WriteOnly | QIODevice::Truncate))
-	{
-		foreach(QRapidshareDownload* pDownload, m_RapidshareDownloads ) 
-		{
-			byteArray.append(pDownload->ToString());
-			config.write(byteArray);
-			byteArray.clear();
-		}
-	}
-}
-void RapidShareDownloadManager::LoadStateFromFile( )
-{
-	RSDM_LOG_FUNC ;
-	if( m_SyncFileName.get() == NULL  ) 
-		return ;
-}
-void RapidShareDownloadManager::SyncQueueWithLocalFile()
-{
-	RSDM_LOG_FUNC ;
-	// here decide weather SaveState, or LoadState. 
-}
-void RapidShareDownloadManager::setSyncFileName(const QString & _fileName)
-{
-	m_SyncFileName.reset( new std::string ( _fileName ) ) ; 
 };
+
+unsigned int RapidShareDownloadManager::size()
+{
+	return m_RapidshareDownloads.size() ;
+}

@@ -150,10 +150,12 @@ public:
 	 * GetState - Return state of download
 	 * \return RapidShareStateMachine - state of RapidShareStateMachine
 	*/
-	RapidShareStateMachine						GetState() const ;
-	unsigned int							GetProgress() const ;
+	RapidShareStateMachine				GetState() const ;
+	unsigned int						GetProgress() const ;
 
 	QString								ToString() const ;
+
+	QString								GetUrlFileAddress() const ; 
 	
 private:
 	virtual void						timerEvent(QTimerEvent *event);	

@@ -18,11 +18,11 @@ public:
 	/*!
 	Default ctor
 	*/
-	RapidShareDownloadManager();
+	RapidShareDownloadManager ();
 	/*!
 	Default dctor. This class should not be derrived ( not a base class ) 
 	*/
-	~RapidShareDownloadManager();
+	~RapidShareDownloadManager ( );
 	/*!
 		AddDownload - adds download to queue. If file exist, library removes file, and creates new one. 
 		TODO: if toDownload is already in queue, return without adding it to queue
@@ -81,25 +81,17 @@ public:
 	 *	\param two as unsigned int - position of second element to swap 
 	 */
 	void							swap(const unsigned int & one, const unsigned int & two );
+
+	unsigned int					size() ;
 	
-	void							SyncQueueWithLocalFile();
-	void							setSyncFileName( const QString & _fileName );
 private:
-	QList<QRapidshareDownload* >				m_RapidshareDownloads;
-	std::auto_ptr<QRapidshareUser>				m_apRapidshareUser;
-	unsigned int						m_iMaxDownload;
-	unsigned int						m_iCurrentDownload;
+	QList<QRapidshareDownload* >	m_RapidshareDownloads;
+	std::auto_ptr<QRapidshareUser>	m_apRapidshareUser;
+	unsigned int					m_iMaxDownload;
+	unsigned int					m_iCurrentDownload;
 	RSLogger						m_Logger;
-	bool							m_bIsSynced;
-	std::auto_ptr<QString>					m_SyncFileName ;
-	/**
-	 * SaveStateToFile - saves object to File with all downloads in it. 
-	 */
-	void							SaveStateToFile() ;
-	/**
-	 * LoadStateFromFile - reads object from file. 
-	 */
-	void							LoadStateFromFile() ;
+
+	
 	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);
 public slots:
 	void							Slot_DoneDownloadingOne();
