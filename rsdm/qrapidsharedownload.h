@@ -128,7 +128,7 @@ public:
 	 * \param _fileDest as QString - same as ctor _fileDest
 	 */
 	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
-
+	void								Restart() ; 
 	//!
 	/*!
 	 * stop - stops download. Download is able to resume
