@@ -153,9 +153,8 @@ public:
 	RapidShareStateMachine				GetState() const ;
 	unsigned int						GetProgress() const ;
 
-	QString								ToString() const ;
-
-	QString								GetUrlFileAddress() const ; 
+	const QString						GetFullUrlFileAddress() const ; 
+	const QString						GetFileDestination() const ;
 	
 private:
 	virtual void						timerEvent(QTimerEvent *event);	
@@ -166,7 +165,6 @@ private:
 	void								SetUrlFileAddress(const QString & _addr ) ;
 	
 private:
-	QString								m_UrlFileAddress;
 	QString								m_ReferrerFileAddress;
 	QString 							m_fileDestination;
 	std::auto_ptr<QHttp>				m_apHttpObj;

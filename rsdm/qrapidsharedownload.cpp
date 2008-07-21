@@ -4,11 +4,11 @@ QString StateToString(const RapidShareStateMachine & rsMachineState)
 {
 	QString toRet = "";
 	if(rsMachineState == STOPPED)
-		toRet =  QString("Not started");
+		toRet =  QString( scRsdm_StateMachineStateStopped );
 	else if( rsMachineState == GET_FIRST )
-		toRet =  QString( "Shaking with rapidshare.com" );
+		toRet =  QString( scRsdm_StateMachineStateGet_First );
 	else if( rsMachineState == GET_SECOND )
-		toRet =  QString( "Requesting second GET" );
+		toRet =  QString( scRsdm_StateMachineStateGet_Second );
 	else if( rsMachineState == POST_FIRST )
 		toRet =  QString( "Requesting first POST" );
 	else if( rsMachineState == GET_THIRD )
@@ -19,8 +19,7 @@ QString StateToString(const RapidShareStateMachine & rsMachineState)
 		toRet =  QString( "Downloading failed!" );
 	 return toRet;
 };
-QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const QString & _fileDest ) : m_UrlFileAddress ( "" ) 
-, m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
+QRapidshareDownload::QRapidshareDownload( const QString & _UrlFileAddress, const QString & _fileDest ) : m_apHttpObj( new QHttp() ), m_apHttpRequestHeader(new QHttpRequestHeader() ), m_apRSUser(NULL), m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() ), m_RSStateMachine( STOPPED ), m_downloadInfo(new DownloadInfo() ), m_timerId(0),m_readedBytes(0)
 , m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) ), m_Progress(0)
 
@@ -429,24 +428,16 @@ unsigned int QRapidshareDownload::GetProgress() const
 {
 	return m_Progress;
 }
-QString QRapidshareDownload::ToString() const 
-{
-	QString toRet ; 
-	toRet  = m_UrlFileAddress + "__;;__ ";
-	toRet += m_fileDestination + "__;;__ "; 
-	toRet += QString::number(m_Progress) + "__;;__ ";
-	toRet += QString ( StateToString(m_RSStateMachine) ) ;
-	toRet +="\n";
-	return toRet;
-}
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {
 	emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
 	m_readedBytes = 0;
-}
-
-QString QRapidshareDownload::GetUrlFileAddress() const
+};
+const QString QRapidshareDownload::GetFullUrlFileAddress() const
 {
-	return m_UrlFileAddress ; 	
+	return m_apFileUrl->toString() ; 
 }
-
+const QString QRapidshareDownload::GetFileDestination() const
+{
+	return m_fileDestination ;
+};

@@ -32,15 +32,16 @@ QString TimeToString();
 
 static const QString s_RSDMLogPath = QString(QDir::homePath() + "/.rslogger/");
 static const QString scLibraryName = QString("RapidshareDownloadManager");
-static const QString scSettingsPath_UserName = QString("user/username");
-static const QString scSettingsPath_UserPass = QString("user/userpass");
-static const QString scSettingsPath_MaxDownloads = QString("manager/max_downloads");
-static const QString scSettingsPath_DefaultPath = QString("manager/default_path");
-static const QString scSettingsPath_DownloadlistSize = QString("manager/download_list_elements");
-static const QString scSettingsPath_Downloadlist = QString("manager/download_list/") ;
 
-static const QString scSettingsPath_DownloadUrlFilePath = QString("manager/download_list/%1/UrlPath") ;
-static const QString scSettingsPath_DownloadFileDestination = QString("manager/download_list/%1/UrlPath") ;
+static const QString scRsdm_StateMachineStateStopped = QString ( " Stalled " ) ;
+static const QString scRsdm_StateMachineStateGet_First = QString ( " Shaking with rapidshare.com " ) ;
+static const QString scRsdm_StateMachineStateGet_Second = QString ( " Requesting second GET " ) ;
+static const QString scRsdm_StateMachineStateGet_Third = QString ( " Requesting third GET " ) ;
+static const QString scRsdm_StateMachineStatePost_First = QString ( " Requesting first POST " ) ;
+static const QString scRsdm_StateMachineStateDone = QString ( " Downloading finished " ) ;
+static const QString scRsdm_StateMachineStateFailed = QString ( " Downloading failed " ) ;
+
+
 #ifndef LOG_FUNC_TO_OUT
 #define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
 #endif

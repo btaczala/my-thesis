@@ -134,6 +134,14 @@ class MainWindow : public QMainWindow
 		std::auto_ptr<QSettings>	m_apSettings;
 		QString						m_DefaultDirPath;
 		RSLogger					m_Logger;
+
+
+		//sync with file 
+		QPointer< QTimer >			m_qpSyncTimer ; 
+		std::auto_ptr< QString >	m_apSyncFileName ; 
+
+		void						SaveQueue() throw() ; 
+		void						LoadQueue() throw() ;
 		
 	private slots:
 		// menu
@@ -161,7 +169,9 @@ class MainWindow : public QMainWindow
 		void 						Activation( QSystemTrayIcon::ActivationReason reason);
 		/////////////////////////context menu ///////////////////////////////
 		void						ContextMenuRemove();
-		
+
+		// sync with file 
+		void						Slot_SycnFileTimer() ; 
 };
 #endif
 

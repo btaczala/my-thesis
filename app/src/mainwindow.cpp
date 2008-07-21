@@ -75,22 +75,27 @@ MainWindow::MainWindow(QWidget * parent)
 	 */
 	m_qpContextMenu = new QMenu ( tr("Context menu"), this);
 	m_qpContextRemoveAction = new QAction(tr("Stop & Remove"), m_qpContextMenu);
+
+	/*
+	 * Sync with file
+	 */
+	m_qpSyncTimer  = new QTimer(this) ; 
+
 	
 	InitializeSystemTray();
 	m_RapidshareDownloadManager.reset( new RapidShareDownloadManager( ) ) ;
 	ConnectActions();
 	SetupUi();
 	ReadSettings();
-	
 	setWindowTitle( APPLICATION_NAME );
 	
 };
 MainWindow::~MainWindow() throw ()
 {
+	//TODO: first stop all downloads, then write settings 
 	RSDM_LOG_FUNC ;
 	WriteSettings();
 	DisConnectActions();
-
 	DeInitialize();
 };
 unsigned int MainWindow::GetRapidshareDownloadProgressAt(const unsigned int & at ) 
@@ -159,6 +164,10 @@ void MainWindow::ConnectActions()
 	this, SLOT( ChangeProgressName( unsigned int,QString ) ) );
 	QObject::connect(m_RapidshareDownloadManager.get(), SIGNAL( DownloadRateChanged( unsigned int , const QString ) ), 
 	this, SLOT( DowloadRateChanged( unsigned int , const QString  ) ) );
+
+	// sync with file 
+	connect(m_qpSyncTimer, SIGNAL( timeout() ), this, SLOT( Slot_SycnFileTimer() ) ) ;
+	m_qpSyncTimer->start( 10000 ) ;
 	
 	////////////////////////////////////context menu ///////////////////////////////////////
 //	QObject::connect(m_qpContextRemoveAction, SIGNAL(triggered()), this, SLOT());
@@ -320,6 +329,8 @@ void MainWindow::Slot_EditMenu_MoveUp()
 }
 void MainWindow::Slot_EditMenu_MoveDown()
 {
+
+	/// reimplement with MRUList 
 	RSDM_LOG_FUNC ;
 
 	QList<QTreeWidgetItem *> selected = m_DownloadView->selectedItems();
@@ -332,9 +343,6 @@ void MainWindow::Slot_EditMenu_MoveDown()
 	if( one && two )
 		m_DownloadView->swap(one,two);
 	m_RapidshareDownloadManager->swap(iPosOne,iPosTwo);
-
-	
-
 }
 void MainWindow::Slot_EditMenu_Stop()
 {
@@ -372,35 +380,36 @@ void MainWindow::Slot_EditMenu_Resume()
 void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 {
 	RSDM_LOG_FUNC ;
-	
-
-
-	if(keyPressed->modifiers() == Qt::ControlModifier)
+	switch( keyPressed->key() )
 	{
-		if ( keyPressed->key() == Qt::Key_V )
+		case Qt::Key_V :
 		{
-			// segment for several download files
-			QClipboard *clipboard = QApplication::clipboard ();
-			QString text = clipboard->text(QClipboard::Clipboard);
-			QStringList urls = text.split( QRegExp( "\\s+" ) );
-			qDebug() << urls;
-			foreach(QString one, urls)
+			if(keyPressed->modifiers() == Qt::ControlModifier)
 			{
-				if(one.contains("rapidshare"))
-					addFileToDownload(one);	
+				QClipboard *clipboard = QApplication::clipboard ();
+				QString text = clipboard->text(QClipboard::Clipboard);
+				QStringList urls = text.split( QRegExp( "\\s+" ) );
+				qDebug() << urls;
+				foreach(QString one, urls)
+				{
+					if(one.contains("rapidshare"))
+						addFileToDownload(one);	
+				}
 			}
+			break ; 
 		}
-	}
-	if( keyPressed->key() == Qt::Key_Delete )
-	{
-		QList<QTreeWidgetItem * > selected = m_DownloadView->selectedItems();
-		foreach(QTreeWidgetItem *item, selected)
+		case Qt::Key_Delete :
 		{
-			qDebug() << item;
-			//m_RapidsharePoolView.removeAll( item );
-			m_DownloadView->removeItemWidget(item,0);
+			QList<QTreeWidgetItem * > selected = m_DownloadView->selectedItems();
+			foreach(QTreeWidgetItem *item, selected)
+			{
+				qDebug() << item;
+				//m_RapidsharePoolView.removeAll( item );
+				m_DownloadView->removeItemWidget(item,0);
+			}
+			break ; 
 		}
-	}
+	}	
 }
 void MainWindow::closeEvent(QCloseEvent * event)
 {
@@ -466,7 +475,7 @@ void MainWindow::ChangeProgressName( const unsigned int & at, const QString & na
 	if( NULL == hadzia )
 		return;
 	else
-		hadzia->setText(4,name);
+		hadzia->setText( 4,name );
 }
 void MainWindow::ChangeProgressValue(const unsigned int & at ,  const unsigned int & iPerc ) 
 {
@@ -534,15 +543,8 @@ void MainWindow::ReadSettings()
 		m_DefaultDirPath = QDir::homePath();
 
 	// reads download list 
-	QRapidshareDownload *pItem ;
-	int iListSize = m_apSettings->value(scSettingsPath_DownloadlistSize, 0 ).toInt(&bOk) ; 
-	QString indexName ;
-	for( int i = 0; i<iListSize ; ++i ) 
-	{
-		indexName = scSettingsPath_Downloadlist + "download" + QString::number( i ) + "/";
-		m_apSettings->beginGroup(scSettingsPath_Downloadlist);
-		QStringList keys = m_apSettings->allKeys();
-	};
+
+	
 };
 void MainWindow::WriteSettings() throw ()
 {
@@ -553,17 +555,7 @@ void MainWindow::WriteSettings() throw ()
 	SaveUiSettings();
 	m_apSettings->setValue( scSettingsPath_MaxDownloads ,m_RapidshareDownloadManager->GetMaxDownloads() );
 	m_apSettings->setValue( scSettingsPath_DefaultPath ,m_DefaultDirPath );
-	int iRapidshareListSize = m_RapidshareDownloadManager->size() ; 
-	QString indexName ;
-	for( int i = 0 ; i< iRapidshareListSize ; ++ i ) 
-	{
-		indexName = QString::number( i );
-		const QRapidshareDownload *pItem = m_RapidshareDownloadManager->GetAt( i ) ;
-		if( pItem != NULL ) 
-		{
-			m_apSettings->setValue(scSettingsPath_DownloadUrlFilePath.arg( i ), pItem->GetUrlFileAddress());
-		}
-	}
+	SaveQueue() ; 
 	m_Logger << "Syncing settings ";
 	m_apSettings->sync();
 };
@@ -594,3 +586,69 @@ void MainWindow::DeInitialize() throw ()
 	delete m_SystemTrayIcon;
 	delete m_SystemTrayMenu;
 };
+
+void MainWindow::Slot_SycnFileTimer()
+{
+	RSDM_LOG_FUNC ;
+	QMutex lock ; 
+	if ( lock.tryLock() ) 
+	{
+		SaveQueue() ; 
+		lock.unlock() ; 
+	}
+};
+void MainWindow::SaveQueue() throw()
+{
+	RSDM_LOG_FUNC ;
+	QString settingPath ;
+	QString settingValue ;
+	int iSize = m_RapidshareDownloadManager->size() ; 
+	{
+		if ( iSize == 0 ) 
+			return ;
+		m_apSettings->setValue(scSettingsPath_DownloadlistSize, QString::number( iSize ) );
+		for( int i = 0 ; i < iSize ; ++i )
+		{
+			const QRapidshareDownload *pDownload = m_RapidshareDownloadManager->GetAt( i ) ; 
+			if( pDownload != NULL ) 
+			{
+				settingPath  = scSettingsPath_DownloadUrlFilePath.arg( i ) ;
+				settingValue = pDownload->GetFullUrlFileAddress() ; 
+				m_apSettings->setValue( settingPath, settingValue ) ; 
+
+				settingPath = scSettingsPath_DownloadFileDestination.arg( i ) ;
+				settingValue = pDownload->GetFileDestination() ; 
+				m_apSettings->setValue( settingPath, settingValue ) ; 
+
+				settingPath = scSettingsPath_DownloadFileState.arg( i ) ;
+				settingValue = StateToString( pDownload->GetState() );
+				m_apSettings->setValue( settingPath, settingValue ) ; 
+
+				settingPath = scSettingsPath_DownloadFilePercentage.arg(i ) ;
+				settingValue = QString::number( pDownload->GetProgress() );
+				m_apSettings->setValue( settingPath, settingValue ) ; 
+			}
+		}
+	}
+};
+void MainWindow::LoadQueue() throw()
+{
+	RSDM_LOG_FUNC ;
+	bool bOk ; 
+	QRapidshareDownload *pDownload ;
+	QString addressUrl ; 
+	QString fileDest ;
+	QString settingPath ;
+	QString settingValue ;
+	int iListSize = m_apSettings->value(scSettingsPath_DownloadlistSize).toInt(&bOk);
+	if ( !bOk ) 
+		return ; 
+	for(int i=0 ; i < iListSize ; ++i ) 
+	{
+		settingPath = scSettingsPath_DownloadUrlFilePath.arg( i ) ;
+		addressUrl = m_apSettings->value( settingPath ) ; 
+		
+	}
+
+
+}
