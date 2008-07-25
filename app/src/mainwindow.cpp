@@ -646,6 +646,6 @@ void MainWindow::LoadQueue() throw()
 	for(int i=0 ; i < iListSize ; ++i ) 
 	{
 		settingPath = scSettingsPath_DownloadUrlFilePath.arg( i ) ;
-		addressUrl = m_apSettings->value( settingPath ) ; 
+		addressUrl = m_apSettings->value( settingPath ).toString() ; 
 	}
 };

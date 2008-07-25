@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	window.show();
 	int iRet = app.exec();
 #ifdef WIN32
-	//_CrtDumpMemoryLeaks();
+	_CrtDumpMemoryLeaks();
 #endif // WIN32
 	return iRet;
 };
