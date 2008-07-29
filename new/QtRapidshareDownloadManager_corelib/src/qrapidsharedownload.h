@@ -49,11 +49,12 @@ public:
 	unsigned long			m_Percentage ; 
 	struct DownloadFileInfo
 	{
-		DownloadFileInfo() : m_FileSize(0), m_FileType("rar"),m_FileName("") {} ; 
+		DownloadFileInfo() : m_FileSize(0), m_FileType("rar"),m_FileName(""), m_FullPathToFileOnRsServer("") {} ; 
 		unsigned long			m_FileSize ; 
 		QString					m_FileType ; 
 		QString					m_FileName ; 
-	}m_FileInfo ; 
+		QString					m_FullPathToFileOnRsServer ; 
+	}m_FileInfo ;
 	struct DownloadFileState
 	{
 		DownloadFileState() : m_bytesDownloaded(0),m_rssmState(STOPPED) {} ; 
@@ -151,6 +152,7 @@ private:
 	void								TranslateAnswer();
 	QString 							ParsePostReponseAndGetAddress(const QString & resp);
 	void								SetUrlFileAddress(const QString & _addr ) ;
+	void								RenameFile();
 private:
 	QString								m_ReferrerFileAddress;
 	QString 							m_fileDestination;

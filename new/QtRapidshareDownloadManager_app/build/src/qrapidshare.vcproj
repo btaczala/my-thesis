@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="qrapidshare"
+	ProjectGUID="{C1AAA1C2-53AF-462D-B978-9D8667F1DF85}"
+	SccProjectName=""
+	SccLocalPath=""
+	Keyword="Win32Proj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="Debug"
+			IntermediateDirectory="qrapidshare.dir\Debug"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				BasicRuntimeChecks="3"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="0"
+				Optimization="0"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_DEBUG,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				AssemblerListingLocation="Debug"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/Debug/qrapidshare.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_DEBUG,CMAKE_INTDIR=\&quot;Debug\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,_DEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_DEBUG,CMAKE_INTDIR=\&quot;Debug\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  C:\Qt\4.4.0\lib\QtGuid4.lib imm32.lib winmm.lib C:\Qt\4.4.0\lib\QtNetworkd4.lib C:\Qt\4.4.0\lib\QtCored4.lib ws2_32.lib "
+				OutputFile="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\Debug\qrapidshare.exe"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="C:\Qt\4.4.0\lib\$(OutDir),C:\Qt\4.4.0\lib"
+				ProgramDataBaseFile="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/Debug/qrapidshare.pdb"
+				GenerateDebugInformation="TRUE"
+				SubSystem="1"
+				ImportLibrary="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\Debug\qrapidshare.lib"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="Release"
+			IntermediateDirectory="qrapidshare.dir\Release"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="2"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;Release\&quot;"
+				AssemblerListingLocation="Release"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/Release/qrapidshare.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;Release\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;Release\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  C:\Qt\4.4.0\lib\QtGui4.lib imm32.lib winmm.lib C:\Qt\4.4.0\lib\QtNetwork4.lib C:\Qt\4.4.0\lib\QtCore4.lib ws2_32.lib "
+				OutputFile="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\Release\qrapidshare.exe"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="C:\Qt\4.4.0\lib\$(OutDir),C:\Qt\4.4.0\lib"
+				ProgramDataBaseFile="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/Release/qrapidshare.pdb"
+				SubSystem="1"
+				ImportLibrary="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\Release\qrapidshare.lib"/>
+		</Configuration>
+		<Configuration
+			Name="MinSizeRel|Win32"
+			OutputDirectory="MinSizeRel"
+			IntermediateDirectory="qrapidshare.dir\MinSizeRel"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				CompileAs="2"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="1"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				AssemblerListingLocation="MinSizeRel"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/MinSizeRel/qrapidshare.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;MinSizeRel\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  C:\Qt\4.4.0\lib\QtGui4.lib imm32.lib winmm.lib C:\Qt\4.4.0\lib\QtNetwork4.lib C:\Qt\4.4.0\lib\QtCore4.lib ws2_32.lib "
+				OutputFile="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\MinSizeRel\qrapidshare.exe"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="C:\Qt\4.4.0\lib\$(OutDir),C:\Qt\4.4.0\lib"
+				ProgramDataBaseFile="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/MinSizeRel/qrapidshare.pdb"
+				SubSystem="1"
+				ImportLibrary="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\MinSizeRel\qrapidshare.lib"/>
+		</Configuration>
+		<Configuration
+			Name="RelWithDebInfo|Win32"
+			OutputDirectory="RelWithDebInfo"
+			IntermediateDirectory="qrapidshare.dir\RelWithDebInfo"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions=" /Zm1000"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				CompileAs="2"
+				DebugInformationFormat="3"
+				ExceptionHandling="1"
+				InlineFunctionExpansion="1"
+				Optimization="2"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="TRUE"
+				WarningLevel="3"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				AssemblerListingLocation="RelWithDebInfo"
+				ObjectFile="$(IntDir)\"
+				ProgramDataBaseFileName="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/RelWithDebInfo/qrapidshare.pdb"
+/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				AdditionalIncludeDirectories="C:\Qt\4.4.0\include;C:\Qt\4.4.0\include\QtGui;C:\Qt\4.4.0\include\QtNetwork;C:\Qt\4.4.0\include\QtCore;C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\app\src;"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="WIN32,_WINDOWS,NDEBUG,QT_DLL,QT_GUI_LIB,QT_NETWORK_LIB,QT_CORE_LIB,QT_NO_DEBUG,CMAKE_INTDIR=\&quot;RelWithDebInfo\&quot;"
+				MkTypLibCompatible="FALSE"
+				TargetEnvironment="1"
+				GenerateStublessProxies="TRUE"
+				TypeLibraryName="$(InputName).tlb"
+				OutputDirectory="$(IntDir)"
+				HeaderFileName="$(InputName).h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="$(InputName)_i.c"
+				ProxyFileName="$(InputName)_p.c"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions=" /STACK:10000000 /machine:I386 /debug"
+				AdditionalDependencies="$(NOINHERIT) kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib  C:\Qt\4.4.0\lib\QtGui4.lib imm32.lib winmm.lib C:\Qt\4.4.0\lib\QtNetwork4.lib C:\Qt\4.4.0\lib\QtCore4.lib ws2_32.lib "
+				OutputFile="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\RelWithDebInfo\qrapidshare.exe"
+				Version="0.0"
+				GenerateManifest="TRUE"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="C:\Qt\4.4.0\lib\$(OutDir),C:\Qt\4.4.0\lib"
+				ProgramDataBaseFile="C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/RelWithDebInfo/qrapidshare.pdb"
+				GenerateDebugInformation="TRUE"
+				SubSystem="1"
+				ImportLibrary="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\RelWithDebInfo\qrapidshare.lib"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\adddownload.ui">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_adddownload.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_adddownload.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/adddownload.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\adddownload.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_adddownload.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_adddownload.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_adddownload.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/adddownload.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\adddownload.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_adddownload.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_adddownload.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_adddownload.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/adddownload.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\adddownload.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_adddownload.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_adddownload.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_adddownload.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/adddownload.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\adddownload.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_adddownload.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\usersettings.ui">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_usersettings.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_usersettings.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/usersettings.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\usersettings.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_usersettings.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_usersettings.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_usersettings.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/usersettings.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\usersettings.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_usersettings.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_usersettings.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_usersettings.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/usersettings.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\usersettings.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_usersettings.h"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating ui_usersettings.h"
+					CommandLine="C:\Qt\4.4.0\bin\uic.exe -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/ui_usersettings.h C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/ui/usersettings.ui"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\ui\usersettings.ui;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_usersettings.h"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\main_resources.qrc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating qrc_main_resources.cxx"
+					CommandLine="C:\Qt\4.4.0\bin\rcc.exe -name main_resources -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/qrc_main_resources.cxx C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/resources/main_resources.qrc"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\icon_systray.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\user.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\configure.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\data_transfer.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\main_resources.qrc;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\qrc_main_resources.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating qrc_main_resources.cxx"
+					CommandLine="C:\Qt\4.4.0\bin\rcc.exe -name main_resources -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/qrc_main_resources.cxx C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/resources/main_resources.qrc"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\icon_systray.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\user.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\configure.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\data_transfer.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\main_resources.qrc;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\qrc_main_resources.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating qrc_main_resources.cxx"
+					CommandLine="C:\Qt\4.4.0\bin\rcc.exe -name main_resources -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/qrc_main_resources.cxx C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/resources/main_resources.qrc"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\icon_systray.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\user.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\configure.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\data_transfer.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\main_resources.qrc;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\qrc_main_resources.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating qrc_main_resources.cxx"
+					CommandLine="C:\Qt\4.4.0\bin\rcc.exe -name main_resources -o C:/QRapidshare/new/QtRapidshareDownloadManager_app/build/src/qrc_main_resources.cxx C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/resources/main_resources.qrc"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\icon_systray.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\user.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\configure.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\data_transfer.png;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\resources\main_resources.qrc;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\qrc_main_resources.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; -HC:/QRapidshare/new/QtRapidshareDownloadManager_app -BC:/QRapidshare/new/QtRapidshareDownloadManager_app/build --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindQt4.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CheckSymbolExists.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\MacroAddFileDependencies.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindPackageMessage.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\UseQt4.cmake&quot;;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; -HC:/QRapidshare/new/QtRapidshareDownloadManager_app -BC:/QRapidshare/new/QtRapidshareDownloadManager_app/build --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindQt4.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CheckSymbolExists.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\MacroAddFileDependencies.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindPackageMessage.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\UseQt4.cmake&quot;;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; -HC:/QRapidshare/new/QtRapidshareDownloadManager_app -BC:/QRapidshare/new/QtRapidshareDownloadManager_app/build --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindQt4.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CheckSymbolExists.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\MacroAddFileDependencies.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindPackageMessage.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\UseQt4.cmake&quot;;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Building Custom Rule C:/QRapidshare/new/QtRapidshareDownloadManager_app/src/CMakeLists.txt"
+					CommandLine="&quot;C:\Program Files\CMake 2.6\bin\cmake.exe&quot; -HC:/QRapidshare/new/QtRapidshareDownloadManager_app -BC:/QRapidshare/new/QtRapidshareDownloadManager_app/build --check-stamp-file CMakeFiles/generate.stamp"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindQt4.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CheckSymbolExists.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\MacroAddFileDependencies.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\CMakeConfigurableFile.in&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\FindPackageMessage.cmake&quot;;&quot;C:\Program Files\CMake 2.6\share\cmake-2.6\Modules\UseQt4.cmake&quot;;C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\CMakeLists.txt;"
+					Outputs="CMakeFiles\generate.stamp"/>
+				</FileConfiguration>
+			</File>
+		<Filter
+			Name="Source Files"
+			Filter="">
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\common.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\main.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.cpp">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\qrc_main_resources.cxx">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="">
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_adddownload.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\ui_usersettings.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\common.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.h">
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="CMake Rules"
+			Filter="">
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_configurationdialog.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_configurationdialog.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_configurationdialog.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_configurationdialog.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_configurationdialog.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_configurationdialog.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_configurationdialog.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_configurationdialog.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\configurationdialog.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_configurationdialog.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloaddelegate.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloaddelegate.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloaddelegate.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloaddelegate.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloaddelegate.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloaddelegate.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloaddelegate.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloaddelegate.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloaddelegate.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloaddelegate.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_mainwindow.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_mainwindow.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_mainwindow.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_mainwindow.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_mainwindow.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_mainwindow.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_mainwindow.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_mainwindow.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\mainwindow.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_mainwindow.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_pages.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_pages.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_pages.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_pages.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_pages.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_pages.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_pages.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_pages.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\pages.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_pages.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_DownloadView.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_DownloadView.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_DownloadView.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_DownloadView.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_DownloadView.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_DownloadView.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_DownloadView.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_DownloadView.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\DownloadView.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_DownloadView.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloadItem.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloadItem.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloadItem.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloadItem.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloadItem.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloadItem.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_downloadItem.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_downloadItem.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\downloadItem.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_downloadItem.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_AddDownloadFileImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_AddDownloadFileImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_AddDownloadFileImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_AddDownloadFileImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_AddDownloadFileImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_AddDownloadFileImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_AddDownloadFileImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_AddDownloadFileImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_AddDownloadFileImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_AddDownloadFileImpl.cxx"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx.rule">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_UserSettingsImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_UserSettingsImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_UserSettingsImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_UserSettingsImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="MinSizeRel|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_UserSettingsImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_UserSettingsImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RelWithDebInfo|Win32">
+					<Tool
+					Name="VCCustomBuildTool"
+					Description="Generating moc_Ui_UserSettingsImpl.cxx"
+					CommandLine="cd .&#x0D;&#x0A;C:&#x0D;&#x0A;C:\Qt\4.4.0\bin\moc.exe @moc_Ui_UserSettingsImpl.cxx_parameters"
+					AdditionalDependencies="C:\QRapidshare\new\QtRapidshareDownloadManager_app\src\Ui_UserSettingsImpl.h;"
+					Outputs="C:\QRapidshare\new\QtRapidshareDownloadManager_app\build\src\moc_Ui_UserSettingsImpl.cxx"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

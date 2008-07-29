@@ -155,6 +155,7 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 	if(m_iCurrentDownload == m_iMaxDownload)
 		return;
 	QRapidshareDownload *rsd;
+	int iSize = m_RapidshareDownloads.size(); 
 	for(int k = startPoint ; k != m_RapidshareDownloads.size() ; ++k)
 	{
 		if( m_iCurrentDownload == m_iMaxDownload)
@@ -164,6 +165,8 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 		{
 			if( rsd->GetState() == STOPPED  || rsd->GetState() == GET_FIRST || rsd->GetState() == GET_SECOND || rsd->GetState() == POST_FIRST )
 			{
+				if(rsd->GetUser() == NULL)
+					rsd->SetUser(*m_apRapidshareUser);
 				rsd->Download() ; // redownload
 				++m_iCurrentDownload ;
 			}
@@ -173,7 +176,10 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 					if( m_apRapidshareUser.get () != NULL ) 
 						rsd->SetUser(*m_apRapidshareUser) ; 
 				}
-				rsd->Resume() ; 
+				if( rsd->GetDownloadHost().isEmpty() )
+					rsd->Download();
+				else
+					rsd->Resume() ; 
 			}
 		}
 	}
@@ -282,6 +288,11 @@ void RapidShareDownloadManager::LoadQueue()
 		{
 			pDownload->SetPercentage(perc);
 		}
+
+		// host 
+		settingPath = scRsdm_SettingsDownloadListHost.arg( j ) ;
+		settingValue = m_apSettings->value(settingPath).toString();
+		pDownload->SetDownloadHost(settingValue) ;
 		AddDownload(pDownload) ;
 	}
 }
