@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>icon_systray.png</file>
+		<file>user.png</file>
+		<file>configure.png</file>
+		<file>data_transfer.png</file>
+    </qresource>
+</RCC>
