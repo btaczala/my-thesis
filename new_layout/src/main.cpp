@@ -25,6 +25,7 @@
 
 #include <QCoreApplication>
 #include "mainwindow.h"
+#include "qappstyle.h"
 int main(int argc, char *argv[])
 {	
 	QApplication::setStyle(new QCleanlooksStyle);

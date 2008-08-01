@@ -20,8 +20,8 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,scRsdm_SettingsOrganization, APPLICATION_NAME)),
-	m_RapidshareDownloadManager( NULL ), m_Logger(" mainwindow "), m_ContextMenuOnItem(0)
+	: QMainWindow(parent), m_apSettings(new QSettings(QSettings::UserScope,scRsdm_SettingsOrganization, APPLICATION_NAME)),m_ConnectionCheckTimer(new QTimer(this)),
+	m_RapidshareDownloadManager( NULL ), m_Logger(" mainwindow "), m_ContextMenuOnItem(0), m_qpStatusBar(new QStatusBar(this)), m_qpProgressBarInStatusBar(new QProgressBar(m_qpStatusBar)), m_qpConnectionText(new QLabel(m_qpStatusBar)), m_qpConnectionIndicator(new QLabel(m_qpStatusBar)),m_qpTestConnection( new QPushButton(m_qpStatusBar))
 {
 	RSDM_LOG_FUNC ;
 	m_ColumnHeaders << "File Path" << "Where " << "Progress" << "Download rate " << "Status ";
@@ -85,6 +85,7 @@ MainWindow::MainWindow(QWidget * parent)
 	SetupUi();
 	ReadSettings();
 	setWindowTitle( APPLICATION_NAME );
+	m_RapidshareDownloadManager->Start();
 	QList<QRapidshareDownload *> list = m_RapidshareDownloadManager->GetDownloadList();
 	foreach(QRapidshareDownload *pItem, list)
 	{
@@ -170,6 +171,11 @@ void MainWindow::ConnectActions()
 	
 	////////////////////////////////////context menu ///////////////////////////////////////
 //	QObject::connect(m_qpContextRemoveAction, SIGNAL(triggered()), this, SLOT());
+	connect(m_qpTestConnection,SIGNAL(pressed()),this,SLOT(CheckConnection()));
+
+
+	connect(m_ConnectionCheckTimer.get(), SIGNAL(timeout()),this,SLOT(CheckConnection()));
+	m_ConnectionCheckTimer->start(1000 * 60 ) ; 
 }
 void MainWindow::DisConnectActions() throw ()
 {
@@ -226,6 +232,21 @@ void MainWindow::SetupUi()
 
 	setCentralWidget( m_DownloadView );
 	setMenuBar(m_MenuBar);
+	
+	m_qpStatusBar->addWidget(m_qpProgressBarInStatusBar);
+	m_qpStatusBar->addPermanentWidget(m_qpConnectionText);
+	m_qpStatusBar->addPermanentWidget(m_qpTestConnection);
+
+	m_qpStatusBar->addPermanentWidget(m_qpConnectionIndicator);
+
+
+	
+	setStatusBar(m_qpStatusBar);
+
+	m_qpProgressBarInStatusBar->setValue(50);
+	m_qpConnectionText->setText("connection test");
+	m_qpConnectionIndicator->setPixmap(QPixmap(":/red_cross.png").scaled(15,15));
+	m_qpTestConnection->setText("Check for connection");
 	QSize iconSize = this->iconSize();
 	iconSize.setWidth(iconSize.width() + 10 );
 	iconSize.setHeight(iconSize.height() + 10 );
@@ -512,7 +533,7 @@ void MainWindow::SetUser(const QString & userName, const QString & userPass)
 	m_RapidshareDownloadManager->SetUser( QRapidshareUser( userName , userPass ) );
 }
 
-void MainWindow::ReadSettings()
+void MainWindow::ReadSettings()	
 {
 	RSDM_LOG_FUNC ;
 	QString userName = m_apSettings->value( scSettingsPath_UserName ).toString();
@@ -574,3 +595,29 @@ void MainWindow::DeInitialize() throw ()
 	delete m_SystemTrayIcon;
 	delete m_SystemTrayMenu;
 };
+void MainWindow::CheckConnection()
+{
+	qDebug() << "CheckConnection";
+	QMutex lock ; 
+	if(lock.tryLock())
+	{
+		int rand = qrand()%2;
+		if(rand == 0)
+		{
+			qDebug() << "We have connection " ; 
+			if(m_qpTestConnection->isEnabled())
+			{
+				m_qpConnectionIndicator->setPixmap(QPixmap(":/green_tick.png").scaled(15,15));
+				m_qpTestConnection->setEnabled(false);
+				m_qpTestConnection->setText("Connected");
+				
+			}
+		}
+		else
+		{
+			m_qpConnectionIndicator->setPixmap(QPixmap(":/red_cross.png").scaled(15,15));
+			m_qpTestConnection->setEnabled(true);
+			m_qpTestConnection->setText("Test connection");
+		}
+	}
+}

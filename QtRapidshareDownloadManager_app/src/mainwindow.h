@@ -107,6 +107,14 @@ class MainWindow : public QMainWindow
 		QPointer<QMenu>				m_AboutMenu;
 		QPointer<QAction>			m_AboutQtAction;
 		QPointer<QAction>			m_AboutQRapidshareAction;
+
+		////////////////// status  bar  ///////////////////////////////////
+		QPointer<QStatusBar>		m_qpStatusBar ; 
+		QPointer<QProgressBar>		m_qpProgressBarInStatusBar;
+		QPointer<QLabel>			m_qpConnectionText ; 
+		QPointer<QPushButton>		m_qpTestConnection ; 
+		QPointer<QLabel>			m_qpConnectionIndicator ; 
+
 		
 		////////////////// context menu ///////////////////////////////////
 		QPointer<QMenu>				m_qpContextMenu;
@@ -134,6 +142,8 @@ class MainWindow : public QMainWindow
 		QString						m_DefaultDirPath;
 		RSLogger					m_Logger;
 
+		std::auto_ptr<QTimer>		m_ConnectionCheckTimer;
+
 	private slots:
 		// menu
 		void						addNewFile();
@@ -160,6 +170,8 @@ class MainWindow : public QMainWindow
 		void 						Activation( QSystemTrayIcon::ActivationReason reason);
 		/////////////////////////context menu ///////////////////////////////
 		void						ContextMenuRemove();
+
+		void						CheckConnection();
 };
 #endif
 

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza≈Ça   *
- *   b@kontrasty.szczecin.pl   *
+ *   Copyright (C) 2008 by Bartek Tacza≥a 								   *
+ *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,24 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef WIN32
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif // WIN32
+#include "qdownloadwidget.h"
+#include < QPaintEvent >
+#include < QPainter >
+QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
+{
+	QStringList headers ;
+	headers << tr("#id") << tr("Path") << tr("File size") << tr("Progress") << tr("Download") ; 
+	setHeaderLabels(headers);
+}
+void QDownloadWidget::paintEvent( QPaintEvent *event )
+{
+	// to add some of specu drawning 
+	QTreeWidget::paintEvent(event);
+}
 
-#include <QCoreApplication>
-#include "mainwindow.h"
-int main(int argc, char *argv[])
-{	
-	QApplication::setStyle(new QCleanlooksStyle);
-	QApplication app(argc, argv);
-	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
-	int iRet = app.exec();
-#ifdef WIN32
-	//_CrtDumpMemoryLeaks();
-#endif // WIN32
-	return iRet;
-};
+QDownloadWidgetDelegate::QDownloadWidgetDelegate( QObject *parent ) 
+: QItemDelegate(parent)
+{
+}
+
+void QDownloadWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+{
+	QItemDelegate::paint(painter,option,index) ; 
+}

@@ -4,7 +4,5 @@
 		<file>user.png</file>
 		<file>configure.png</file>
 		<file>data_transfer.png</file>
-		<file>green_tick.png</file>
-		<file>red_cross.png</file>
     </qresource>
 </RCC>

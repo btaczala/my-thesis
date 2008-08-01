@@ -33,7 +33,7 @@ public:
 	*/
 	void 							AddDownload(const QString & toDownload, const QString & where);
 	void							AddDownload(QRapidshareDownload *pDownload);
-	void							Start() ; 
+	void							Start();
 	/*!
 	 *
 	 *	RemoveAt - removes download from iPos position
@@ -103,7 +103,7 @@ private:
 	unsigned int					m_iCurrentDownload;
 	RSLogger						m_Logger;
 	std::auto_ptr<QSettings>		m_apSettings;
-	bool							m_bStarted ; 
+	bool							m_bStarted;
 
 	
 	void							DownloadAsManyAsCan(const unsigned int & startPoint = 0);

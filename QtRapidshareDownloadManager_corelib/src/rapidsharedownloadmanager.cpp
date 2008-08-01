@@ -381,14 +381,14 @@ void RapidShareDownloadManager::UpdateInSettings( const int & position, const QS
 	QString settingIndex  = what.arg( position ) ;
 	m_apSettings->setValue( settingIndex,value ) ;
 }
+const QList<QRapidshareDownload *> RapidShareDownloadManager::GetDownloadList()
+{
+	RSDM_LOG_FUNC ;
+	return m_RapidshareDownloads ; 
+}
+
 void RapidShareDownloadManager::Start()
 {
 	RSDM_LOG_FUNC ;
 	m_bStarted = true ; 
-	DownloadAsManyAsCan() ; 
-}
-
-const QList<QRapidshareDownload *> RapidShareDownloadManager::GetDownloadList()
-{
-	return m_RapidshareDownloads ; 
 }

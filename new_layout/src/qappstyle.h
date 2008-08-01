@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza≈Ça   *
- *   b@kontrasty.szczecin.pl   *
+ *   Copyright (C) 2008 by Bartek Tacza≥a 								   *
+ *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,24 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef WIN32
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif // WIN32
+#ifndef QAPPSTYLE_H
+#define QAPPSTYLE_H
+#include <QCommonStyle>
+class QAppStyle : public QCommonStyle 
+{
+	Q_OBJECT
+public:
+	QAppStyle(){};
+	~QAppStyle() throw() {};
+	virtual void drawPrimitive(PrimitiveElement pe, const QStyleOption *opt, QPainter *p, const QWidget *w  = 0 ) const ;
 
-#include <QCoreApplication>
-#include "mainwindow.h"
-int main(int argc, char *argv[])
-{	
-	QApplication::setStyle(new QCleanlooksStyle);
-	QApplication app(argc, argv);
-	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
-	int iRet = app.exec();
-#ifdef WIN32
-	//_CrtDumpMemoryLeaks();
-#endif // WIN32
-	return iRet;
 };
+
+class QMenuBarStyle : public QCommonStyle
+{
+	Q_OBJECT
+public:
+	QMenuBarStyle() : QCommonStyle() {};
+	~QMenuBarStyle() throw() {} ;
+	virtual void drawPrimitive(PrimitiveElement element, const QStyleOption *opt, QPainter *painter, const QWidget *widget = 0	) const ;
+	virtual void drawControl(ControlElement element, const QStyleOption *opt, QPainter *p, const QWidget *w  = 0 ) const ; 
+};
+
+#endif // QAPPSTYLE_H
