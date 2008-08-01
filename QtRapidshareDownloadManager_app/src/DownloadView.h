@@ -70,5 +70,7 @@ signals:
 protected:
 	void						dragMoveEvent(QDragMoveEvent *event);
 	void						dropEvent(QDropEvent *event);
+protected:
+	//void						item
 };
 #endif //DOWNLOADVIEW_H

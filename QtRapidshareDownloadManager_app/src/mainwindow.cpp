@@ -601,7 +601,8 @@ void MainWindow::CheckConnection()
 	QMutex lock ; 
 	if(lock.tryLock())
 	{
-		int rand = qrand()%2;
+		//int rand = qrand()%2;
+
 		if(rand == 0)
 		{
 			qDebug() << "We have connection " ; 
@@ -609,8 +610,7 @@ void MainWindow::CheckConnection()
 			{
 				m_qpConnectionIndicator->setPixmap(QPixmap(":/green_tick.png").scaled(15,15));
 				m_qpTestConnection->setEnabled(false);
-				m_qpTestConnection->setText("Connected");
-				
+				m_qpTestConnection->setText("Connected");	
 			}
 		}
 		else
