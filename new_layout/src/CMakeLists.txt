@@ -4,21 +4,24 @@ set(QT_USE_QTNETWORK 1)
 SET( APP_SRCS
     main.cpp
     mainwindow.cpp
-	qdownloadwidget.cpp
-	styles/qappstyle.cpp
-	styles/qmenubarstyle.cpp
+    qdownloadwidget.cpp
+    menubar.cpp
+    toolbar.cpp
+    actions.cpp
 )
 SET( APP_HDRS
-	mainwindow.h
-	qdownloadwidget.h
-	styles/qappstyle.h
-	styles/qmenubarstyle.h
+    mainwindow.h
+    qdownloadwidget.h
+    menubar.h
+    toolbar.h
+    actions.h
 )
 SET( APP_MOC_HDRS
     mainwindow.h
-	qdownloadwidget.h
-	styles/qappstyle.h
-	styles/qmenubarstyle.h
+    qdownloadwidget.h
+    menubar.h
+    toolbar.h
+    actions.h
 )
 SET( APP_UI_FORMS 
     )

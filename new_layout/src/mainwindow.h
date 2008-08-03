@@ -23,31 +23,10 @@
 #include <QMainWindow>
 #include <memory>
 #include "qdownloadwidget.h"
+#include "menubar.h"
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
 */
-
-class MainWindowMenuBar : public QMenuBar
-{
-	Q_OBJECT
-public:
-	MainWindowMenuBar(QWidget *parent );
-	struct FileMenu
-	{
-		std::auto_ptr<QMenu>		m_Menu ; 
-		std::auto_ptr<QAction>		m_NewAct;
-		std::auto_ptr<QAction>		m_SendToTrayAct;
-		std::auto_ptr<QAction>		m_ExitAct;
-	}m_FileMenu;
-
-	struct SettingMenu
-	{
-		std::auto_ptr<QMenu>		m_Menu ;
-		std::auto_ptr<QAction>		m_ConfigureAct ;
-	}m_SettingsMenu;
-protected:
-	//virtual void paintEvent(QPaintEvent *event);
-};
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -55,10 +34,7 @@ class MainWindow : public QMainWindow
 		MainWindow(QWidget * parent = 0);
 		~MainWindow() throw() ; 
 	private:
-		std::auto_ptr<MainWindowMenuBar>		m_MenuBar ; 
+		std::auto_ptr<UI::MenuBar>			m_MenuBar ; 
 		std::auto_ptr<QDownloadWidget>			m_DownloadWidget;
 };
 #endif
-
-
-

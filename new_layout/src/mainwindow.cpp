@@ -19,25 +19,9 @@
  ***************************************************************************/
 #include <QtGui>
 #include "mainwindow.h"
-#include "qappstyle.h"
-
-MainWindowMenuBar::MainWindowMenuBar(QWidget *parent) : QMenuBar(parent)
-{	
-	//setStyle(new QMenuBarStyle);
-	m_FileMenu.m_Menu.reset(new QMenu(tr("&File")));
-	
-	m_FileMenu.m_ExitAct.reset( new QAction( tr( "E&xit" ), m_FileMenu.m_Menu.get() ) ) ; 
-	m_FileMenu.m_Menu->addAction(m_FileMenu.m_ExitAct.get());
-
-	m_SettingsMenu.m_Menu.reset(new QMenu(tr("&Settings")));
-	m_SettingsMenu.m_ConfigureAct.reset(new QAction(tr("&Configure"),m_SettingsMenu.m_Menu.get()));
-	m_SettingsMenu.m_Menu->addAction(m_SettingsMenu.m_ConfigureAct.get());
-
-	addMenu(m_FileMenu.m_Menu.get());
-	addMenu(m_SettingsMenu.m_Menu.get());	
-};
+using namespace UI;
 MainWindow::MainWindow(QWidget * parent)
-	: QMainWindow(parent), m_MenuBar(new MainWindowMenuBar(this)), m_DownloadWidget(new QDownloadWidget(this))
+	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this))
 {
 	QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
 	setCentralWidget(m_DownloadWidget.get());

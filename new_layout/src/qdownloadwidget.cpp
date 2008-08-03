@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza³a 								   *
+ *   Copyright (C) 2008 by Bartek Taczaï¿½a 								   *
  *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "qdownloadwidget.h"
-#include < QPaintEvent >
-#include < QPainter >
+#include <QPaintEvent>
+#include <QPainter>
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
 {
 	QStringList headers ;

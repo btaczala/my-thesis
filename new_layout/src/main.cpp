@@ -25,10 +25,11 @@
 
 #include <QCoreApplication>
 #include "mainwindow.h"
-#include "qappstyle.h"
 int main(int argc, char *argv[])
 {	
+	#ifdef WIN32
 	QApplication::setStyle(new QCleanlooksStyle);
+	#endif
 	QApplication app(argc, argv);
 	Q_INIT_RESOURCE(main_resources);
 	MainWindow window;
