@@ -71,6 +71,7 @@ QList<int> DownloadView::StopDownloads(const QList<QTreeWidgetItem *> & toStop )
 void DownloadView::swap(const QTreeWidgetItem * _one, const QTreeWidgetItem * _two )
 {
 	QTreeWidgetItem *pItem = new QTreeWidgetItem();
+	
 	*pItem = *_one ;
 	QTreeWidgetItem *pItem2 = new QTreeWidgetItem();
 	*pItem2 = *_two;

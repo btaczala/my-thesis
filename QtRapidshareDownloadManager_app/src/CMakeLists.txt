@@ -12,17 +12,21 @@ SET( APP_SRCS
     downloadItem.cpp
     Ui_AddDownloadFileImpl.cpp
     Ui_UserSettingsImpl.cpp
+    toolbar.cpp
+    ui.cpp
 )
 SET( APP_HDRS
-	configurationdialog.h
+    configurationdialog.h
     downloaddelegate.h
     mainwindow.h
     pages.h
     Ui_AddDownloadFileImpl.h
     Ui_UserSettingsImpl.h
-	common.h
-	DownloadView.h
-	downloadItem.h
+    common.h
+    DownloadView.h
+    downloadItem.h
+    toolbar.h
+    ui.h
 )
 SET( APP_MOC_HDRS
     configurationdialog.h
@@ -33,6 +37,8 @@ SET( APP_MOC_HDRS
     downloadItem.h
     Ui_AddDownloadFileImpl.h
     Ui_UserSettingsImpl.h
+    toolbar.h
+    ui.h
 )
 SET( APP_UI_FORMS 
     ui/adddownload.ui 	

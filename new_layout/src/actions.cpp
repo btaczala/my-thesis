@@ -18,7 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "actions.h"
-UI::ActionSet::ActionSet(QWidget *parent) : m_MenuActions(parent), m_ContextMenuActions(parent)
+/*UI::ActionSet::ActionSet(QWidget *parent) : m_MenuActions(parent), m_ContextMenuActions(parent)
 {
 }
 UI::ActionSet::MenuActionSet::MenuActionSet(QWidget * parent) : m_FileMenuAct(parent), m_EditMenuAct(parent)
@@ -33,7 +33,4 @@ UI::ActionSet::MenuActionSet::EditMenuActionSet::EditMenuActionSet(QWidget * par
 UI::ActionSet::ContextMenuActionSet::ContextMenuActionSet(QWidget * parent)
 {
 }
-
-
-
-
+*/

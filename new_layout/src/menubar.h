@@ -28,17 +28,18 @@ namespace UI
 	  Q_OBJECT
   public:
 	  MenuBar(QWidget *parent );
-	  struct FileMenu
+	  struct FileMenuActions
 	  {
-		  std::auto_ptr<QMenu>		m_Menu ; 
+		  FileMenuActions(QWidget *parent);
+		  std::auto_ptr<QMenu>			m_Menu ; 
 		  std::auto_ptr<QAction>		m_NewAct;
 		  std::auto_ptr<QAction>		m_SendToTrayAct;
 		  std::auto_ptr<QAction>		m_ExitAct;
 	  }m_FileMenu;
-
-	  struct SettingMenu
+	  struct SettingMenuActions
 	  {
-		  std::auto_ptr<QMenu>		m_Menu ;
+		  SettingMenuActions(QWidget *parent);
+		  std::auto_ptr<QMenu>			m_Menu ;
 		  std::auto_ptr<QAction>		m_ConfigureAct ;
 	  }m_SettingsMenu;
   protected:
