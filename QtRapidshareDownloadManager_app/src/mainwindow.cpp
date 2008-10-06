@@ -137,8 +137,6 @@ void MainWindow::InitializeSystemTray()
 		m_SystemTrayIcon->setIcon( QIcon( ":/icon_systray.png") );
 		m_SystemTrayIcon->show();
 	}
-	
-	
 }
 void MainWindow::ConnectActions()
 {
@@ -413,13 +411,10 @@ void MainWindow::keyPressEvent(QKeyEvent *keyPressed)
 		}
 		case Qt::Key_Delete :
 		{
-			QList<QTreeWidgetItem * > selected = m_DownloadView->selectedItems();
-			foreach(QTreeWidgetItem *item, selected)
-			{
-				qDebug() << item;
-				//m_RapidsharePoolView.removeAll( item );
-				m_DownloadView->removeItemWidget(item,0);
-			}
+			QList<int> del = m_DownloadView->DeleteDownloads(m_DownloadView->selectedItems());
+			
+			foreach(int itemPos, del)
+				m_RapidshareDownloadManager->RemoveAt(itemPos);
 			break ; 
 		}
 	}	
