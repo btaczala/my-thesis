@@ -19,9 +19,9 @@
  ***************************************************************************/
 #ifndef DOWNLOADMANAGER_H
 #define DOWNLOADMANAGER_H
-#include < memory >
-#include < string >
-/*! \struct DownloadInfo
+#include <memory>
+#include <string>
+/*! \struct DownloadState
  * \brief Holds information about bytes read. 
  */
 class DownloadState
@@ -32,7 +32,6 @@ public:
 	DownloadState() ; 
 	UInt 					m_DownloadFileSize ; 
 	UInt					m_BytesDownloaded ; 
-	UInt 					
 	int						bytesReadCurrent;
 	int						bytesReadPreviously;
 	unsigned long			m_bytesToRead ;
@@ -40,17 +39,17 @@ public:
 	unsigned long			m_Percentage ; 
 	struct DownloadFileState
 	{
-		DownloadFileState() : m_bytesDownloaded(0),m_rssmState(STOPPED) {} ; 
+		DownloadFileState() : m_bytesDownloaded(0)/*,m_rssmState(STOPPED)*/ {} ; 
 		unsigned long			m_bytesDownloaded ; 
-		RapidShareStateMachine	m_rssmState ; 
+//		RapidShareStateMachine	m_rssmState ; 
 	} m_State;
 };
 class IDownload 
 {
 	public :
-		IDownload () ; 
-		~IDownload() ; 
-		DownloadInfo * 		downloadInfo () const ; 
+		IDownload () ;
+		~IDownload() ;
+        DownloadState * 	downloadInfo () const ; 
 		virtual void 		start() = 0 ; 
 		virtual void 		pause() = 0 ; 
 		virtual void 		stop() = 0 ; // abort () 
@@ -61,8 +60,8 @@ class IDownload
 		const std::string & destinationAddress() const ; 
 		void setDestinationAddress ( const std::string & localAddress  ) ; 
 	private :
-		std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
+        std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
 		std::string						m_UrlAddress ; 
-		std::string						m_FileDestination ; 
-		
-}
+		std::string						m_FileDestination ; 		
+};
+#endif //  DOWNLOADMANAGER_H

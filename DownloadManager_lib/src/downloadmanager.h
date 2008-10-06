@@ -19,15 +19,27 @@
  ***************************************************************************/
 #ifndef DOWNLOADMANAGER_H
 #define DOWNLOADMANAGER_H
-#include < list > 
-#include < boost/shared_ptr.hpp >
+#include <vector> 
+#include <boost/shared_ptr.hpp>
+#include <QObject>
 
 class IDownload ; 
-class DownloadManager 
+class DownloadEngine ;
+class DownloadManager : public QObject
 {
+    Q_OBJECT
 	public:
 		DownloadManager() ; 
 		~DownloadManager() ; 
+        void                addDownload( const std::string & urlAddress, const std::string & destination ) ;
+        void                startDownload( const std::string & urlAddress ) ;
+        void                removeDownload( const std::string & urlAddress ) ;
 	private : 
-		std::auto_ptr<std::list<boost::shared_ptr<IDownload> > 	> 		m_apDownloadList ; 
-}
+        std::auto_ptr<std::vector<boost::shared_ptr<IDownload> > 	> 		m_apDownloadList ; 
+        unsigned int        m_iMaxDownloadFiles ; 
+        unsigned int        m_iCurrentDownloadingFiles ; 
+        std::vector< boost::shared_ptr<DownloadEngine> >                    m_apDownloadEngines ; 
+        
+        IDownload *         find(const std::string & pattern ) ; 
+};
+#endif // DOWNLOADMANAGER_H
