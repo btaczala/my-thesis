@@ -199,6 +199,7 @@ void RapidShareDownloadManager::DownloadAsManyAsCan(const unsigned int & startPo
 					rsd->Download();
 				else
 					rsd->Resume() ; 
+				++m_iCurrentDownload ;
 			}
 		}
 	}
