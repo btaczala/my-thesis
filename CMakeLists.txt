@@ -6,7 +6,7 @@ find_package(Qt4 REQUIRED )
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(QT_USE_QTNETWORK 1)
 
-SUBDIRS(QtRapidshareDownloadManager_corelib)
+SUBDIRS(DownloadManager_lib)
 SUBDIRS(QtRapidshareDownloadManager_app)
 INCLUDE(${QT_USE_FILE})
 include_directories(QtRapidshareDownloadManager_corelib)

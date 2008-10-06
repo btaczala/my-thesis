@@ -24,12 +24,12 @@
 /*! \struct DownloadInfo
  * \brief Holds information about bytes read. 
  */
-class DownloadInfo
+class DownloadState
 {
 public:
 	typedef unsigned int UInt ; 
 	typedef unsigned long ULong ; 
-	DownloadInfo() ; 
+	DownloadState() ; 
 	UInt 					m_DownloadFileSize ; 
 	UInt					m_BytesDownloaded ; 
 	UInt 					
@@ -38,14 +38,6 @@ public:
 	unsigned long			m_bytesToRead ;
 	unsigned long			m_bytesRead ;
 	unsigned long			m_Percentage ; 
-	struct DownloadFileInfo
-	{
-		DownloadFileInfo() : m_FileSize(0), m_FileType("rar"),m_FileName(""), m_FullPathToFileOnRsServer("") {} ; 
-		int						m_FileSize ; 
-		std::string					m_FileType ; 
-		std::string					m_FileName ; 
-		std::string					m_FullPathToFileOnRsServer ; 
-	}m_FileInfo ;
 	struct DownloadFileState
 	{
 		DownloadFileState() : m_bytesDownloaded(0),m_rssmState(STOPPED) {} ; 
@@ -69,7 +61,7 @@ class IDownload
 		const std::string & destinationAddress() const ; 
 		void setDestinationAddress ( const std::string & localAddress  ) ; 
 	private :
-		std::auto_ptr< DownloadInfo >		m_pDownloadInfo ; 
+		std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
 		std::string						m_UrlAddress ; 
 		std::string						m_FileDestination ; 
 		
