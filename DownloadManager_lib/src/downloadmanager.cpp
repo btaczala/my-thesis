@@ -1,11 +1,12 @@
 #include "downloadmanager.h"
 #include "idownload.h"
+#include "engines/rapidshare/rapidshareengine.h"
 
 IDownload* DownloadManager::find(const std::string & pattern)
 {
     IDownload* pRet = NULL  ; 
-    std::vector<boost::shared_ptr<IDownload> >::iterator it = m_apDownloadList->begin() ;
-    std::vector<boost::shared_ptr<IDownload> >::iterator itEnd = m_apDownloadList->begin() ;  
+    DownloadListType::iterator it = m_DownloadList.begin() ;
+    DownloadListType::iterator itEnd = m_DownloadList.end() ;  
     for ( it ; it != itEnd ; ++it ) 
     {
         //it->get()->urlAddress() == pattern ; 
@@ -18,8 +19,20 @@ IDownload* DownloadManager::find(const std::string & pattern)
 
 void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
+    IDownload *pDownload = NULL ; 
+    IDownload *pTmp = NULL ; 
+
     if ( find(urlAddress ) != NULL ) 
         return ; // already in download 
-    //m_apDownloadList->push_back( boost::shared_ptr<IDownload>( new 
-    // check for plugins and select correct one . 
-}
+    EngineListType::iterator it = m_apDownloadEngines.begin() ; 
+    EngineListType::iterator itEnd = m_apDownloadEngines.end() ; 
+    for ( it ; it != itEnd ; ++it )
+    {
+        DownloadEngine * ptr = it->get() ; 
+        RapidshareEngine * ptr2 = (RapidshareEngine *)ptr ; 
+        ptr2->handleThisPattern("");
+        //pTmp = it->get()->handleThisPattern(urlAddress) ; 
+        if ( pTmp != NULL ) 
+            pDownload = pTmp ; 
+    }
+};

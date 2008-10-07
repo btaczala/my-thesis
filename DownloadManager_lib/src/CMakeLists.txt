@@ -18,6 +18,7 @@ SET( SRCS
     rscommon.cpp 
     engines/rapidshare/qrapidsharedownload.cpp
     engines/rapidshare/qrapidshareuser.cpp
+	engines/rapidshare/rapidshareengine.cpp
     ) 
 SET( HDRS 
     downloadmanager.h
@@ -25,7 +26,9 @@ SET( HDRS
     idownload.h
     rapidsharedownloadmanager.h 
     rslogger.h 
-    rscommon.h )
+    rscommon.h
+	engines/rapidshare/rapidshareengine.h
+	)
 
 QT4_WRAP_CPP(QT_MOC_SRC engines/rapidshare/qrapidsharedownload.h rapidsharedownloadmanager.h downloadmanager.h )
 INCLUDE(${QT_USE_FILE})

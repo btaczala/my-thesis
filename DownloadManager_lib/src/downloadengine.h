@@ -12,6 +12,8 @@
 #ifndef DOWNLOADENGINE_H
 #define DOWNLOADENGINE_H
 
+#include <string>
+#include <list>
 class IDownload ; 
 /**
 	@author 
@@ -19,12 +21,16 @@ class IDownload ;
 
 class DownloadEngine{
     public:
-                                DownloadEngine(const std::string & patt = "" );
+        typedef                 std::list<std::string>  StringList ; 
+                                DownloadEngine();
         virtual                 ~DownloadEngine();
         virtual IDownload *     handleThisPattern( const std::string & pattern ) = 0 ; 
-        const std::string &     pattern() const ; 
+        void                    setPatterns(const StringList & patt ) ;
+        const StringList &      patterns() const ; 
+
+
     private:
-        std::string             m_UrlPattern ; 
+        StringList              m_UrlPatterns ; 
 
 };
 

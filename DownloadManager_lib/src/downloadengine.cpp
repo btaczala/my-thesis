@@ -11,18 +11,19 @@
 //
 #include "downloadengine.h"
 
-DownloadEngine::DownloadEngine(const std::string & patt ) : m_UrlPattern ( patt )  
+DownloadEngine::DownloadEngine()
 {
 }
-
-
 DownloadEngine::~DownloadEngine()
 {
 }
-
-const std::string & DownloadEngine::pattern() const
+const DownloadEngine::StringList& DownloadEngine::patterns() const
 {
-    return m_UrlPattern; 
+    return m_UrlPatterns; 
+}
+void DownloadEngine::setPatterns(const StringList &patt)
+{
+    std::copy(patt.begin(),patt.end(),m_UrlPatterns.begin());
 }
 
 
