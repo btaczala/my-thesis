@@ -11,8 +11,8 @@ IDownload* DownloadManager::find(const std::string & pattern)
     {
         //it->get()->urlAddress() == pattern ; 
         IDownload *pRet = it->get() ; 
-//        if ( pRet->urlAddress() == pattern )
-//            return pRet ; 
+        if ( pRet->urlAddress() == pattern )
+            return pRet ; 
     };
     return pRet ; 
 }
@@ -29,10 +29,14 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     for ( it ; it != itEnd ; ++it )
     {
         DownloadEngine * ptr = it->get() ; 
-        RapidshareEngine * ptr2 = (RapidshareEngine *)ptr ; 
-        ptr2->handleThisPattern("");
-        //pTmp = it->get()->handleThisPattern(urlAddress) ; 
-        if ( pTmp != NULL ) 
+        pTmp = ptr->handleThisPattern("");
+        if ( pTmp != NULL )
             pDownload = pTmp ; 
+    }
+    if ( pDownload ) 
+    {
+        pDownload->setUrlAddress(urlAddress) ;
+        pDownload->setDestinationAddress(destination);
+        m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
     }
 };

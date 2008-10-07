@@ -29,8 +29,11 @@ class DownloadManager : public QObject
 {
     Q_OBJECT
 	public:
-        typedef std::vector<boost::shared_ptr<IDownload> > DownloadListType ; 
+        typedef boost::shared_ptr<IDownload> IDownloadSmartPtr ; 
+        typedef std::vector<IDownloadSmartPtr> DownloadListType ; 
         typedef std::vector< boost::shared_ptr<DownloadEngine> > EngineListType ; 
+
+
 		                        DownloadManager() ; 
 		                        ~DownloadManager() ; 
         void                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
@@ -41,7 +44,6 @@ class DownloadManager : public QObject
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
         EngineListType          m_apDownloadEngines ; 
-        
         IDownload *             find(const std::string & pattern ) ; 
 };
 #endif // DOWNLOADMANAGER_H
