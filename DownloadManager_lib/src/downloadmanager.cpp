@@ -2,6 +2,10 @@
 #include "idownload.h"
 #include "engines/rapidshare/rapidshareengine.h"
 
+#include <QTimer>
+DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0)
+{
+}
 IDownload* DownloadManager::find(const std::string & pattern)
 {
     IDownload* pRet = NULL  ; 
@@ -38,5 +42,20 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
         pDownload->setUrlAddress(urlAddress) ;
         pDownload->setDestinationAddress(destination);
         m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
-    }
+
+        QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
+    };
 };
+void DownloadManager::startDownload(const std::string &urlAddress)
+{
+    IDownload *pDownload ; 
+    pDownload = find(urlAddress) ; 
+    if ( pDownload == NULL ) 
+        return ; 
+    pDownload->start() ; 
+    QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
+}
+void DownloadManager::slot_listChanged()
+{
+}
+    

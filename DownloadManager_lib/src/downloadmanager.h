@@ -44,6 +44,10 @@ class DownloadManager : public QObject
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
         EngineListType          m_apDownloadEngines ; 
-        IDownload *             find(const std::string & pattern ) ; 
+        IDownload *             find(const std::string & pattern ) ;              
+    private slots:
+        void                    slot_listChanged() ; 
+
+
 };
 #endif // DOWNLOADMANAGER_H
