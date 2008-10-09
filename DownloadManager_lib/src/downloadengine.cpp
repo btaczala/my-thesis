@@ -10,6 +10,7 @@
 //
 //
 #include "downloadengine.h"
+#include <algorithm>
 
 DownloadEngine::DownloadEngine(const std::string & engineName ) : m_EngineName(engineName)
 {
@@ -23,7 +24,21 @@ const DownloadEngine::StringList& DownloadEngine::patterns() const
 }
 void DownloadEngine::setPatterns(const StringList &patt)
 {
-    std::copy(patt.begin(),patt.end(),m_UrlPatterns.begin());
+    m_UrlPatterns = patt ; 
+    //std::copy(patt.begin(),patt.end(),m_UrlPatterns.begin());
 }
-
-
+const std::string & DownloadEngine::name() const
+{
+    return m_EngineName ; 
+}
+bool DownloadEngine::handleThisPattern( const std::string & pattern ) 
+{
+    StringList::iterator it = m_UrlPatterns.begin() ; 
+    StringList::iterator itEnd = m_UrlPatterns.end() ; 
+    for ( ; it != itEnd ; ++it ) 
+    {
+        if ( pattern.find(*it) != std::string::npos ) 
+            return true ; 
+    }
+    return false ; 
+}

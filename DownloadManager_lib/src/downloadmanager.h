@@ -27,31 +27,28 @@
 
 class IDownload ; 
 class DownloadEngine ;
+class EngineManager;
 class DownloadManager : public QObject
 {
     Q_OBJECT
 	public:
         typedef boost::shared_ptr<IDownload> IDownloadSmartPtr ; 
         typedef std::vector<IDownloadSmartPtr> DownloadListType ; 
-        typedef std::map<std::string, boost::shared_ptr<DownloadEngine> > EngineMapType ; 
-
-
 		                        DownloadManager() ; 
 		                        ~DownloadManager() ; 
         void                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
         void                    startDownload( const std::string & urlAddress ) ;
         void                    removeDownload( const std::string & urlAddress ) ;
+        const EngineManager *   engineManager() const ; 
 	private : 
         DownloadListType 		m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
         
-        
-        EngineMapType          m_DownloadEngines ; 
-        DownloadEngine *        findEngine(const std::string & engineName ) ;
+        std::auto_ptr<EngineManager>   m_pEngineManager;
+
 
         IDownload *             find(const std::string & pattern ) ;
-        void                    loadEngines();
     private slots:
         void                    slot_listChanged() ; 
         void                    init();

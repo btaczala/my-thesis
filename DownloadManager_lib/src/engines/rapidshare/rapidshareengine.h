@@ -24,15 +24,15 @@
 #define  RS_USER_NAME "RS_username"
 #define  RS_USER_PASS "RS_userpassword"
 
-#include <map>
+#include <map>  
 #include <algorithm>
 
 class RapidshareEngine : public DownloadEngine
 {
     public:
         RapidshareEngine();
-        virtual bool            handleThisPattern( const std::string & pattern ) ;
-        virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) ;
+        virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) ; 
+        virtual IDownload *     spawn() const; 
         const std::string &     username() const; 
         const std::string &     userpass() const; 
     private:

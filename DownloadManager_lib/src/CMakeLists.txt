@@ -1,5 +1,5 @@
 find_package(Qt4 REQUIRED )
-find_package(Boost REQUIRED )
+find_package(Boost COMPONENTS filesystem REQUIRED )
 if(WIN32)
 ADD_DEFINITIONS(  )
 else(WIN32)
@@ -16,7 +16,7 @@ SET( SRCS
     rapidsharedownloadmanager.cpp 
     rslogger.cpp 
     rscommon.cpp 
-	engines/enginemanager.cpp
+	enginemanager.cpp
     engines/rapidshare/qrapidsharedownload.cpp
     engines/rapidshare/qrapidshareuser.cpp
 	engines/rapidshare/rapidshareengine.cpp
@@ -28,13 +28,13 @@ SET( HDRS
     rapidsharedownloadmanager.h 
     rslogger.h 
     rscommon.h
-	engines/enginemanager.h
+	enginemanager.h
 	engines/rapidshare/rapidshareengine.h
 	)
 
 QT4_WRAP_CPP(QT_MOC_SRC engines/rapidshare/qrapidsharedownload.h rapidsharedownloadmanager.h downloadmanager.h )
 INCLUDE(${QT_USE_FILE})
-add_library( QtRapidshareDownloadManager_corelib STATIC ${QT_MOC_SRC} ${SRCS} ${HDRS} )
-target_link_libraries( QtRapidshareDownloadManager_corelib ${QT_LIBRARIES} )
+add_library( downloadmanager_lib STATIC ${QT_MOC_SRC} ${SRCS} ${HDRS} )
+target_link_libraries( downloadmanager_lib ${QT_LIBRARIES} )
 
 

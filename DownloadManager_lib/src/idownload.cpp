@@ -1,5 +1,6 @@
 #include "idownload.h"
 IDownload::IDownload() : m_pDownloadInfo( new DownloadState ){};
+IDownload::~IDownload(){};
 
 void IDownload::setUrlAddress(const std::string & urlAddrr)
 {

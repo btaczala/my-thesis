@@ -1,7 +1,9 @@
-
 #include <QDialog>
 #include <QApplication>
-#include "downloadmanager.h"
+#include <QDir>
+#include "src/downloadmanager.h"
+#include "src/downloadengine.h"
+#include "src/enginemanager.h"
 int main(int argc, char** argv)
 {
 	/*
@@ -18,11 +20,12 @@ int main(int argc, char** argv)
 	app.exec() ;
 	*/
     DownloadManager dwnlMgr ; 
-    DownloadEngine * pEngine = dwnlMgr->findEngine("rapidshare");
+    
+    DownloadEngine * pEngine = dwnlMgr.engineManager()->findEngine("rapidshare") ;
     std::map<std::string,void *> options ; 
     options["RS_username"] = (void*)(&(std::string("4625386")));
     options["RS_userpass"] = (void*)(&(std::string("WM2FTZgx5Y")));
     pEngine->setOptionsForEngine(options);
-    dwnlMgr.addDownload("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar",QDir::homePath());
+    dwnlMgr.addDownload("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar",QDir::homePath().toStdString() );
 	return 0;
 }

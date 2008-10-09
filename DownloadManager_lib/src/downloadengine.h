@@ -13,7 +13,7 @@
 #define DOWNLOADENGINE_H
 
 #include <string>
-#include <list>
+#include <vector>
 #include <map>
 class IDownload ; 
 /**
@@ -22,15 +22,15 @@ class IDownload ;
 
 class DownloadEngine{
     public:
-        typedef                 std::list<std::string>  StringList ; 
+        typedef                 std::vector<std::string>  StringList ; 
                                 DownloadEngine(const std::string & engineName );
         virtual                 ~DownloadEngine();
-        virtual bool            handleThisPattern( const std::string & pattern ) = 0 ; 
-        virtual IDownload *     spawn() ; 
+        virtual bool            handleThisPattern( const std::string & pattern ) ; 
+        virtual IDownload *     spawn() const = 0; 
         virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) = 0 ; 
         void                    setPatterns(const StringList & patt ) ;
         const StringList &      patterns() const ; 
-        const std::string       name() const ; 
+        const std::string &     name() const ; 
     protected:
         StringList              m_UrlPatterns ; 
     private:

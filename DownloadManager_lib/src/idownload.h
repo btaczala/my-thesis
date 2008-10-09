@@ -47,7 +47,7 @@ class IDownload
 {
 	public :
 		IDownload () ;
-		~IDownload() ;
+		virtual ~IDownload() ;
         DownloadState * 	downloadInfo () const ; 
 		virtual void 		start() = 0 ; 
 		virtual void 		pause() = 0 ; 
