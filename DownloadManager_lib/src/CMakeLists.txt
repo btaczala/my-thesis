@@ -16,6 +16,7 @@ SET( SRCS
     rapidsharedownloadmanager.cpp 
     rslogger.cpp 
     rscommon.cpp 
+	engines/enginemanager.cpp
     engines/rapidshare/qrapidsharedownload.cpp
     engines/rapidshare/qrapidshareuser.cpp
 	engines/rapidshare/rapidshareengine.cpp
@@ -27,6 +28,7 @@ SET( HDRS
     rapidsharedownloadmanager.h 
     rslogger.h 
     rscommon.h
+	engines/enginemanager.h
 	engines/rapidshare/rapidshareengine.h
 	)
 
