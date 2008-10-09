@@ -25,7 +25,6 @@ bool handle_tmpr ( const std::pair<std::string, boost::shared_ptr<DownloadEngine
 void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
     IDownload *pDownload = NULL ; 
-    IDownload *pTmp = NULL ; 
 
     if ( find(urlAddress ) != NULL ) 
         return ; // already in download 

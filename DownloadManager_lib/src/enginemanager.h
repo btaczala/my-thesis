@@ -13,6 +13,7 @@
 #define ENGINEMANAGER_H
 
 #include <map>
+#include <string>
 #include <boost/shared_ptr.hpp>
 class DownloadEngine;
 class EngineManager
@@ -31,5 +32,4 @@ private:
     std::string             m_EnginesDirPath ; 
     void                    addEngine() ; 
 };
-
-#endif
+#endif //ENGINEMANAGER_H
