@@ -11,7 +11,7 @@
 //
 #include "downloadengine.h"
 
-DownloadEngine::DownloadEngine()
+DownloadEngine::DownloadEngine(const std::string & engineName ) : m_EngineName(engineName)
 {
 }
 DownloadEngine::~DownloadEngine()

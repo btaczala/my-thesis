@@ -14,6 +14,7 @@
 
 #include <string>
 #include <list>
+#include <map>
 class IDownload ; 
 /**
 	@author 
@@ -22,15 +23,18 @@ class IDownload ;
 class DownloadEngine{
     public:
         typedef                 std::list<std::string>  StringList ; 
-                                DownloadEngine();
+                                DownloadEngine(const std::string & engineName );
         virtual                 ~DownloadEngine();
-        virtual IDownload *     handleThisPattern( const std::string & pattern ) = 0 ; 
+        virtual bool            handleThisPattern( const std::string & pattern ) = 0 ; 
+        virtual IDownload *     spawn() ; 
+        virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) = 0 ; 
         void                    setPatterns(const StringList & patt ) ;
         const StringList &      patterns() const ; 
-
-
-    private:
+        const std::string       name() const ; 
+    protected:
         StringList              m_UrlPatterns ; 
+    private:
+        std::string             m_EngineName ; 
 
 };
 

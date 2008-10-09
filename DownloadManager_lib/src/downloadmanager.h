@@ -20,8 +20,10 @@
 #ifndef DOWNLOADMANAGER_H
 #define DOWNLOADMANAGER_H
 #include <vector> 
+#include <map>
 #include <boost/shared_ptr.hpp>
 #include <QObject>
+
 
 class IDownload ; 
 class DownloadEngine ;
@@ -31,7 +33,7 @@ class DownloadManager : public QObject
 	public:
         typedef boost::shared_ptr<IDownload> IDownloadSmartPtr ; 
         typedef std::vector<IDownloadSmartPtr> DownloadListType ; 
-        typedef std::vector< boost::shared_ptr<DownloadEngine> > EngineListType ; 
+        typedef std::map<std::string, boost::shared_ptr<DownloadEngine> > EngineMapType ; 
 
 
 		                        DownloadManager() ; 
@@ -43,10 +45,17 @@ class DownloadManager : public QObject
         DownloadListType 		m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
-        EngineListType          m_apDownloadEngines ; 
-        IDownload *             find(const std::string & pattern ) ;              
+        
+        
+        EngineMapType          m_DownloadEngines ; 
+        DownloadEngine *        findEngine(const std::string & engineName ) ;
+
+        IDownload *             find(const std::string & pattern ) ;
+        void                    loadEngines();
     private slots:
         void                    slot_listChanged() ; 
+        void                    init();
+        
 
 
 };

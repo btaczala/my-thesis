@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Taczała 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Taczała                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,10 +21,22 @@
 #define RAPIDSHAREENGINE_H
 #include "downloadengine.h"
 
+#define  RS_USER_NAME "RS_username"
+#define  RS_USER_PASS "RS_userpassword"
+
+#include <map>
+#include <algorithm>
+
 class RapidshareEngine : public DownloadEngine
 {
-public:
-    RapidshareEngine();
-    virtual IDownload *     handleThisPattern( const std::string & pattern ) ;
+    public:
+        RapidshareEngine();
+        virtual bool            handleThisPattern( const std::string & pattern ) ;
+        virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) ;
+        const std::string &     username() const; 
+        const std::string &     userpass() const; 
+    private:
+        std::string             m_UserName ;
+        std::string             m_UserPass ;
 };
 #endif // RAPIDSHAREENGINE_H
