@@ -8,7 +8,7 @@
 #include <memory>
 #include "ui_usersettings.h"
 #include "common.h"
-#include "rscommon.h"
+
 class Ui_UserSettingsImpl : public QDialog
 {
 	Q_OBJECT

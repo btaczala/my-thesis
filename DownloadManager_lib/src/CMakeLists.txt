@@ -6,8 +6,8 @@ else(WIN32)
 ADD_DEFINITIONS( -Wall -O2 )
 endif(WIN32)
 set(QT_USE_QTNETWORK 1)
-
 include_directories ( "./" ) 
+
 
 SET( SRCS 
     downloadmanager.cpp

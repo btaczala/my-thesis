@@ -9,7 +9,6 @@ SET(QT_USE_QTNETWORK 1)
 
 SUBDIRS(src)
 INCLUDE(${QT_USE_FILE})
-
 ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp)
 
 #need to link to some other libraries ? just add them here
