@@ -1,5 +1,5 @@
 find_package(Qt4 REQUIRED )
-find_package(Boost COMPONENTS filesystem REQUIRED )
+find_package(Boost REQUIRED )
 if(WIN32)
 ADD_DEFINITIONS(  )
 else(WIN32)

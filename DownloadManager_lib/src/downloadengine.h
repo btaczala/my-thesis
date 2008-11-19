@@ -22,6 +22,7 @@ class IDownload ;
 
 class DownloadEngine{
     public:
+        //FIXME: should be QList<QRegExp> 
         typedef                 std::vector<std::string>  StringList ; 
                                 DownloadEngine(const std::string & engineName );
         virtual                 ~DownloadEngine();

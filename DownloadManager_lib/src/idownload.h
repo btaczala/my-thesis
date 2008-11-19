@@ -50,7 +50,6 @@ class IDownload
 		virtual ~IDownload() ;
         DownloadState * 	downloadInfo () const ; 
 		virtual void 		start() = 0 ; 
-		virtual void 		pause() = 0 ; 
 		virtual void 		stop() = 0 ; // abort () 
 		virtual void 		restart() = 0 ; 
 		
