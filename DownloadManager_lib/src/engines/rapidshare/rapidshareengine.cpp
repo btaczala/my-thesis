@@ -19,5 +19,6 @@ void RapidshareEngine::setOptionsForEngine(const std::map< std::string, void * >
 };
 IDownload* RapidshareEngine::spawn() const 
 {
+	//FIXME: create QRapidshareDownload 
     return NULL ; 
 }

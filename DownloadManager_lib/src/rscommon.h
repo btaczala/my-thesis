@@ -33,24 +33,25 @@ QString TimeToString();
 * \brief hold state machine state. 
 * 
 */
-enum RapidShareStateMachine
-{
-	STOPPED = 0,
-	GET_FIRST,
-	GET_SECOND,
-	POST_FIRST,
-	GET_THIRD, // aka Downloading 
-	DOWNLOADING,
-	DONE,
-	FAILED,
-	PAUSED
-};
+//enum rapidsharestatemachine
+//{
+//	stopped = 0,
+//	get_first,
+//	get_second,
+//	post_first,
+//	get_third, // aka downloading 
+//	downloading,
+//	done,
+//	failed,
+//	paused
+//};
+
 //! \fn StateToString - translating RapidShareStateMachine into QString 
-
-
-QString StateToString(const RapidShareStateMachine & rsMachineState);
-QString StateToString2(const RapidShareStateMachine & rsMachineState);
-RapidShareStateMachine StringToState(const QString & string );
+ 
+//
+//QString StateToString(const RapidShareStateMachine & rsMachineState);
+//QString StateToString2(const RapidShareStateMachine & rsMachineState);
+//RapidShareStateMachine StringToState(const QString & string );
 
 static const QString s_RSDMLogPath = QString(QDir::homePath() + "/.rslogger/");
 static const QString scLibraryName = QString("RapidshareDownloadManager");

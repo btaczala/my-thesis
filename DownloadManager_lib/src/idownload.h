@@ -34,14 +34,16 @@ public:
 	int						bytesReadCurrent;
 	int						bytesReadPreviously;
 	unsigned long			m_bytesToRead ;
-	unsigned long			m_Percentage ; 
+	unsigned long			m_Percentage ;	
     enum States
     {
         STOPPED=0,
-        DOWNLOADING,
-        PAUSED,
-        FINISHED
+        //DOWNLOADING,
+        //PAUSED,
+        DONE,
+        FAILED
     } m_State ; 
+
 };
 class IDownload 
 {
@@ -52,14 +54,25 @@ class IDownload
 		virtual void 		start() = 0 ; 
 		virtual void 		stop() = 0 ; // abort () 
 		virtual void 		restart() = 0 ; 
+
+        DownloadState::States   GetState() const {return m_pDownloadInfo->m_State; };
+        void                    SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
+        unsigned int            GetBytesDownloaded() const { 	return m_pDownloadInfo->m_BytesDownloaded ;  };
+        //FIXME bytesdownloaded == getpercantage ?
+        void                    SetPercentage( const unsigned int & _perc ){ 	m_pDownloadInfo->m_Percentage = _perc ; };
+        unsigned int            GetPercentage( ) const { return m_pDownloadInfo->m_Percentage ; };
+        unsigned int            GetFileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
+        void                    SetFileSize( const unsigned int & fileSize ) { 	m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
+        unsigned int            IDownload::GetProgress() const;
 		
 		void                setUrlAddress ( const std::string & urlAddrr ) ; 
 		const std::string & urlAddress() const ; 
 		const std::string & destinationAddress() const ; 
 		void                setDestinationAddress ( const std::string & localAddress  ) ; 
-	private :
+	protected :
         std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
 		std::string						    m_UrlAddress ; 
-		std::string						    m_FileDestination ; 		
+		std::string						    m_FileDestination ;
+        mutable unsigned int				m_Progress;
 };
 #endif //  IDOWNLOADMANAGER_H

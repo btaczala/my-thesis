@@ -27,9 +27,9 @@
 #include "Ui_AddDownloadFileImpl.h"
 #include "common.h"
 /// RSDM include files
-#include "qrapidsharedownload.h"
-#include "rapidsharedownloadmanager.h"
-#include "rslogger.h"
+//#include "qrapidsharedownload.h"
+//#include "rapidsharedownloadmanager.h"
+//#include "rslogger.h"
 
 #include "DownloadView.h"
 #include "configurationdialog.h"

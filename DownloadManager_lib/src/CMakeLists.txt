@@ -29,7 +29,9 @@ SET( HDRS
     rslogger.h 
     rscommon.h
 	enginemanager.h
-	engines/rapidshare/rapidshareengine.h
+    engines/rapidshare/qrapidsharedownload.h
+    engines/rapidshare/qrapidshareuser.h
+    engines/rapidshare/rapidshareengine.h
 	)
 
 QT4_WRAP_CPP(QT_MOC_SRC engines/rapidshare/qrapidsharedownload.h rapidsharedownloadmanager.h downloadmanager.h )

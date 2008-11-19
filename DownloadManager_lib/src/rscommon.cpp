@@ -5,6 +5,8 @@ QString TimeToString()
 	QDateTime now ( QDate::currentDate(), QTime::currentTime());
 	return now.toString(QString(" dd.MM.yyyy - hh:mm:ss.zzz ")).remove('"');
 };
+/*
+//FIXME:
 QString StateToString(const RapidShareStateMachine & rsMachineState)
 {
 	QString toRet = "";
@@ -24,6 +26,7 @@ QString StateToString(const RapidShareStateMachine & rsMachineState)
 		toRet =  QString( "Downloading failed!" );
 	return toRet;
 };
+
 QString StateToString2( const RapidShareStateMachine & rsMachineState )
 {
 	QString toRet = "";
@@ -69,3 +72,4 @@ RapidShareStateMachine StringToState( const QString & string )
 		return PAUSED ; 
 	return STOPPED ; 
 }
+*/
