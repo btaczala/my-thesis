@@ -1,6 +1,9 @@
-#include "rapidshareengine.h"
-#include "qrapidsharedownload.h";
 #include <map>
+
+
+#include "rapidshareengine.h"
+#include "qrapidsharedownload.h"
+
 
 RapidshareEngine::RapidshareEngine() : DownloadEngine("rapidshare"), m_UserName(""),m_UserPass("")
 {
@@ -10,17 +13,25 @@ RapidshareEngine::RapidshareEngine() : DownloadEngine("rapidshare"), m_UserName(
     sl.push_back("rapids");
     setPatterns(sl);
 };
-void RapidshareEngine::setOptionsForEngine(const std::map< std::string, void * > &options)
+
+void RapidshareEngine::setOptionsForEngine(const std::map< std::string, boost::any > &options)
 {
-    std::map< std::string, void * >::const_iterator it = options.find(RS_USER_NAME);
+    std::map< std::string, boost::any >::const_iterator it = options.find(scRS_USER_NAME);
+    std::string tmp ; 
     if ( it != options.end() ) 
     {
-        ;
+        m_UserName = boost::any_cast<std::string>(it->second);
+    }
+
+    it = options.find( scRS_USER_PASS );
+    if( it!=options.end() )
+    {
+        m_UserPass = boost::any_cast<std::string>(it->second);
     }
 };
 IDownload* RapidshareEngine::spawn() const 
 {
-	//FIXME: create QRapidshareDownload 
-    IDownload* download = new QRapidshareDownload();
-    return download;
+    QRapidshareDownload* pDownload = new QRapidshareDownload();
+    pDownload->setUser( m_UserName.c_str(), m_UserPass.c_str() );
+    return (IDownload*) pDownload;
 }

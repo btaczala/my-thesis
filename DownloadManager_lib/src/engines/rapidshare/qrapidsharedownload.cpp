@@ -23,6 +23,9 @@
  	QObject::connect( m_apHttpObj.get(), SIGNAL( authenticationRequired(  const QString , quint16 , QAuthenticator *) ), this, SLOT(  authenticationRequired(  const QString , quint16 , QAuthenticator *)  ) );
  	QObject::connect( m_apHttpObj.get(), SIGNAL( proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ), this, SLOT(  proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ) );
  	QObject::connect( m_apHttpObj.get(), SIGNAL( readyRead ( QHttpResponseHeader ) ), this, SLOT(  readyRead ( QHttpResponseHeader ) ) );	
+
+    m_errorsList.append(RsErrors::err2);
+    m_errorsList.append(RsErrors::err5);
  }
 
  QRapidshareDownload::~QRapidshareDownload()
@@ -52,11 +55,10 @@
  	{
  		 // resume downloading 
  	}
-	//FIXME: add state machine with GET_FIRST etc.
  	m_rssmState = GET_FIRST;
     m_pDownloadInfo->m_State = DownloadState::INIT;
-	//FIXME:
  	emit whatAmIDoing( m_pDownloadInfo->m_State );
+
  	m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
  	m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
  	m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
@@ -110,48 +112,7 @@
  	}
  }
 
-/*
- void QRapidshareDownload::Download(const QString & _addr, const QString & _fileDest )
- {
- 	RSDM_LOG_FUNC ;
- 	SetUrlFileAddress( _addr );
- 	if( !_addr.isEmpty() )
- 		m_ReferrerFileAddress = _addr;
- 	if( !_fileDest.isEmpty() )
- 	{
- 		m_fileDestination = _fileDest;
- 	}
- 	if( m_ReferrerFileAddress.isEmpty() || m_fileDestination.isEmpty() )
- 		return ; 
-	
- 	m_apFile->setFileName(m_fileDestination + ".part");
- 	//m_pDownloadInfo->m_FileInfo.m_FileName = m_fileDestination;
-	
- 	if ( QFile::exists(m_fileDestination) )
- 	{
- 		 // resume downloading 
- 	}
-	//FIXME: add state machine with GET_FIRST etc.
- 	m_rssmState = GET_FIRST;
-    m_pDownloadInfo->m_State = DownloadState::INIT;
-	//FIXME:
- 	emit whatAmIDoing( m_pDownloadInfo->m_State );
- 	m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
- 	m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
- 	m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
- 	m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
- 	m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
- 	m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
- 	m_Logger << QString("First GET");
- 	m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
- 	m_apHttpObj->setHost(  m_apFileUrl->host() );
- 	m_apHttpObj->request( *( m_apHttpRequestHeader ) );
- };
- */
- 
- 
  /********** SLOTS **************/
- 
  void QRapidshareDownload::requestStarted(const int & idReq)
  {
  	m_Logger << __FUNCTION_NAME__<< "idReq =  " << idReq ;
@@ -311,10 +272,19 @@
  		m_Logger << m_apHttpObj->errorString();
  		return ;
  	}
+
  	if( m_rssmState == GET_FIRST )
  	{
- 		//m_RSStateMachine = GET_SECOND;
  		QByteArray aa = m_apHttpObj->readAll();
+        
+        if( checkForErrors( aa ))
+        {
+            m_pDownloadInfo->m_State = DownloadState::FAILED;
+ 			emit whatAmIDoing( m_pDownloadInfo->m_State );
+ 			emit done();
+            return;
+        }
+
  		DebugUtils::DumpReponseToFile(aa,"get_first");
  		m_apHttpRequestHeader->removeValue("Cookie");
  		m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
@@ -338,7 +308,7 @@
  		if(newUrl.isEmpty() )
  		{
  			m_Logger<<("Could not find file on server");
-            m_pDownloadInfo->m_State = DownloadState::States::FAILED;
+            m_pDownloadInfo->m_State = DownloadState::FAILED;
  			emit whatAmIDoing( m_pDownloadInfo->m_State );
  			emit done();
  			return ;
@@ -586,6 +556,18 @@
  {
  	if(m_apFile.get()!=NULL && !m_fileDestination.isEmpty())
  		QFile::rename(m_apFile->fileName(), m_fileDestination);
+ }
+
+ bool QRapidshareDownload::checkForErrors( const QByteArray& response )
+ {
+     QList<const char*>::iterator it = m_errorsList.begin();
+     while( it != m_errorsList.end() )
+     {
+         if( response.contains(*it))
+             return true;
+         ++it;
+     }
+     return false;
  }
  
  

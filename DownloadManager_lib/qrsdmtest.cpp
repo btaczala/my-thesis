@@ -1,9 +1,18 @@
 #include <QDialog>
 #include <QApplication>
+#include <QMainWindow>
 #include <QDir>
+#include <boost/any.hpp>
+
 #include "src/downloadmanager.h"
 #include "src/downloadengine.h"
 #include "src/enginemanager.h"
+
+class QTwojStary : public QMainWindow
+{
+public:
+    QTwojStary( QWidget *parent = NULL ) : QMainWindow(parent){};
+};
 int main(int argc, char** argv)
 {
 	/*
@@ -19,13 +28,17 @@ int main(int argc, char** argv)
 	tmp.show() ;
 	app.exec() ;
 	*/
+    QApplication app(argc, argv); 
     DownloadManager dwnlMgr ; 
     
     DownloadEngine * pEngine = dwnlMgr.engineManager()->findEngine("rapidshare") ;
-    std::map<std::string,void *> options ; 
-    options["RS_username"] = (void*)(&(std::string("4625386")));
-    options["RS_userpass"] = (void*)(&(std::string("WM2FTZgx5Y")));
+
+    std::map<std::string,boost::any> options ; 
+    options["RS_username"] = std::string("4625386");
+    options["RS_userpassword"] = std::string("WM2FTZgx5Y");
     pEngine->setOptionsForEngine(options);
-    dwnlMgr.addDownload("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar",QDir::homePath().toStdString() );
-	return 0;
+    dwnlMgr.addDownload("http://rapidshare.com/files/115886102/Dj_Bobo-Planet_Colors-upload_by_kreciq.rar",QDir::homePath().toStdString() );
+    QTwojStary t ; 
+    t.show();
+	return app.exec();
 }

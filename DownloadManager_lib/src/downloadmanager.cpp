@@ -38,8 +38,8 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
 
     QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
-	//FIXME: temporasr
-	//pDownload->start()
+    pDownload->start();
+
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {

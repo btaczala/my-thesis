@@ -77,5 +77,17 @@ static const QString scRsdm_SettingsDownloadListHost = QString( "Download_list/%
 
 #ifndef LOG_FUNC_TO_OUT
 #define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
+
+
+namespace RsErrors
+{
+//<!-- E#5 -->
+static const char* err5= "Due to a violation of our terms of use, the file has been removed from the server";
+//<!-- E#2 -->    
+static const char* err2 = "The Account has been found, but the password is incorrect";
+}
+//<p>The Account has been found, but the password is incorrect.</p>
+
+
 #endif
 #endif //RSCOMMON_H

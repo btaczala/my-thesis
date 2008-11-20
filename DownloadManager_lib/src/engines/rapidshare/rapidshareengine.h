@@ -19,19 +19,26 @@
  ***************************************************************************/
 #ifndef RAPIDSHAREENGINE_H
 #define RAPIDSHAREENGINE_H
-#include "downloadengine.h"
 
-#define  RS_USER_NAME "RS_username"
-#define  RS_USER_PASS "RS_userpassword"
 
 #include <map>  
 #include <algorithm>
+#include <boost/any.hpp>
+
+#include "downloadengine.h"
+
+#define  RS_USER_NAME std::string("RS_username")
+#define  RS_USER_PASS "RS_userpassword"
+
+static const std::string scRS_USER_NAME = std::string("RS_username");
+static const std::string scRS_USER_PASS = std::string("RS_userpassword");
+
 
 class RapidshareEngine : public DownloadEngine
 {
     public:
         RapidshareEngine();
-        virtual void            setOptionsForEngine( const std::map<std::string, void*> & options ) ; 
+        virtual void            setOptionsForEngine( const std::map<std::string, boost::any> & options ) ; 
         virtual IDownload *     spawn() const; 
         const std::string &     username() const; 
         const std::string &     userpass() const; 

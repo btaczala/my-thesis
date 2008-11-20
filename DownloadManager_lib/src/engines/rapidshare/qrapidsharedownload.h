@@ -30,6 +30,8 @@
  #include "qrapidshareuser.h"
  #include "rslogger.h"
 #include "idownload.h"
+
+//errors
  
  /*! \class QRapidshareDownload - representing one download
   * \brief Class for downloading from rapidshare. Set filePath in constructor, or in Download.  
@@ -100,6 +102,8 @@ class QRapidshareDownload : public QObject, public IDownload
  	QString 							parsePostReponseAndGetAddress(const QString & resp);
  	void								setUrlFileAddress(const QString & _addr ) ;
  	void								renameFile();
+
+    bool                                checkForErrors( const QByteArray& response );
  private:
  	QString								m_ReferrerFileAddress;
  	QString 							m_fileDestination;
@@ -117,6 +121,7 @@ class QRapidshareDownload : public QObject, public IDownload
  	int 								m_timerId;
  	qint64								m_readedBytes;
  	RSLogger							m_Logger;
+    QList<const char*>                  m_errorsList;
  	
 	RS_State							m_rssmState;
  private slots:

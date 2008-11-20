@@ -46,6 +46,7 @@ public:
     } m_State ; 
 
 };
+
 class IDownload 
 {
 	public :
@@ -59,8 +60,6 @@ class IDownload
         DownloadState::States   GetState() const {return m_pDownloadInfo->m_State; };
         void                    SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
         unsigned int            GetBytesDownloaded() const { 	return m_pDownloadInfo->m_BytesDownloaded ;  };
-        //FIXME bytesdownloaded == getpercantage ?
-        void                    SetPercentage( const unsigned int & _perc ){ 	m_pDownloadInfo->m_Percentage = _perc ; };
         unsigned int            GetPercentage( ) const { return m_pDownloadInfo->m_Percentage ; };
         unsigned int            GetFileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
         void                    SetFileSize( const unsigned int & fileSize ) { 	m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
@@ -70,6 +69,7 @@ class IDownload
 		const std::string & urlAddress() const ; 
 		const std::string & destinationAddress() const ; 
 		void                setDestinationAddress ( const std::string & localAddress  ) ; 
+
 	protected :
         std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
 		std::string						    m_UrlAddress ; 
