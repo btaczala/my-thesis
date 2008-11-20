@@ -32,7 +32,8 @@ class DownloadEngine{
         virtual void            setOptionsForEngine( const std::map<std::string, boost::any> & options ) = 0 ; 
         void                    setPatterns(const StringList & patt ) ;
         const StringList &      patterns() const ; 
-        const std::string &     name() const ; 
+        const std::string &     name() const ;
+        int                     getPercent();
     protected:
         StringList              m_UrlPatterns ; 
     private:

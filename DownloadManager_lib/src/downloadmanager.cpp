@@ -41,7 +41,6 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
 
     QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
     pDownload->start();
-
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {
@@ -81,6 +80,7 @@ void DownloadManager::whatAmIDoing(const DownloadState::States& what)
 void DownloadManager::downloadStatus(const int & istate )
 {
     qDebug() << istate;
+    emit globalProgress(istate);
 }
 
 void DownloadManager::done()
@@ -91,4 +91,22 @@ void DownloadManager::done()
 void DownloadManager::downloadRate(const QString & dwnlRate)
 {
     qDebug() << dwnlRate;
+}
+int DownloadManager::getPercentage() 
+{
+    DownloadListType::iterator it = m_DownloadList.begin(); 
+    DownloadListType::iterator itEnd = m_DownloadList.begin(); 
+    int count  = m_DownloadList.size(); 
+    int sum = 0 ; 
+    for ( it ; it != itEnd ;++it ) 
+    {
+        sum += (*it)->GetPercentage() ; 
+    }
+    return sum = ((double)sum/(double)count) ; 
+}
+
+void DownloadManager::setSignalReceiver(QObject* tato)
+{
+    m_pSignalReceiver = tato;
+    QObject::connect(this, SIGNAL( globalProgress(int)), m_pSignalReceiver, SLOT(setValue (int)));
 }
