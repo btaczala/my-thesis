@@ -38,6 +38,7 @@ QT4_WRAP_CPP(QT_MOC_SRC src/engines/rapidshare/qrapidsharedownload.h src/rapidsh
 INCLUDE(${QT_USE_FILE})
 include_directories(${Boost_INCLUDE_DIR})
 add_library( downloadmanager_lib STATIC ${QT_MOC_SRC} ${DownloadManager_SRCS} ${DownloadManager_HDRS} )
+target_link_libraries ( downloadmanager_lib ${QT_LIBRARIES} ) 
 
 if( BUILD_TEST_APP )
 ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp)
