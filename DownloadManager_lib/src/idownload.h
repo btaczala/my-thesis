@@ -37,9 +37,10 @@ public:
 	unsigned long			m_Percentage ;	
     enum States
     {
-        STOPPED=0,
-        //DOWNLOADING,
-        //PAUSED,
+        INIT = 0,
+        STOPPED,
+        DOWNLOADING,
+        PAUSED,
         DONE,
         FAILED
     } m_State ; 

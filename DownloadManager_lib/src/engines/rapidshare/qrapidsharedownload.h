@@ -48,66 +48,25 @@ class QRapidshareDownload : public QObject, public IDownload
 		GET_THIRD,
 		POST_FIRST,
 		POST_SECOND,
-        PAUSED,
         DOWNLOADING,
-        DONE,
-        STOPPED,
-        FAILED
+        FINISHED
 	 };
  	// Ctors:
  	
- 	
- 	//! Ctor
- 	/*!
- 	 * \brief One, and only one ctor 
- 	 * \param _UrlFileAddress an QString argument, holding address of file on rapidshare server
- 	 * \param _fileDest an QString argument, holding destination of local drive
- 	 */
- 	QRapidshareDownload(const QString & _UrlFileAddress, const QString & _fileDest );
- 	// DCtors:
- 	//! DCtor
+ 	QRapidshareDownload(/*const QString & _UrlFileAddress, const QString & _fileDest*/);
  	virtual 							~QRapidshareDownload();
- 	//public methods:
- 	//!SetUser - set a RSUser
- 	/*!
- 	 * \param rsUser as QRapidshareUser. Sets user as rsUser, or if rsUser = EMPTY , does nothing
- 	 */
- 	void								SetUser(const QRapidshareUser & rsUser );
- 
- 	//!SetUser - set a RSUser with given username and pass
- 	/*!
- 	 * \param rsName as QString - username
- 	 * \param pass as QString - user password
- 	 */
- 	void								SetUser(const QString& rsName,  const QString& pass);
- 	QRapidshareUser *					GetUser() const ;
- 	//!Download - begin download from RS server
- 	/*!
- 	 * \param _addr as QString - same as ctor _UrlFileAddress
- 	 * \param _fileDest as QString - same as ctor _fileDest
- 	 */
- 	void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
- 	void								Resume();
+ 	
+    void 		                        start(); 
+	void 		                        stop(); // abort () 
+	void 		                        restart(); 
+    
+    void								setUser(const QRapidshareUser & rsUser );
+    void								setUser(const QString& rsName,  const QString& pass); 	
+    QRapidshareUser *					getUser() const ;
+ 	//void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
  
  	bool								operator==( const QRapidshareDownload & _cmp );
- 
- 	void								Restart() ; 
- 	//!
- 	/*!
- 	 * stop - stops download. Download is able to resume
- 	*/
- 	void								stop();
- 	//!
- 	/*
- 	 * abort - aborts http request. Download is not able to resume. 
- 	 *
- 	 */
- 	void								abort();
- 	/*!
- 	 * SetRapidshareUser - set rapidshare user for download
- 	 * \param _usr as QRapidskareUser - set rapidshare user for download
- 	*/
- 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
+ 	void								setRapidshareUser(const QRapidshareUser & _usr ) ;
  
  	/*!
  	 * GetState - Return state of download
@@ -118,30 +77,29 @@ class QRapidshareDownload : public QObject, public IDownload
 	//move to IDownload class;
 
  	//unsigned int						GetProgress() const  ;
- 	unsigned int						GetBytesDownloaded() const ; 
- 	unsigned int						GetFileSize() const ; 
- 	void								SetFileSize(const unsigned int & fileSize ) ; 
+ 	unsigned int						getBytesDownloaded() const ; 
+ 	unsigned int						getFileSize() const ; 
+ 	void								setFileSize(const unsigned int & fileSize ) ; 
  
- 	const QString						GetFullUrlFileAddress() const ; 
- 	const QString						GetFileDestination() const ;
- 	const QString						GetDownloadHost() const ; 
- 	void								SetDownloadHost(const QString & _host ) ;
+ 	const QString						getFullUrlFileAddress() const ; 
+ 	const QString						getFileDestination() const ;
+ 	const QString						getDownloadHost() const ; 
+ 	void								setDownloadHost(const QString & _host ) ;
  
  
  	
- 	void								SetPercentage(const unsigned int & _perc ) ;
- 	unsigned int						GetPercentage() const;
+ 	void								setPercentage(const unsigned int & _perc ) ;
+ 	unsigned int						getPercentage() const;
  	
  private:
  	QRapidshareDownload( const QRapidshareDownload & _cpy ) ; // hide 
- 	QRapidshareDownload() ;									  // hide 
  	virtual void						timerEvent(QTimerEvent *event);	
- 	QString								ParseResponseAndGetNewUrl(const QString & resp);
- 	int									ParseResponseAndGetFileSize(const QString & resp);
- 	void								TranslateAnswer();
- 	QString 							ParsePostReponseAndGetAddress(const QString & resp);
- 	void								SetUrlFileAddress(const QString & _addr ) ;
- 	void								RenameFile();
+ 	QString								parseResponseAndGetNewUrl(const QString & resp);
+ 	int									parseResponseAndGetFileSize(const QString & resp);
+ 	void								translateAnswer();
+ 	QString 							parsePostReponseAndGetAddress(const QString & resp);
+ 	void								setUrlFileAddress(const QString & _addr ) ;
+ 	void								renameFile();
  private:
  	QString								m_ReferrerFileAddress;
  	QString 							m_fileDestination;
@@ -173,9 +131,9 @@ class QRapidshareDownload : public QObject, public IDownload
  	void 								proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator );
  	void 								readyRead ( const QHttpResponseHeader & resp );
  signals:
- 	void								WhatAmIDoing(const DownloadState::States& what);
- 	void								DownloadStatus(const int & istate );
- 	void								Done();
+ 	void								whatAmIDoing(const DownloadState::States& what);
+ 	void								downloadStatus(const int & istate );
+ 	void								done();
  	void								downloadRate(const QString & dwnlRate);
  };
 #endif

@@ -1,4 +1,5 @@
 #include "rapidshareengine.h"
+#include "qrapidsharedownload.h";
 #include <map>
 
 RapidshareEngine::RapidshareEngine() : DownloadEngine("rapidshare"), m_UserName(""),m_UserPass("")
@@ -20,5 +21,6 @@ void RapidshareEngine::setOptionsForEngine(const std::map< std::string, void * >
 IDownload* RapidshareEngine::spawn() const 
 {
 	//FIXME: create QRapidshareDownload 
-    return NULL ; 
+    IDownload* download = new QRapidshareDownload();
+    return download;
 }
