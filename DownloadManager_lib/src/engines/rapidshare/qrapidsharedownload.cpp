@@ -219,7 +219,7 @@
  				qDebug() << ("isClosed, open it");
  				if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
  				{
- 					qDebug()<<("ERROR ..:::DDD124");
+ 					qDebug()<<("ERROR '-_- "); //. 
  					// message = bad
  					// 
  					return ;
@@ -581,7 +581,7 @@
 {
 	RSDM_LOG_FUNC ;
 	QString ret = QString(url);
-    ret = ret.right(ret.indexOf("/files") + 6);
+    ret = ret.right(ret.length() - ret.indexOf("/files") - 7);
 	// remove /213123123/ <- digits only
 	ret = ret.remove(QRegExp ("\\d+/") );
     int ind = ret.indexOf(".htm");

@@ -80,7 +80,7 @@ void DownloadManager::whatAmIDoing(const DownloadState::States& what)
 void DownloadManager::downloadStatus(const int & istate )
 {
     qDebug() << istate;
-    emit globalProgress(istate);
+    emit globalProgress(getPercentage());
 }
 
 void DownloadManager::done()
@@ -95,12 +95,12 @@ void DownloadManager::downloadRate(const QString & dwnlRate)
 int DownloadManager::getPercentage() 
 {
     DownloadListType::iterator it = m_DownloadList.begin(); 
-    DownloadListType::iterator itEnd = m_DownloadList.begin(); 
+    DownloadListType::iterator itEnd = m_DownloadList.end(); 
     int count  = m_DownloadList.size(); 
     int sum = 0 ; 
     for ( it ; it != itEnd ;++it ) 
     {
-        sum += (*it)->GetPercentage() ; 
+        sum += (*it)->GetProgress();
     }
     return sum = ((double)sum/(double)count) ; 
 }

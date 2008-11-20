@@ -24,14 +24,15 @@ const std::string & IDownload::destinationAddress() const
 
 unsigned int IDownload::GetProgress() const 
  {
- 	if ( m_pDownloadInfo->m_Percentage == 0 ) 
- 	{
- 		if ( m_pDownloadInfo->m_BytesDownloaded != 0 && m_pDownloadInfo->m_DownloadFileSize != 0)
+     int tmp = m_pDownloadInfo->m_Percentage ;
+     if( m_pDownloadInfo->m_Percentage != 100 )
+     {
+ 	    if ( m_pDownloadInfo->m_BytesDownloaded != 0 && m_pDownloadInfo->m_DownloadFileSize != 0)
  		{
- 			m_pDownloadInfo->m_Percentage = (double)((double)m_pDownloadInfo->m_BytesDownloaded  / (double)m_pDownloadInfo->m_DownloadFileSize  ) * 100  ; 
+ 			m_pDownloadInfo->m_Percentage = (double)((double)m_pDownloadInfo->m_BytesDownloaded  / (double)m_pDownloadInfo->m_DownloadFileSize  ) * 100 ; 
  		}
- 	}
- 	return m_pDownloadInfo->m_Percentage;
+     }
+     return m_pDownloadInfo->m_Percentage ;
  }
 
 void IDownload::setDownloadManager(DownloadManager* manager)
