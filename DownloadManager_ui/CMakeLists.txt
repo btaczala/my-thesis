@@ -2,8 +2,20 @@ cmake_minimum_required(VERSION 2.6)
 PROJECT( DownloadManager_ui )
 
 ## CMAKE File for app/src
+FIND_PACKAGE(Qt4 REQUIRED )
 
-set(QT_USE_QTNETWORK 1)
+SET(QT_USE_QTNETWORK 1)
+SET(VS_SUBSYSTEM "")
+
+IF(WIN32)
+	IF( CONSOLE_ON )
+		SET(VS_SUBSYSTEM "")
+	ELSE(CONSOLE_ON)
+		SET(VS_SUBSYSTEM WIN32)
+		SET(QT_USE_QTMAIN TRUE)
+	ENDIF (CONSOLE_ON)
+ENDIF (WIN32)
+
 SET( APP_SRCS
     src/main.cpp
     src/mainwindow.cpp
@@ -30,14 +42,11 @@ SET( APP_UI_FORMS
     )
 SET(APP_RSC src/resources/main_resources.qrc )
 #ADD_DEFINITIONS( -Wall )
-find_package(Qt4 REQUIRED )
+
 INCLUDE( ${QT_USE_FILE})
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})
 QT4_WRAP_UI (APP_UI_HDRS ${APP_UI_FORMS} )
 QT4_WRAP_CPP (APP_MOC_SRCS ${APP_MOC_HDRS})
 
-#INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR}/QtRapidshareDownloadManager_app/src )
-#INCLUDE_DIRECTORIES( ./../../QtRapidshareDownloadManager_corelib/src )
-
-add_executable( DownloadManager_ui ${APP_UI_HDRS} ${APP_MOC_SRCS} ${APP_SRCS} ${APP_RSC_SCRS} ${APP_HDRS} )
-target_link_libraries(DownloadManager_ui ${QT_LIBRARIES})
+ADD_EXECUTABLE( DownloadManager_ui ${VS_SUBSYSTEM} ${APP_UI_HDRS} ${APP_MOC_SRCS} ${APP_SRCS} ${APP_RSC_SCRS} ${APP_HDRS} )
+TARGET_LINK_LIBRARIES(DownloadManager_ui ${QT_LIBRARIES})
