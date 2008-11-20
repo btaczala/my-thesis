@@ -1,4 +1,7 @@
- #include "qrapidsharedownload.h"
+#include <qDebug>
+
+#include "qrapidsharedownload.h"
+
  
  
  QRapidshareDownload::QRapidshareDownload( /*const QString & _UrlFileAddress, const QString & _fileDest*/ ) 
@@ -46,12 +49,16 @@
     m_ReferrerFileAddress = m_UrlAddress.c_str();
 
     QString fileName(m_FileDestination.c_str());
+    fileName += "/";
+    fileName += transformUrlPathToLocalPath(m_ReferrerFileAddress);
     if( fileName.isEmpty())
        return;
+    
+    m_qFileDestination = fileName;
 
     m_apFile->setFileName( fileName + ".part");
 
- 	if ( QFile::exists(m_fileDestination) )
+    if ( QFile::exists(m_apFile->fileName()) )
  	{
  		 // resume downloading 
  	}
@@ -65,8 +72,8 @@
  	m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
  	m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
  	m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
- 	m_Logger << QString("First GET");
- 	m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
+ 	qDebug() << QString("First GET");
+ 	qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
  	m_apHttpObj->setHost(  m_apFileUrl->host() );
  	m_apHttpObj->request( *( m_apHttpRequestHeader ) );
  }
@@ -94,9 +101,9 @@
  	m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
  	m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)");
  	m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
- 	m_Logger << QString("Resumed !!!!!!");
+ 	qDebug() << QString("Resumed !!!!!!");
  	QString httpHeader = DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
- 	m_Logger << httpHeader;
+ 	qDebug() << httpHeader;
  	QString host = m_apFileUrl->host();
  	m_apHttpObj->setHost( m_DownloadServerHost );
  	m_apHttpObj->request( *( m_apHttpRequestHeader ) );
@@ -115,29 +122,29 @@
  /********** SLOTS **************/
  void QRapidshareDownload::requestStarted(const int & idReq)
  {
- 	m_Logger << __FUNCTION_NAME__<< "idReq =  " << idReq ;
+ 	qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq ;
  }
  void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
  {	
- 	m_Logger << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
+ 	qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
  	m_apFile->close();
  	if( isFalse )
  	{
- 		m_Logger << m_apHttpObj->errorString() ;
+ 		qDebug() << m_apHttpObj->errorString() ;
  		return ; 
  	}
  }
  void QRapidshareDownload::stateChanged(const int & iState)
  {	
- 	m_Logger << __FUNCTION_NAME__<< "iState =  " << iState ;
+ 	qDebug() << __FUNCTION_NAME__<< "iState =  " << iState ;
  }
  void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
  {	
- 	m_Logger << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
+ 	qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
  }
  void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
  {
- 	m_Logger << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
+ 	qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
  	// support for Direct downloads
  	char *buff = NULL ; 
  	qint64 iBytes2 = 0;
@@ -148,7 +155,7 @@
  		buff = new char[bytes];
  		iBytes2 = m_apHttpObj->read(buff, bytes);
  		if( -1 == iBytes2 )
- 			m_Logger<<("ERROR while reading from Http stream ");
+ 			qDebug()<<("ERROR while reading from Http stream ");
  		QString decive ( buff ) ;
  		if( decive.contains("<!DOCTYPE"))
  		{
@@ -167,10 +174,10 @@
  		{
  			if(!m_apFile->isOpen())
  			{
- 				m_Logger << "Openning file to resume " ; 
+ 				qDebug() << "Openning file to resume " ; 
  				if(!m_apFile->open(QIODevice::WriteOnly | QIODevice::Append ) )
  				{
- 					m_Logger << "UnSuccessfull opening file " ; 
+ 					qDebug() << "UnSuccessfull opening file " ; 
  					return ; 
  				}
  				m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
@@ -180,7 +187,7 @@
  			}
  		}
  	}
- 	if ( m_pDownloadInfo->m_State  == DOWNLOADING ) 
+ 	if ( m_pDownloadInfo->m_State  == DownloadState::DOWNLOADING ) 
  	{
  		//m_pDownloadInfo->m_FileInfo.m_FileSize = total ; 
  		// just past it to the file ! 
@@ -191,7 +198,7 @@
  		double dResTotal = dDone / dTotal;
  		dResTotal *= 100;
  		m_Progress = (int)dResTotal;
- 		m_Logger << "emit :DownloadStatus("<< m_Progress <<")";  
+ 		qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
  		emit downloadStatus(m_Progress) ;
  
  		m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
@@ -202,33 +209,33 @@
  			iBytes2 = m_apHttpObj->read(buff, bytes);
  		}
  		if ( -1 == iBytes2)
- 			m_Logger<<("ERROR while reading from Http stream ");
+ 			qDebug()<<("ERROR while reading from Http stream ");
  
  		else
  		{
- 			m_Logger << "readed bytes " << iBytes2;
+ 			qDebug() << "readed bytes " << iBytes2;
  			if( !m_apFile->isOpen())
  			{
- 				m_Logger << ("isClosed, open it");
+ 				qDebug() << ("isClosed, open it");
  				if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
  				{
- 					m_Logger<<("ERROR ..:::DDD124");
+ 					qDebug()<<("ERROR ..:::DDD124");
  					// message = bad
  					// 
  					return ;
  				}
  				else
- 					m_Logger << "opened";
+ 					qDebug() << "opened";
  			}
  
  			qint64 btmp = m_apFile->write(buff,iBytes2); 
  			if( -1 == btmp )
  			{
- 				m_Logger<<("write failed");
+ 				qDebug()<<("write failed");
  				return;
  			}
  			else
- 				m_Logger << ("written successful") << btmp;
+ 				qDebug() << ("written successful") << btmp;
  		}
  		delete[] buff;
  	}
@@ -241,35 +248,35 @@
  }
  void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
  {
- 	m_Logger << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
+ 	qDebug() << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
  }
  void QRapidshareDownload::proxyAuthenticationRequired(const QNetworkProxy & proxy, QAuthenticator * authenticator)
  {
- 	m_Logger << __FUNCTION_NAME__;
+ 	qDebug() << __FUNCTION_NAME__;
  }
  void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
  {
- 	m_Logger << __FUNCTION_NAME__;
+ 	qDebug() << __FUNCTION_NAME__;
  }
  
  void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
  {
  	RSDM_LOG_FUNC ;
- 	m_Logger << resp.reasonPhrase() ;
+ 	qDebug() << resp.reasonPhrase() ;
  	int iStatusCode = resp.statusCode(); 
  	if( iStatusCode == 200 || iStatusCode == 301 || iStatusCode == 302 || iStatusCode == 303 || iStatusCode == 307 )
  	{
  		;
  	}
  	else
- 		m_Logger << "Error response:"<< iStatusCode;
+ 		qDebug() << "Error response:"<< iStatusCode;
  }
  void QRapidshareDownload::done(const bool & error)
  {
  	RSDM_LOG_FUNC ;
  	if( error )
  	{
- 		m_Logger << m_apHttpObj->errorString();
+ 		qDebug() << m_apHttpObj->errorString();
  		return ;
  	}
 
@@ -291,8 +298,8 @@
  		m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
  		m_apHttpRequestHeader->setValue("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, ap//plication/vnd.ms-powerpoint, application/msword, application/x-shockwave-flash, */*" );
  		m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
- 		m_Logger << "Second GET";		
- 		m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
+ 		qDebug() << "Second GET";		
+ 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
  		m_apHttpObj->setHost( m_apFileUrl->host() );
  		m_apHttpObj->request( *( m_apHttpRequestHeader ));
   		m_rssmState = GET_SECOND ;
@@ -307,7 +314,7 @@
  		m_pDownloadInfo->m_DownloadFileSize = iFileSize ; 
  		if(newUrl.isEmpty() )
  		{
- 			m_Logger<<("Could not find file on server");
+ 			qDebug()<<("Could not find file on server");
             m_pDownloadInfo->m_State = DownloadState::FAILED;
  			emit whatAmIDoing( m_pDownloadInfo->m_State );
  			emit done();
@@ -325,8 +332,8 @@
  		m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
  		m_apHttpRequestHeader->setValue("Content-Length", "16");
  		m_apHttpRequestHeader->setValue("Referrer", m_ReferrerFileAddress);
- 		m_Logger << "First post"; 		
- 		m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
+ 		qDebug() << "First post"; 		
+ 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
  		m_apHttpObj->setHost( m_apFileUrl->host() );
  		m_apHttpObj->request( *( m_apHttpRequestHeader ), "dl.start=PREMIUM");
   		m_rssmState = POST_FIRST ;
@@ -347,9 +354,9 @@
  		m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
  		m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
  		m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
- 		m_Logger << "First post"; 
+ 		qDebug() << "First post"; 
  		m_rssmState = GET_THIRD; 
- 		m_Logger << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;		
+ 		qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;		
  		m_apHttpObj->setHost( m_apFileUrl->host() );
  		m_apHttpObj->request( *( m_apHttpRequestHeader ) );
  		m_timerId = startTimer(1000);
@@ -393,7 +400,7 @@
  	z = resp.indexOf("form action");
  	if(z < 0 )
  	{
- 		m_Logger << "Could not localize substring!" << resp ;
+ 		qDebug() << "Could not localize substring!" << resp ;
  		if( resp.indexOf("The file could not be found") >=0 )
  		{
  			
@@ -435,7 +442,7 @@
  	z = resp.indexOf("downloadlink");
  	if(z < 0 )
  	{
- 		m_Logger <<"err: Hoho, response is zero!";
+ 		qDebug() <<"err: Hoho, response is zero!";
  		return -1;
  	}
  	for(;;)
@@ -475,7 +482,7 @@
  	z = resp.indexOf("form name");
  	if(z < 0 )
  	{
- 		m_Logger << " err : Could not localize substring!";
+ 		qDebug() << " err : Could not localize substring!";
  		return "";
  	}
  	for(;;)
@@ -493,7 +500,7 @@
  			break;
  		newUrl +=line.at(i);
  	}
- 	m_Logger << newUrl;
+ 	qDebug() << newUrl;
  	return newUrl;
  }
  void QRapidshareDownload::setUser(const QRapidshareUser & rsUser)
@@ -527,7 +534,7 @@
  const QString QRapidshareDownload::getFileDestination() const
  {
  	RSDM_LOG_FUNC ;
- 	return m_fileDestination ;
+ 	return m_qFileDestination ;
  };
  
  /*
@@ -554,8 +561,8 @@
  
  void QRapidshareDownload::renameFile()
  {
- 	if(m_apFile.get()!=NULL && !m_fileDestination.isEmpty())
- 		QFile::rename(m_apFile->fileName(), m_fileDestination);
+ 	if(m_apFile.get()!=NULL && !m_qFileDestination.isEmpty())
+ 		QFile::rename(m_apFile->fileName(), m_qFileDestination);
  }
 
  bool QRapidshareDownload::checkForErrors( const QByteArray& response )
@@ -570,4 +577,17 @@
      return false;
  }
  
- 
+ QString QRapidshareDownload::transformUrlPathToLocalPath(const QString & url)
+{
+	RSDM_LOG_FUNC ;
+	QString ret = QString(url);
+    ret = ret.right(ret.indexOf("/files") + 6);
+	// remove /213123123/ <- digits only
+	ret = ret.remove(QRegExp ("\\d+/") );
+    int ind = ret.indexOf(".htm");
+    if( ind != -1 )
+    {
+        ret = ret.left( ind );
+    }
+	return ret;
+}

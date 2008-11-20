@@ -104,9 +104,11 @@ class QRapidshareDownload : public QObject, public IDownload
  	void								renameFile();
 
     bool                                checkForErrors( const QByteArray& response );
+    QString                             transformUrlPathToLocalPath(const QString & url);
+    QRapidshareDownload&                operator=( const QRapidshareDownload& rhs );
  private:
  	QString								m_ReferrerFileAddress;
- 	QString 							m_fileDestination;
+ 	QString 							m_qFileDestination;
  	QString								m_DownloadServerHost ; 
  	std::auto_ptr<QHttp>				m_apHttpObj;
  	std::auto_ptr<QHttpRequestHeader>	m_apHttpRequestHeader;
