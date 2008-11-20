@@ -4,7 +4,7 @@
 #include "enginemanager.h"
 
 #include <boost/bind.hpp>
-
+#include <QDebug>
 #include <QTimer>
 
 DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0),m_pEngineManager(new EngineManager())
@@ -33,6 +33,8 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     if ( !pEngine)
         return ; 
     pDownload = pEngine->spawn() ; 
+    pDownload->setDownloadManager( this );
+    pDownload->setConnections();
     pDownload->setUrlAddress(urlAddress) ;
     pDownload->setDestinationAddress(destination);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
@@ -69,4 +71,24 @@ IDownload* DownloadManager::find(const std::string & urlAddress )
     if ( it == m_DownloadList.end() )
         return NULL ; 
     return it->get();
+}
+
+void DownloadManager::whatAmIDoing(const DownloadState::States& what)
+{
+    qDebug() << (int) what;
+}
+
+void DownloadManager::downloadStatus(const int & istate )
+{
+    qDebug() << istate;
+}
+
+void DownloadManager::done()
+{
+    qDebug() << "done";
+}
+
+void DownloadManager::downloadRate(const QString & dwnlRate)
+{
+    qDebug() << dwnlRate;
 }

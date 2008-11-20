@@ -591,3 +591,11 @@
     }
 	return ret;
 }
+
+ void QRapidshareDownload::setConnections()
+ {
+    QObject::connect(this, SIGNAL(whatAmIDoing(const DownloadState::States&)), (QObject*)m_pDownloadManager, SLOT(whatAmIDoing(const DownloadState::States&)));
+    QObject::connect(this, SIGNAL(downloadStatus(const int&)), (QObject*)m_pDownloadManager, SLOT(downloadStatus(const int&)));
+    QObject::connect(this, SIGNAL(done()), (QObject*)m_pDownloadManager, SLOT(done()));
+    QObject::connect(this, SIGNAL(downloadRate(const QString&)), (QObject*)m_pDownloadManager, SLOT(downloadRate(const QString&)));
+ }

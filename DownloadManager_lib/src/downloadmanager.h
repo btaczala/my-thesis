@@ -24,6 +24,8 @@
 #include <boost/shared_ptr.hpp>
 #include <QObject>
 
+#include "idownload.h"
+
 
 class IDownload ; 
 class DownloadEngine ;
@@ -52,6 +54,11 @@ class DownloadManager : public QObject
     private slots:
         void                    slot_listChanged() ; 
         void                    init();
+
+        void					whatAmIDoing(const DownloadState::States& what);
+ 	    void					downloadStatus(const int & istate );
+ 	    void					done();
+ 	    void					downloadRate(const QString & dwnlRate);
         
 
 

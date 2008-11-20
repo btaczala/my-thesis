@@ -21,6 +21,8 @@
 #define IDOWNLOADMANAGER_H
 #include <memory>
 #include <string>
+
+
 /*! \struct DownloadState
  * \brief Holds information about bytes read. 
  */
@@ -47,6 +49,9 @@ public:
 
 };
 
+class DownloadManager;
+
+
 class IDownload 
 {
 	public :
@@ -55,8 +60,9 @@ class IDownload
         DownloadState * 	downloadInfo () const ; 
 		virtual void 		start() = 0 ; 
 		virtual void 		stop() = 0 ; // abort () 
-		virtual void 		restart() = 0 ; 
-
+		virtual void 		restart() = 0 ;
+        virtual void        setConnections() = 0;
+        void                    setDownloadManager(DownloadManager* manager);
         DownloadState::States   GetState() const {return m_pDownloadInfo->m_State; };
         void                    SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
         unsigned int            GetBytesDownloaded() const { 	return m_pDownloadInfo->m_BytesDownloaded ;  };
@@ -75,5 +81,6 @@ class IDownload
 		std::string						    m_UrlAddress ; 
 		std::string						    m_FileDestination ;
         mutable unsigned int				m_Progress;
+        DownloadManager*                    m_pDownloadManager;
 };
 #endif //  IDOWNLOADMANAGER_H

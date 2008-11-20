@@ -64,8 +64,9 @@ class QRapidshareDownload : public QObject, public IDownload
     
     void								setUser(const QRapidshareUser & rsUser );
     void								setUser(const QString& rsName,  const QString& pass); 	
-    QRapidshareUser *					getUser() const ;
- 	//void 								Download(const QString & _addr = QString("") , const QString & _fileDest = QString(""));
+    QRapidshareUser*					getUser() const ;
+    void                                setConnections();
+
  
  	bool								operator==( const QRapidshareDownload & _cmp );
  	void								setRapidshareUser(const QRapidshareUser & _usr ) ;
@@ -95,6 +96,7 @@ class QRapidshareDownload : public QObject, public IDownload
  	
  private:
  	QRapidshareDownload( const QRapidshareDownload & _cpy ) ; // hide 
+
  	virtual void						timerEvent(QTimerEvent *event);	
  	QString								parseResponseAndGetNewUrl(const QString & resp);
  	int									parseResponseAndGetFileSize(const QString & resp);
@@ -124,8 +126,8 @@ class QRapidshareDownload : public QObject, public IDownload
  	qint64								m_readedBytes;
  	RSLogger							m_Logger;
     QList<const char*>                  m_errorsList;
- 	
 	RS_State							m_rssmState;
+
  private slots:
  	void 								requestStarted(const int & idReq) ;
  	void 								requestFinished(const int & idReq, const bool & isFalse) ;
@@ -137,7 +139,8 @@ class QRapidshareDownload : public QObject, public IDownload
  	void 								authenticationRequired ( const QString & hostname, quint16 port, QAuthenticator *authenticator );
  	void 								proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator );
  	void 								readyRead ( const QHttpResponseHeader & resp );
- signals:
+ 
+signals:
  	void								whatAmIDoing(const DownloadState::States& what);
  	void								downloadStatus(const int & istate );
  	void								done();
