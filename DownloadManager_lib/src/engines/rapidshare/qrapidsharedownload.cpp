@@ -581,9 +581,7 @@
 {
 	RSDM_LOG_FUNC ;
 	QString ret = QString(url);
-    ret = ret.right(ret.length() - ret.indexOf("/files") - 7);
-	// remove /213123123/ <- digits only
-	ret = ret.remove(QRegExp ("\\d+/") );
+    ret = ret.right(ret.length() - ret.lastIndexOf("/") - 1);
     int ind = ret.indexOf(".htm");
     if( ind != -1 )
     {
