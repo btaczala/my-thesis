@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget * parent)
 	setMenuBar(menuBar);
 
     InitializeWidgets();
+    
+    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ;   
+    connect( Actions::getAction(Actions::scStartRestoreActionText),SIGNAL( triggered() ),this,SLOT( StartResume() ) );
 };
 
 MainWindow::~MainWindow() throw()
@@ -60,6 +63,8 @@ void MainWindow::InitilizeToolbarWidget()
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStopActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scRemoveActionText ) );
+    m_ToolbarWidget->addSeparator();
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scQuitActionText ) );
     
 
     addToolBar(m_ToolbarWidget.get());
@@ -68,5 +73,9 @@ void MainWindow::InitilizeToolbarWidget()
 void MainWindow::InitilizeDownloadWidget()
 {
     setCentralWidget(m_DownloadWidget.get());
+}
+////////////////////////// slots /////////////////////////////////
+void MainWindow::StartResume()
+{
 }
 

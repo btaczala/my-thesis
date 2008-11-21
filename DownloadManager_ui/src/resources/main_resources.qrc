@@ -5,5 +5,11 @@
 		<file>configure.png</file>
 		<file>data_transfer.png</file>
 		<file>download_item.png</file>
+		<file>exit.png</file>
+		<file>start.png</file>
+		<file>stop.png</file>
+		<file>start_resume.png</file>
+		<file>start_resume_red.png</file>
+		<file>new_file.png</file>
     </qresource>
 </RCC>

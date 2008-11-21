@@ -34,6 +34,8 @@ public:
     static const QString scStartRestoreActionText ; 
     static const QString scStopActionText ; 
     static const QString scRemoveActionText ; 
+    static const QString scQuitActionText ; 
+    static const QString scHideUnHideAppActionText ; 
 private:
     static const Actions* instance() ; 
     QAction* action(const QString & actionName ) const ; 

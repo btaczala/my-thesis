@@ -24,6 +24,9 @@ const QString Actions::scNewActionText = QObject::tr("New") ;
 const QString Actions::scStartRestoreActionText  = QObject::tr("Start\\Resume") ;
 const QString Actions::scStopActionText = QObject::tr("Stop") ;
 const QString Actions::scRemoveActionText = QObject::tr("Remove") ;
+const QString Actions::scQuitActionText = QObject::tr("Quit") ;
+const QString Actions::scHideUnHideAppActionText = QObject::tr("Hide\\Show App") ;
+
 
 const Actions* Actions::instance()
 {
@@ -32,18 +35,18 @@ const Actions* Actions::instance()
 };
 Actions::Actions()
 {
-    // the actions will be orphans.
-    m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( scNewActionText,NULL) );
-    m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( scStartRestoreActionText,NULL) );
-    m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( scStopActionText,NULL) );
+    // the actions will be orphans, 
+    m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( QIcon(":/new_file.png"),scNewActionText,NULL) );
+    m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( QIcon(":/start_resume.png"),scStartRestoreActionText,NULL) );
+    m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( QIcon(":/stop.png"),  scStopActionText,NULL) );
     m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( scRemoveActionText,NULL) );
-
+    m_ActionContainer[scQuitActionText] = QActionShPtr( new QAction( QIcon(":/exit.png"),scQuitActionText,NULL) );
+    m_ActionContainer[scHideUnHideAppActionText] = QActionShPtr( new QAction( scHideUnHideAppActionText,NULL) );
 }
 QAction* Actions::getAction(const QString &actionName) 
 {
     const Actions* pActContainer = Actions::instance() ; 
-    return pActContainer->action( actionName ) ;
-    
+    return pActContainer->action( actionName ) ;   
 }
 QAction* Actions::action(const QString &actionName) const 
 {

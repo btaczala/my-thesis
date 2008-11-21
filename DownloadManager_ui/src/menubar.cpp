@@ -25,6 +25,8 @@ MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_Settings
     m_SettingsMenu = new QMenu( tr("Settings"),parent );
     m_FileMenu->addAction( Actions::getAction( Actions::scNewActionText ) ) ; 
     m_FileMenu->addSeparator();
+    m_FileMenu->addAction( Actions::getAction ( Actions::scHideUnHideAppActionText ) ) ;
+    m_FileMenu->addAction( Actions::getAction ( Actions::scQuitActionText ) ) ;
 
     addMenu(m_FileMenu);
     addMenu(m_SettingsMenu);
