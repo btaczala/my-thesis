@@ -55,7 +55,7 @@ namespace DownloadWidgetDelegates
     {
 	    Q_OBJECT
     public:
-	    QDownloadProgressDelegate(QObject *parent ) ; 
+        QDownloadProgressDelegate(QObject *parent ) : QItemDelegate(parent){}; 
 	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
     };
 };

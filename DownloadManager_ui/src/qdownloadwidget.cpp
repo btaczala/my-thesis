@@ -20,12 +20,14 @@
 #include "qdownloadwidget.h"
 #include <QPaintEvent>
 #include <QPainter>
+#include <QApplication> // for style in QApplication::style()
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
 {
     QStringList headers ;
     headers << tr("#id") << tr("Path") << tr("File size") << tr("Progress") << tr("Download") ; 
     setHeaderLabels(headers);
     setItemDelegateForColumn(0, new DownloadWidgetDelegates::QDownloadIconedItemDelegate(QPixmap(":/download_item.png"), this));
+    setItemDelegateForColumn(3, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
     setItemDelegateForColumn(4, new DownloadWidgetDelegates::QDownloadIconedItemDelegate(QPixmap(":/download_item.png"), this));
     setSelectionBehavior( QAbstractItemView::SelectRows );
     setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -65,7 +67,7 @@ namespace DownloadWidgetDelegates
             painter->setPen(option.palette.highlightedText().color());
         }
         
-        QDownloadWidget* p = static_cast<QDownloadWidget*>(parent());
+        QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
         QTreeWidgetItem* item = p->topLevelItem(index.row());
         
         QRect rect = option.rect;
@@ -83,7 +85,41 @@ namespace DownloadWidgetDelegates
 
     void QDownloadProgressDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
     {
+        painter->save();
+        QStyleOptionProgressBar progressBarOption;
+    	progressBarOption.state = QStyle::State_Enabled;
+	    progressBarOption.direction = QApplication::layoutDirection();
+	    progressBarOption.rect = option.rect;
+	    progressBarOption.fontMetrics = QApplication::fontMetrics();
+	    progressBarOption.minimum = 0;
+	    progressBarOption.maximum = 100;
+        progressBarOption.textAlignment = Qt::AlignCenter;
+	    progressBarOption.textVisible = true;	
+	    int iRow = index.row();
+	    int progress = 7;// should really be (qobject_cast<QDownloadWidget*>parent())->getProgress();
+        // getProgress will return current progress. 
+        // m_Progress will be set like:
+        /* MainWindows          DownloadManager             IDownload
+            |   getProgressAt(int)  |                           |
+            |-----------------------|                           |
+            |                       | find(int)                 |
+            |                       |------                     |
+            |                       |     |                     |
+            |                       |<-----                     |
+            |                       |            getProgress    |
+            |                       |--------------------------->
+            |                       |<--------------------------|
+            |returnProgressAt(int)  |         returnProgress    |
+            |-----------------------|                           |
+            |                       |                           |
 
+        */
+        if(progress == -1 )
+		    progress = 0;
+        progressBarOption.progress = progress < 0 ? 0 : progress;
+	    progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
+        QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
+        painter->restore();
     }
 
 }

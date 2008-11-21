@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget * parent)
 	QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
 	setMenuBar(menuBar);
 
-     InitializeWidgets();
+    InitializeWidgets();
 };
 
 MainWindow::~MainWindow() throw()
