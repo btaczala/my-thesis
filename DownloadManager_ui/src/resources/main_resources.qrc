@@ -4,5 +4,6 @@
 		<file>user.png</file>
 		<file>configure.png</file>
 		<file>data_transfer.png</file>
+		<file>download_item.png</file>
     </qresource>
 </RCC>

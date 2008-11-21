@@ -33,11 +33,30 @@ protected:
 	virtual void paintEvent(QPaintEvent *event);
 };
 
-class QDownloadWidgetDelegate :	public QItemDelegate
+namespace DownloadWidgetDelegates
 {
-	Q_OBJECT
-public:
-	QDownloadWidgetDelegate(QObject *parent ) ; 
-	virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+    enum DownloadViewItemMargins
+    {
+        horizonatalMargin = 3,
+        verticalMargin = 1,
+    };
+
+    class QDownloadIconedItemDelegate : public QItemDelegate
+    {
+	    Q_OBJECT
+    public:
+	    QDownloadIconedItemDelegate(QPixmap& icon, QObject *parent ) ; 
+	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+    private:
+         QPixmap m_icon;
+    };
+
+    class QDownloadProgressDelegate :	public QItemDelegate
+    {
+	    Q_OBJECT
+    public:
+	    QDownloadProgressDelegate(QObject *parent ) ; 
+	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+    };
 };
 #endif // QDOWNLOADWIDGET_H

@@ -26,15 +26,22 @@
 #include "menubar.h"
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
+	@author Tomasz Czyzewski <tomasz.czy@gmail.com>
 */
 class MainWindow : public QMainWindow
 {
-	Q_OBJECT
-	public:
-		MainWindow(QWidget * parent = 0);
-		~MainWindow() throw() ; 
-	private:
-		std::auto_ptr<UI::MenuBar>			m_MenuBar ; 
-		std::auto_ptr<QDownloadWidget>			m_DownloadWidget;
+    Q_OBJECT
+    public:
+        MainWindow(QWidget * parent = 0);
+        ~MainWindow() throw() ; 
+    protected:
+        void InitilizeToolbarWidget();
+        void InitilizeDownloadWidget();
+        void InitializeWidgets();
+
+    private:
+    std::auto_ptr<UI::MenuBar> m_MenuBar; 
+    std::auto_ptr<QToolBar> m_ToolbarWidget; 
+    std::auto_ptr<QDownloadWidget> m_DownloadWidget;
 };
 #endif
