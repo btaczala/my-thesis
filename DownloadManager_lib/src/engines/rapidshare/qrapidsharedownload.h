@@ -57,7 +57,7 @@ class QRapidshareDownload : public QObject, public IDownload
  	
  	QRapidshareDownload(/*const QString & _UrlFileAddress, const QString & _fileDest*/);
  	virtual 							~QRapidshareDownload();
- 	//from IDownload
+ 	//from IDownlo
     void 		                        start(); 
 	void 		                        stop(); // abort () 
 	void 		                        restart(); 
@@ -86,7 +86,7 @@ class QRapidshareDownload : public QObject, public IDownload
  	void								renameFile();
 
     bool                                checkForErrors( const QByteArray& response );
-    QString                                 (const QString & url);
+    QString                             transformUrlPathToLocalPath(const QString & url);
     QRapidshareDownload&                operator=( const QRapidshareDownload& rhs );
  private:
  	QString								m_ReferrerFileAddress;
