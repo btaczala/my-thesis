@@ -97,12 +97,14 @@ int DownloadManager::getPercentage()
     DownloadListType::iterator it = m_DownloadList.begin(); 
     DownloadListType::iterator itEnd = m_DownloadList.end(); 
     int count  = m_DownloadList.size(); 
-    int sum = 0 ; 
+    unsigned int sum = 0 ; 
+    unsigned int total = 0;
     for ( it ; it != itEnd ;++it ) 
     {
-        sum += (*it)->GetProgress();
+        sum += (*it)->GetBytesDownloaded();
+        total += (*it)->GetFileSize();
     }
-    return sum = ((double)sum/(double)count) ; 
+    return sum = ((double)sum/(double)total) * 100 ; 
 }
 
 void DownloadManager::setSignalReceiver(QObject* tato)

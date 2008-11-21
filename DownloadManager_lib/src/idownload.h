@@ -66,7 +66,6 @@ class IDownload
         DownloadState::States   GetState() const {return m_pDownloadInfo->m_State; };
         void                    SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
         unsigned int            GetBytesDownloaded() const { 	return m_pDownloadInfo->m_BytesDownloaded ;  };
-        unsigned int            GetPercentage( ) const { return m_pDownloadInfo->m_Percentage ; };
         unsigned int            GetFileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
         void                    SetFileSize( const unsigned int & fileSize ) { 	m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
         unsigned int            IDownload::GetProgress() const;
