@@ -57,42 +57,23 @@ class QRapidshareDownload : public QObject, public IDownload
  	
  	QRapidshareDownload(/*const QString & _UrlFileAddress, const QString & _fileDest*/);
  	virtual 							~QRapidshareDownload();
- 	
+ 	//from IDownload
     void 		                        start(); 
 	void 		                        stop(); // abort () 
 	void 		                        restart(); 
     
     void								setUser(const QRapidshareUser & rsUser );
     void								setUser(const QString& rsName,  const QString& pass); 	
+    void								setRapidshareUser(const QRapidshareUser & _usr );
     QRapidshareUser*					getUser() const ;
     void                                setConnections();
-
  
  	bool								operator==( const QRapidshareDownload & _cmp );
- 	void								setRapidshareUser(const QRapidshareUser & _usr ) ;
- 
- 	/*!
- 	 * GetState - Return state of download
- 	 * \return RapidShareStateMachine - state of RapidShareStateMachine
- 	*/
 
-	//FIXME:
-	//move to IDownload class;
-
- 	//unsigned int						GetProgress() const  ;
- 	unsigned int						getBytesDownloaded() const ; 
- 	unsigned int						getFileSize() const ; 
- 	void								setFileSize(const unsigned int & fileSize ) ; 
- 
  	const QString						getFullUrlFileAddress() const ; 
  	const QString						getFileDestination() const ;
  	const QString						getDownloadHost() const ; 
  	void								setDownloadHost(const QString & _host ) ;
- 
- 
- 	
- 	void								setPercentage(const unsigned int & _perc ) ;
- 	unsigned int						getPercentage() const;
  	
  private:
  	QRapidshareDownload( const QRapidshareDownload & _cpy ) ; // hide 
@@ -100,13 +81,12 @@ class QRapidshareDownload : public QObject, public IDownload
  	virtual void						timerEvent(QTimerEvent *event);	
  	QString								parseResponseAndGetNewUrl(const QString & resp);
  	int									parseResponseAndGetFileSize(const QString & resp);
- 	void								translateAnswer();
  	QString 							parsePostReponseAndGetAddress(const QString & resp);
  	void								setUrlFileAddress(const QString & _addr ) ;
  	void								renameFile();
 
     bool                                checkForErrors( const QByteArray& response );
-    QString                             transformUrlPathToLocalPath(const QString & url);
+    QString                                 (const QString & url);
     QRapidshareDownload&                operator=( const QRapidshareDownload& rhs );
  private:
  	QString								m_ReferrerFileAddress;

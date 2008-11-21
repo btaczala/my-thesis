@@ -513,13 +513,7 @@
  	RSDM_LOG_FUNC ;
  	setUser(QRapidshareUser(rsName,rsPass));
  }
-/* RapidShareStateMachine QRapidshareDownload::GetState() const 
- {
- 	RSDM_LOG_FUNC ;
- 	return m_pDownloadInfo->m_State.m_rssmState;
- }
- */
- 
+
  void QRapidshareDownload::timerEvent(QTimerEvent *event)
  {
  	RSDM_LOG_FUNC ;
@@ -537,18 +531,11 @@
  	return m_qFileDestination ;
  };
  
- /*
- unsigned int QRapidshareDownload::GetPercentage( ) const 
- {
- 	RSDM_LOG_FUNC ;
- 	return m_pDownloadInfo->m_State.m_bytesDownloaded ; 
- }
- */
- 
  QRapidshareUser * QRapidshareDownload::getUser() const
  {
  	return m_apRSUser.get() ; 
  }
+
  const QString QRapidshareDownload::getDownloadHost() const
  {
  	return m_DownloadServerHost; 
