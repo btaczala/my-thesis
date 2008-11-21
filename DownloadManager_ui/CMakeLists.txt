@@ -36,7 +36,6 @@ SET( APP_MOC_HDRS
     src/qdownloadwidget.h
     src/menubar.h
     src/toolbar.h
-    src/actions.h
 )
 SET( APP_UI_FORMS 
     )

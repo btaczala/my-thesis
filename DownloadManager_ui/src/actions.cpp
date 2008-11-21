@@ -18,19 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "actions.h"
-/*UI::ActionSet::ActionSet(QWidget *parent) : m_MenuActions(parent), m_ContextMenuActions(parent)
+#include <memory>
+
+const QString Actions::scNewActionText = QObject::tr("New") ;
+const QString Actions::scStartRestoreActionText  = QObject::tr("Start\\Resume") ;
+const QString Actions::scStopActionText = QObject::tr("Stop") ;
+const QString Actions::scRemoveActionText = QObject::tr("Remove") ;
+
+const Actions* Actions::instance()
 {
-}
-UI::ActionSet::MenuActionSet::MenuActionSet(QWidget * parent) : m_FileMenuAct(parent), m_EditMenuAct(parent)
+    static std::auto_ptr<Actions> ret( new Actions() ) ; 
+    return ret.get() ; 
+};
+Actions::Actions()
 {
+    // the actions will be orphans.
+    m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( scNewActionText,NULL) );
+    m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( scStartRestoreActionText,NULL) );
+    m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( scStopActionText,NULL) );
+    m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( scRemoveActionText,NULL) );
+
 }
-UI::ActionSet::MenuActionSet::FileMenuActionSet::FileMenuActionSet(QWidget * parent) : m_NewAct(new QAction(parent)), m_SendToTrayAct(new QAction(parent)),m_QuitAct(new QAction(parent))
+QAction* Actions::getAction(const QString &actionName) 
 {
+    const Actions* pActContainer = Actions::instance() ; 
+    return pActContainer->action( actionName ) ;
+    
 }
-UI::ActionSet::MenuActionSet::EditMenuActionSet::EditMenuActionSet(QWidget * parent) : m_StartSelectedAct(new QAction(parent)), m_PauseSelectedAct(new QAction(parent)), m_ResumeSelectedAct(new QAction(parent))
+QAction* Actions::action(const QString &actionName) const 
 {
+    MapType::iterator it  = m_ActionContainer.find(actionName) ; 
+    if ( it != m_ActionContainer.end() ) 
+        return it->get() ; 
+    return NULL ; 
 }
-UI::ActionSet::ContextMenuActionSet::ContextMenuActionSet(QWidget * parent)
-{
-}
-*/

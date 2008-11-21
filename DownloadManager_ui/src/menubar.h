@@ -20,30 +20,19 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 #include <QMenuBar>
-#include <memory>
-namespace UI
+#include <QPointer>
+
+
+class QMenu ; 
+class MenuBar : public QMenuBar
 {
-  class MenuBar : public QMenuBar
-  {
-	  Q_OBJECT
-  public:
-	  MenuBar(QWidget *parent );
-	  struct FileMenuActions
-	  {
-		  FileMenuActions(QWidget *parent);
-		  std::auto_ptr<QMenu>			m_Menu ; 
-		  std::auto_ptr<QAction>		m_NewAct;
-		  std::auto_ptr<QAction>		m_SendToTrayAct;
-		  std::auto_ptr<QAction>		m_ExitAct;
-	  }m_FileMenu;
-	  struct SettingMenuActions
-	  {
-		  SettingMenuActions(QWidget *parent);
-		  std::auto_ptr<QMenu>			m_Menu ;
-		  std::auto_ptr<QAction>		m_ConfigureAct ;
-	  }m_SettingsMenu;
-  protected:
-	  //virtual void paintEvent(QPaintEvent *event);
-  };
+  Q_OBJECT
+public:
+    MenuBar(QWidget *parent = NULL );
+private:
+    QPointer<QMenu>			m_FileMenu ; 
+    QPointer<QMenu>			m_SettingsMenu ; 
+protected:
+  
 };
 #endif // MENUBAR_H

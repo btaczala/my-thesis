@@ -22,12 +22,13 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <memory>
-#include "qdownloadwidget.h"
-#include "menubar.h"
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
 	@author Tomasz Czyzewski <tomasz.czy@gmail.com>
 */
+//fwd declarations
+class QDownloadWidget;
+class MenuBar;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -38,9 +39,8 @@ class MainWindow : public QMainWindow
         void InitilizeToolbarWidget();
         void InitilizeDownloadWidget();
         void InitializeWidgets();
-
     private:
-    std::auto_ptr<UI::MenuBar> m_MenuBar; 
+    std::auto_ptr<MenuBar> m_MenuBar; 
     std::auto_ptr<QToolBar> m_ToolbarWidget; 
     std::auto_ptr<QDownloadWidget> m_DownloadWidget;
 };

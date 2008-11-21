@@ -18,21 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "menubar.h"
-UI::MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent), m_SettingsMenu(parent), m_FileMenu(parent)
+#include "actions.h"
+MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_SettingsMenu(NULL)
 {
-	addMenu(m_FileMenu.m_Menu.get());
-	addMenu(m_SettingsMenu.m_Menu.get());	
+	m_FileMenu = new QMenu( tr("File"),parent ) ; 
+    m_SettingsMenu = new QMenu( tr("Settings"),parent );
+    m_FileMenu->addAction( Actions::getAction( Actions::scNewActionText ) ) ; 
+    m_FileMenu->addSeparator();
+
+    addMenu(m_FileMenu);
+    addMenu(m_SettingsMenu);
+
 };
-UI::MenuBar::FileMenuActions::FileMenuActions(QWidget * parent) :
-		m_Menu(new QMenu(tr("File"),parent)), m_NewAct(new QAction(tr("New download"),m_Menu.get())), m_SendToTrayAct(new QAction(tr("Send to tray"),m_Menu.get())), m_ExitAct(new QAction(tr("Quit"),m_Menu.get()))
-{
-	m_Menu->addAction(m_NewAct.get());
-	m_Menu->addSeparator();
-	m_Menu->addAction(m_SendToTrayAct.get());
-	m_Menu->addAction(m_ExitAct.get());
-	
-}
-UI::MenuBar::SettingMenuActions::SettingMenuActions(QWidget * parent) : m_Menu( new QMenu(tr("Settings"), parent)), m_ConfigureAct(new QAction(tr("Configure"), m_Menu.get()))
-{
-	m_Menu->addAction(m_ConfigureAct.get());
-}

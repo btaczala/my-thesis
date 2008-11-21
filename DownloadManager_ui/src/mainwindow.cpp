@@ -19,7 +19,10 @@
  ***************************************************************************/
 #include <QtGui>
 #include "mainwindow.h"
-using namespace UI;
+#include "menubar.h"
+#include "qdownloadwidget.h"
+#include "actions.h"
+
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
      m_ToolbarWidget(new QToolBar(this))
@@ -52,11 +55,12 @@ void MainWindow::InitializeWidgets()
 void MainWindow::InitilizeToolbarWidget()
 {
     
-    m_ToolbarWidget->addAction("New");
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewActionText ) );
     m_ToolbarWidget->addSeparator();
-    m_ToolbarWidget->addAction("Start\\Resume");
-    m_ToolbarWidget->addAction("Stop");
-    m_ToolbarWidget->addAction("Remove");
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scStopActionText ) );
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scRemoveActionText ) );
+    
 
     addToolBar(m_ToolbarWidget.get());
 }

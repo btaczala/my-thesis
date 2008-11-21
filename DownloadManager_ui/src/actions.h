@@ -17,42 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-/*#ifndef ACTIONS_H
+#ifndef ACTIONS_H
 #define ACTIONS_H
 #include <QAction>
-#include <memory>
-// only UI Actions ! ( no rsdm actions allowed ! ) 
-class QWidget ; 
-namespace UI
+#include <QMap>
+#include <QObject>
+#include <boost/shared_ptr.hpp>
+class Actions
 {
-	struct ActionSet
-	{
-		ActionSet(QWidget *parent);
-		~ActionSet();
-		struct MenuActionSet
-		{
-			MenuActionSet(QWidget *parent);
-			struct FileMenuActionSet
-			{
-				FileMenuActionSet(QWidget *parent);
-				std::auto_ptr<QAction>		m_NewAct;
-				std::auto_ptr<QAction>		m_SendToTrayAct;
-				std::auto_ptr<QAction>		m_QuitAct;
-			}m_FileMenuAct ;
-			struct EditMenuActionSet
-			{
-				EditMenuActionSet(QWidget *parent);
-				std::auto_ptr<QAction>		m_PauseSelectedAct;
-				std::auto_ptr<QAction>		m_ResumeSelectedAct;
-				std::auto_ptr<QAction>		m_StartSelectedAct;
-			}m_EditMenuAct ;
-		}m_MenuActions;
-		struct ContextMenuActionSet
-		{
-			ContextMenuActionSet(QWidget *parent);
-		}m_ContextMenuActions;
-	};
-};
+public:
+    typedef boost::shared_ptr<QAction>    QActionShPtr; 
+    typedef QMap<QString,QActionShPtr >   MapType ; 
+    static QAction* getAction(const QString & actionName ) ; 
 
+    static const QString scNewActionText ; 
+    static const QString scStartRestoreActionText ; 
+    static const QString scStopActionText ; 
+    static const QString scRemoveActionText ; 
+private:
+    static const Actions* instance() ; 
+    QAction* action(const QString & actionName ) const ; 
+    Actions(const Actions & ) ; 
+    Actions() ; 
+    Actions & operator=(const Actions & rhs) ; 
+    MapType     m_ActionContainer ; 
+};
 #endif // ACTIONS_H
-*/
+
