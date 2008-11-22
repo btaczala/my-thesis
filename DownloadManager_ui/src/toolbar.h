@@ -27,4 +27,4 @@ class ToolBar : public QToolBar
 public:
       ToolBar(QWidget *parent) ; 
 };
-#endif TOOLBAR_H
+#endif //TOOLBAR_H

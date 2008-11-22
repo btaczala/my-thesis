@@ -50,7 +50,7 @@ QAction* Actions::getAction(const QString &actionName)
 }
 QAction* Actions::action(const QString &actionName) const 
 {
-    MapType::iterator it  = m_ActionContainer.find(actionName) ; 
+    MapType::const_iterator it  = m_ActionContainer.find(actionName) ; 
     if ( it != m_ActionContainer.end() ) 
         return it->get() ; 
     return NULL ; 

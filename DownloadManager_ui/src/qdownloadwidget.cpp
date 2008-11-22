@@ -51,7 +51,7 @@ void QDownloadWidget::paintEvent( QPaintEvent *event )
 
 namespace DownloadWidgetDelegates
 {
-    QDownloadIconedItemDelegate::QDownloadIconedItemDelegate(QPixmap& icon, QObject *parent)
+    QDownloadIconedItemDelegate::QDownloadIconedItemDelegate(const QPixmap& icon, QObject *parent)
     : QItemDelegate(parent)
     {
         m_icon = icon;
@@ -66,10 +66,10 @@ namespace DownloadWidgetDelegates
             painter->fillRect(option.rect, option.palette.highlight());  
             painter->setPen(option.palette.highlightedText().color());
         }
-        
+
         QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
         QTreeWidgetItem* item = p->topLevelItem(index.row());
-        
+
         QRect rect = option.rect;
         rect.setX( rect.x() + horizonatalMargin);
         rect.setY( rect.y() + verticalMargin);

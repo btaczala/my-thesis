@@ -45,7 +45,7 @@ namespace DownloadWidgetDelegates
     {
 	    Q_OBJECT
     public:
-	    QDownloadIconedItemDelegate(QPixmap& icon, QObject *parent ) ; 
+	    QDownloadIconedItemDelegate(const QPixmap& icon, QObject *parent ) ; 
 	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
     private:
          QPixmap m_icon;
