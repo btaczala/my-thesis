@@ -21,16 +21,48 @@
 #define QDOWNLOADWIDGET_H
 #include <QTreeWidget>
 #include <QItemDelegate>
+#include <vector>
 class QPaintEvent;
+
 class QDownloadWidget : public QTreeWidget
 {
 	Q_OBJECT
 public:
 	QDownloadWidget(QWidget * parent = 0) ; 
+
+    class QDownloadWidgetColumnInfo
+    {
+    public:
+        QDownloadWidgetColumnInfo(int id, QString& colName, bool visible)
+        {
+            _id = id; _colName = colName; _visible = visible;
+        }
+        int getId() const { return _id; }
+        const QString& getName() const { return _colName; }
+        bool isVisible() const { return _visible; }
+    private:
+        int _id;
+        QString _colName;
+        bool _visible;
+    };
+
+    typedef std::vector<QDownloadWidgetColumnInfo> ColumnCollection;
+
+public slots:
+    void StartPauseSelectedDownload();
+    void StopSelectedDownload();    
+    void RemoveSelectedDownload();
+    
 private:
-	QDownloadWidget(const QDownloadWidget & ) ; // hidden 
+    QDownloadWidget(const QDownloadWidget & ) ; // hidden 
+    void InitializeColumns();
 protected:
-	virtual void paintEvent(QPaintEvent *event);
+    virtual void paintEvent(QPaintEvent *event);
+    virtual void contextMenuEvent(QContextMenuEvent * event );
+
+
+    ColumnCollection m_columns;
+    
 };
 
 namespace DownloadWidgetDelegates
@@ -40,15 +72,14 @@ namespace DownloadWidgetDelegates
         horizonatalMargin = 3,
         verticalMargin = 1,
     };
-
+    
     class QDownloadIconedItemDelegate : public QItemDelegate
     {
 	    Q_OBJECT
     public:
-	    QDownloadIconedItemDelegate(const QPixmap& icon, QObject *parent ) ; 
-	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
-    private:
-         QPixmap m_icon;
+        QDownloadIconedItemDelegate(QObject *parent ) ; 
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+
     };
 
     class QDownloadProgressDelegate :	public QItemDelegate

@@ -39,7 +39,7 @@ Actions::Actions()
     m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( QIcon(":/new_file.png"),scNewActionText,NULL) );
     m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( QIcon(":/start_resume.png"),scStartRestoreActionText,NULL) );
     m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( QIcon(":/stop.png"),  scStopActionText,NULL) );
-    m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( scRemoveActionText,NULL) );
+    m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( QIcon(":/red_cross.png"), scRemoveActionText,NULL) );
     m_ActionContainer[scQuitActionText] = QActionShPtr( new QAction( QIcon(":/exit.png"),scQuitActionText,NULL) );
     m_ActionContainer[scHideUnHideAppActionText] = QActionShPtr( new QAction( scHideUnHideAppActionText,NULL) );
 }

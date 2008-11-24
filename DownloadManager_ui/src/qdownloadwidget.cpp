@@ -21,43 +21,90 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QApplication> // for style in QApplication::style()
+#include <QtGui>
+
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
 {
-    QStringList headers ;
-    headers << tr("#id") << tr("Path") << tr("File size") << tr("Progress") << tr("Download") ; 
-    setHeaderLabels(headers);
-    setItemDelegateForColumn(0, new DownloadWidgetDelegates::QDownloadIconedItemDelegate(QPixmap(":/download_item.png"), this));
+    InitializeColumns();
+
     setItemDelegateForColumn(3, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
-    setItemDelegateForColumn(4, new DownloadWidgetDelegates::QDownloadIconedItemDelegate(QPixmap(":/download_item.png"), this));
     setSelectionBehavior( QAbstractItemView::SelectRows );
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setAlternatingRowColors( true );
     setRootIsDecorated( false );
 
+    QIcon itemIcon(QPixmap(":/download_item.png"));
+
     QTreeWidgetItem* item = new QTreeWidgetItem();
     item->setText(0, "movie.avi");
+    item->setIcon(0, itemIcon);
     item->setText(4, "Downloading");
+    item->setSizeHint(0, QSize(100, 20));
     addTopLevelItem(item);
     QTreeWidgetItem* item1 = new QTreeWidgetItem();
     item1->setText(0, "music.mp3");
+    item1->setIcon(0, itemIcon);
     item1->setText(4, "Downloading");
     addTopLevelItem(item1);
 }
+
+void QDownloadWidget::InitializeColumns()
+{
+    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("id"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Path"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("File size"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Progress"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Download"),true) );
+
+    QStringList headers;
+    for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+    {
+        if (i->isVisible())
+            headers << i->getName();
+    }
+    
+    setHeaderLabels(headers);
+}
+
 void QDownloadWidget::paintEvent( QPaintEvent *event )
 {
 	// to add some of specu drawning 
 	QTreeWidget::paintEvent(event);
 }
 
+void QDownloadWidget::StartPauseSelectedDownload()
+{
+    ;
+}
+
+void QDownloadWidget::StopSelectedDownload()
+{
+    ;
+}
+
+void QDownloadWidget::RemoveSelectedDownload()
+{
+    ;
+}
+
+void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
+{
+    QMenu menu("Configure columns");
+    menu.addAction("Configure columns...");
+
+    menu.popup(mapToGlobal(event->pos()));
+    menu.exec();
+}
+
 namespace DownloadWidgetDelegates
 {
-    QDownloadIconedItemDelegate::QDownloadIconedItemDelegate(const QPixmap& icon, QObject *parent)
-    : QItemDelegate(parent)
+    QDownloadIconedItemDelegate::QDownloadIconedItemDelegate(QObject *parent)
+        : QItemDelegate(parent)
     {
-        m_icon = icon;
+        
     }
 
-    void QDownloadIconedItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    void QDownloadIconedItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
     {
         painter->save();
 
@@ -72,10 +119,10 @@ namespace DownloadWidgetDelegates
 
         QRect rect = option.rect;
         rect.setX( rect.x() + horizonatalMargin);
-        rect.setY( rect.y() + verticalMargin);
+        rect.setY( rect.y() + verticalMargin);       
 
-        QIcon ico(m_icon.scaled(16,16));
-        ico.paint(painter, rect, Qt::AlignLeft);
+       /* QIcon ico(m_icon.scaled(16,16));
+        ico.paint(painter, rect, Qt::AlignLeft);*/
 
         rect.setX( rect.x() + 16 + horizonatalMargin);
         painter->drawText(rect,  item->text(index.column()));

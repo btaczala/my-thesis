@@ -3,6 +3,7 @@ PROJECT( DownloadManager_ui )
 
 ## CMAKE File for app/src
 FIND_PACKAGE(Qt4 REQUIRED )
+FIND_PACKAGE ( Boost REQUIRED )   
 
 SET(QT_USE_QTNETWORK 1)
 SET(VS_SUBSYSTEM "")
@@ -23,6 +24,7 @@ SET( APP_SRCS
     src/menubar.cpp
     src/toolbar.cpp
     src/actions.cpp
+	src/columnsconfigdialog.cpp
 )
 SET( APP_HDRS
     src/mainwindow.h
@@ -30,6 +32,7 @@ SET( APP_HDRS
     src/menubar.h
     src/toolbar.h
     src/actions.h
+    src/columnsconfigdialog.h
 )
 SET( APP_MOC_HDRS
     src/mainwindow.h
@@ -37,12 +40,13 @@ SET( APP_MOC_HDRS
     src/menubar.h
     src/toolbar.h
 )
-SET( APP_UI_FORMS 
+SET( APP_UI_FORMS src/ui/columnsConfig.ui
     )
 SET(APP_RSC src/resources/main_resources.qrc )
 #ADD_DEFINITIONS( -Wall )
 
 INCLUDE( ${QT_USE_FILE})
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})  
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})
 QT4_WRAP_UI (APP_UI_HDRS ${APP_UI_FORMS} )

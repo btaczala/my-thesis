@@ -25,7 +25,7 @@
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
-     m_ToolbarWidget(new QToolBar(this))
+     m_ToolbarWidget(new QToolBar("Download Toolbar", this))
 {
 	QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
 	setMenuBar(menuBar);
@@ -57,7 +57,9 @@ void MainWindow::InitializeWidgets()
 
 void MainWindow::InitilizeToolbarWidget()
 {
-    
+    m_ToolbarWidget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    m_ToolbarWidget->setFloatable(false);
+    m_ToolbarWidget->setMovable(false);
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewActionText ) );
     m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
@@ -65,7 +67,6 @@ void MainWindow::InitilizeToolbarWidget()
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scRemoveActionText ) );
     m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scQuitActionText ) );
-    
 
     addToolBar(m_ToolbarWidget.get());
 }
