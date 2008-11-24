@@ -9,12 +9,12 @@ SET(QT_USE_QTNETWORK 1)
 SET(VS_SUBSYSTEM "")
 
 IF(WIN32)
-	IF( CONSOLE_ON )
+	IF( CONSOLE )
 		SET(VS_SUBSYSTEM "")
-	ELSE(CONSOLE_ON)
+	ELSE(CONSOLE)
 		SET(VS_SUBSYSTEM WIN32)
 		SET(QT_USE_QTMAIN TRUE)
-	ENDIF (CONSOLE_ON)
+	ENDIF (CONSOLE)
 ENDIF (WIN32)
 
 SET( APP_SRCS
@@ -37,6 +37,7 @@ SET( APP_HDRS
 SET( APP_MOC_HDRS
     src/mainwindow.h
     src/qdownloadwidget.h
+	src/columnsconfigdialog.h
     src/menubar.h
     src/toolbar.h
 )

@@ -22,12 +22,17 @@
 #include <QPainter>
 #include <QApplication> // for style in QApplication::style()
 #include <QtGui>
+#include "ColumnsConfigDialog.h"
+#include <sstream>
+#include "actions.h"
+
+const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
 {
     InitializeColumns();
 
-    setItemDelegateForColumn(3, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
+    
     setSelectionBehavior( QAbstractItemView::SelectRows );
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setAlternatingRowColors( true );
@@ -46,24 +51,69 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
     item1->setIcon(0, itemIcon);
     item1->setText(4, "Downloading");
     addTopLevelItem(item1);
+
+    connect(Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
 }
+
+QDownloadWidget::~QDownloadWidget()
+{
+    SaveColumns();
+}
+
 
 void QDownloadWidget::InitializeColumns()
 {
-    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("id"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Path"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("File size"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Progress"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(0,tr("Download"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnId, tr("id"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnPath,tr("Path"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
 
     QStringList headers;
-    for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+
+    QSettings setts("Yattaman", "QDownloadManager");
+
+    QString columns = setts.value(QDownloadWidgetColumnInfo::settingsName).value<QString>();
+
+    for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+    {
+        headers << i->getName();
+        if (!columns.isEmpty())
+            i->setVisible(columns.contains(i->getName()));
+    }
+
+    setHeaderLabels(headers);
+    
+    ReloadColumns();
+
+    setItemDelegateForColumn(QDownloadWidgetColumnInfo::ColumnProgress, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
+}
+
+void QDownloadWidget::ReloadColumns(bool readSettings)
+{
+    for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
         if (i->isVisible())
-            headers << i->getName();
+            showColumn(i->getId());
+        else
+            hideColumn(i->getId());
     }
-    
-    setHeaderLabels(headers);
+}
+
+void QDownloadWidget::SaveColumns()
+{
+    QSettings setts("Yattaman", "QDownloadManager");
+    std::stringstream ss;
+    for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+    {
+        if (!ss.str().empty())
+            ss << ";";
+
+        if (i->isVisible())
+            ss << i->getName().toStdString();
+    }
+
+    setts.setValue(QDownloadWidgetColumnInfo::settingsName, QString(ss.str().c_str()));
 }
 
 void QDownloadWidget::paintEvent( QPaintEvent *event )
@@ -74,7 +124,7 @@ void QDownloadWidget::paintEvent( QPaintEvent *event )
 
 void QDownloadWidget::StartPauseSelectedDownload()
 {
-    ;
+  
 }
 
 void QDownloadWidget::StopSelectedDownload()
@@ -87,10 +137,18 @@ void QDownloadWidget::RemoveSelectedDownload()
     ;
 }
 
+void QDownloadWidget::onConfigureColumns()
+{
+    ColumnsConfigDialog dialog(m_columns, this);
+
+    if (dialog.exec() == QDialog::Accepted)
+        ReloadColumns();
+}
+
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 {
     QMenu menu("Configure columns");
-    menu.addAction("Configure columns...");
+    menu.addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
     menu.popup(mapToGlobal(event->pos()));
     menu.exec();

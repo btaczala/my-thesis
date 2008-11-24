@@ -32,8 +32,7 @@ MainWindow::MainWindow(QWidget * parent)
 
     InitializeWidgets();
     
-    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ;   
-    connect( Actions::getAction(Actions::scStartRestoreActionText),SIGNAL( triggered() ),this,SLOT( StartResume() ) );
+    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ; 
 };
 
 MainWindow::~MainWindow() throw()
@@ -74,9 +73,6 @@ void MainWindow::InitilizeToolbarWidget()
 void MainWindow::InitilizeDownloadWidget()
 {
     setCentralWidget(m_DownloadWidget.get());
-}
-////////////////////////// slots /////////////////////////////////
-void MainWindow::StartResume()
-{
-}
 
+    //connect(Actions::getAction( Actions::scStartRestoreActionText ), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(StartPauseSelectedDownload()));
+}

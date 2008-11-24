@@ -23,14 +23,19 @@
 #include <QDialog>
 
 #include "ui_columnsConfig.h"
+#include "qdownloadwidget.h"
 
 class ColumnsConfigDialog : public QDialog
 {
+    Q_OBJECT
 public:
-    ColumnsConfigDialog(QObject* parent);
+    ColumnsConfigDialog(QDownloadWidget::ColumnCollection& columns, QWidget* parent = 0);
+private slots:
+    void itemChanged(QListWidgetItem*);
     
 protected:
-    Ui_columnsconfig _uiColumnsConfig;
+    Ui_columnsconfig _ui;
+    QDownloadWidget::ColumnCollection& _columns;
 };
 
 #endif 

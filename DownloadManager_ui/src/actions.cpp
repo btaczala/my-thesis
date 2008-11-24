@@ -26,6 +26,7 @@ const QString Actions::scStopActionText = QObject::tr("Stop") ;
 const QString Actions::scRemoveActionText = QObject::tr("Remove") ;
 const QString Actions::scQuitActionText = QObject::tr("Quit") ;
 const QString Actions::scHideUnHideAppActionText = QObject::tr("Hide\\Show App") ;
+const QString Actions::scConfigureColumnsActionText = QObject::tr("Configure Columns..") ;
 
 
 const Actions* Actions::instance()
@@ -42,6 +43,7 @@ Actions::Actions()
     m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( QIcon(":/red_cross.png"), scRemoveActionText,NULL) );
     m_ActionContainer[scQuitActionText] = QActionShPtr( new QAction( QIcon(":/exit.png"),scQuitActionText,NULL) );
     m_ActionContainer[scHideUnHideAppActionText] = QActionShPtr( new QAction( scHideUnHideAppActionText,NULL) );
+    m_ActionContainer[scConfigureColumnsActionText] = QActionShPtr( new QAction( scConfigureColumnsActionText,NULL) );
 }
 QAction* Actions::getAction(const QString &actionName) 
 {

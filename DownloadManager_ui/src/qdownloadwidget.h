@@ -22,13 +22,15 @@
 #include <QTreeWidget>
 #include <QItemDelegate>
 #include <vector>
+
 class QPaintEvent;
 
 class QDownloadWidget : public QTreeWidget
 {
 	Q_OBJECT
 public:
-	QDownloadWidget(QWidget * parent = 0) ; 
+	QDownloadWidget(QWidget * parent = 0);
+	~QDownloadWidget(); 
 
     class QDownloadWidgetColumnInfo
     {
@@ -40,6 +42,20 @@ public:
         int getId() const { return _id; }
         const QString& getName() const { return _colName; }
         bool isVisible() const { return _visible; }
+
+        void setVisible(bool visible) { _visible = visible; }
+
+        static const QString settingsName;
+
+        enum
+        {
+            ColumnId = 0,
+            ColumnPath,
+            ColumnFileSize,
+            ColumnProgress,
+            ColumnDownload
+        };
+
     private:
         int _id;
         QString _colName;
@@ -52,10 +68,14 @@ public slots:
     void StartPauseSelectedDownload();
     void StopSelectedDownload();    
     void RemoveSelectedDownload();
+    void onConfigureColumns();
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void InitializeColumns();
+    void ReloadColumns(bool readSettings = false);
+    void SaveColumns();
+
 protected:
     virtual void paintEvent(QPaintEvent *event);
     virtual void contextMenuEvent(QContextMenuEvent * event );
