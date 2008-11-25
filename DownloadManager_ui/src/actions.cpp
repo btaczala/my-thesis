@@ -30,6 +30,7 @@ const QString Actions::scConfigureColumnsActionText = QObject::tr("&Configure Co
 const QString Actions::scSettingsActionText = QObject::tr("&Settings...") ;
 const QString Actions::scAboutActionText = QObject::tr("&About") ;
 const QString Actions::scAboutQtActionText = QObject::tr("About &Qt") ;
+const QString Actions::scHideCurrentColumnText = QObject::tr("Hide %1 column") ;
 
 
 const Actions* Actions::instance()
@@ -50,6 +51,8 @@ Actions::Actions()
     m_ActionContainer[scSettingsActionText] = QActionShPtr( new QAction( QIcon(":/settings.png"),scSettingsActionText,NULL) );
     m_ActionContainer[scAboutActionText] = QActionShPtr( new QAction( scAboutActionText,NULL) );
     m_ActionContainer[scAboutQtActionText] = QActionShPtr( new QAction( scAboutQtActionText,NULL) );
+
+    m_ActionContainer[scHideCurrentColumnText] = QActionShPtr( new QAction( scHideCurrentColumnText,NULL) );
 
 
 }

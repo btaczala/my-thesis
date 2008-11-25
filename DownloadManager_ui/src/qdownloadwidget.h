@@ -23,6 +23,7 @@
 #include <QItemDelegate>
 #include <QHeaderView>
 #include <vector>
+#include <QPointer>
 
 class QPaintEvent;
 class QContextMenuEvent;
@@ -97,6 +98,8 @@ protected:
 
 
     ColumnCollection m_columns;
+    QPointer<QMenu>  m_pContextMenu ; 
+    QAction*         m_pCurrentColumnContextAction ; 
     
 };
 

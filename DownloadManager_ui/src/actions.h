@@ -40,6 +40,8 @@ public:
     static const QString scSettingsActionText;
     static const QString scAboutActionText;
     static const QString scAboutQtActionText;
+    static const QString scHideCurrentColumnText;
+
 private:
     static const Actions* instance() ; 
     QAction* action(const QString & actionName ) const ; 

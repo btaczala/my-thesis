@@ -28,11 +28,12 @@
 
 const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
-QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
+QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_pCurrentColumnContextAction( NULL ) 
 {
     InitializeColumns();
 
     setHeader(new QDownloadHeaderView(this));
+    
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
 
     setSelectionBehavior( QAbstractItemView::SelectRows );
@@ -53,6 +54,8 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
     item1->setIcon(0, itemIcon);
     item1->setText(4, "Downloading");
     addTopLevelItem(item1);
+
+    m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
     connect(Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
 }
@@ -156,16 +159,24 @@ void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* 
 
 void QDownloadWidget::contextMenu(QContextMenuEvent * event )
 {
+    m_pContextMenu->removeAction( Actions::getAction( Actions::scHideCurrentColumnText ) ) ; 
+    QHeaderView *head = header();
+    QAbstractItemModel *model = head->model();
+    int index = head->logicalIndexAt(event->pos());
+    QVariant w = model->headerData(index,Qt::Horizontal);
+    QString txt = w.toString();
+    QAction *pAction = Actions::getAction( Actions::scHideCurrentColumnText ) ;
+    pAction->setText( Actions::scHideCurrentColumnText.arg(txt));
+    m_pContextMenu->addAction( pAction );
     contextMenuEvent(event);
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 {
-    QMenu menu("Configure columns");
-    menu.addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
-
-    menu.popup(mapToGlobal(event->pos()));
-    menu.exec();
+    
+    //menu.
+    m_pContextMenu->popup(mapToGlobal(event->pos()));
+    m_pContextMenu->exec();
 }
 
 
