@@ -22,7 +22,7 @@
 #include <QPainter>
 #include <QApplication> // for style in QApplication::style()
 #include <QtGui>
-#include "ColumnsConfigDialog.h"
+#include "columnsconfigdialog.h"
 #include <sstream>
 #include "actions.h"
 
@@ -68,11 +68,11 @@ QDownloadWidget::~QDownloadWidget()
 
 void QDownloadWidget::InitializeColumns()
 {
-    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnId, tr("id"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnPath,tr("Path"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo(QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnId, tr("id"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnPath,tr("Path"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
 
     QStringList headers;
 

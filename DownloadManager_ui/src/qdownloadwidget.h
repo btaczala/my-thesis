@@ -49,10 +49,19 @@ public:
     class QDownloadWidgetColumnInfo
     {
     public:
-        QDownloadWidgetColumnInfo(int id, QString& colName, bool visible)
+        
+        QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible) // has to be const when passing temporary object
         {
             _id = id; _colName = colName; _visible = visible;
         }
+        enum ColumnType // gcc does not support unnamed enums ( ? ) 
+        {
+            ColumnId = 0,
+            ColumnPath,
+            ColumnFileSize,
+            ColumnProgress,
+            ColumnDownload
+        };
         int getId() const { return _id; }
         const QString& getName() const { return _colName; }
         bool isVisible() const { return _visible; }
@@ -61,14 +70,7 @@ public:
 
         static const QString settingsName;
 
-        enum
-        {
-            ColumnId = 0,
-            ColumnPath,
-            ColumnFileSize,
-            ColumnProgress,
-            ColumnDownload
-        };
+
 
     private:
         int _id;
