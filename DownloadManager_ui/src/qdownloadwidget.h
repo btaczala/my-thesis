@@ -21,9 +21,22 @@
 #define QDOWNLOADWIDGET_H
 #include <QTreeWidget>
 #include <QItemDelegate>
+#include <QHeaderView>
 #include <vector>
 
 class QPaintEvent;
+class QContextMenuEvent;
+
+class QDownloadHeaderView : public QHeaderView
+{
+    Q_OBJECT
+public:
+    QDownloadHeaderView(QWidget* parent = 0): QHeaderView(Qt::Horizontal, parent){ ; }
+protected:
+    virtual void contextMenuEvent ( QContextMenuEvent * event ) { emit contextMenu(event); }
+signals:
+    void contextMenu(QContextMenuEvent* event);
+};
 
 class QDownloadWidget : public QTreeWidget
 {
@@ -70,6 +83,7 @@ public slots:
     void RemoveSelectedDownload();
     void onConfigureColumns();
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
+    void contextMenu(QContextMenuEvent * event );
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 

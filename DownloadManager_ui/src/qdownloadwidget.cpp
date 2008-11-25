@@ -32,7 +32,9 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent )
 {
     InitializeColumns();
 
-    
+    setHeader(new QDownloadHeaderView(this));
+    connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
+
     setSelectionBehavior( QAbstractItemView::SelectRows );
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setAlternatingRowColors( true );
@@ -86,6 +88,8 @@ void QDownloadWidget::InitializeColumns()
     
     ReloadColumns();
 
+//    header()->setResizeMode(QHeaderView::FixStretched);
+
     setItemDelegateForColumn(QDownloadWidgetColumnInfo::ColumnProgress, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
 }
 
@@ -93,10 +97,9 @@ void QDownloadWidget::ReloadColumns(bool readSettings)
 {
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
-        if (i->isVisible())
-            showColumn(i->getId());
-        else
-            hideColumn(i->getId());
+        setColumnHidden(i->getId(), !(i->isVisible()));
+
+        setColumnWidth(i->getId(), 100);
     }
 }
 
@@ -148,10 +151,12 @@ void QDownloadWidget::onConfigureColumns()
 
 void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column)
 {
-    if (column->isVisible())
-        showColumn(column->getId());
-    else
-        hideColumn(column->getId());
+    setColumnHidden(column->getId(), !(column->isVisible()));
+}
+
+void QDownloadWidget::contextMenu(QContextMenuEvent * event )
+{
+    contextMenuEvent(event);
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
@@ -162,6 +167,7 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
     menu.popup(mapToGlobal(event->pos()));
     menu.exec();
 }
+
 
 namespace DownloadWidgetDelegates
 {
