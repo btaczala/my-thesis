@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza?a 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Tacza?a                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,35 +33,111 @@ class EngineManager;
 class DownloadManager : public QObject
 {
     Q_OBJECT
-	public:
+    public:
+        /**
+         * @var IDownloadSmartPtrs - smart pointer of IDownload
+         */
         typedef boost::shared_ptr<IDownload> IDownloadSmartPtr ; 
+        /**
+         * @var DownloadListType - type of container 
+         */
         typedef std::vector<IDownloadSmartPtr> DownloadListType ; 
-		                        DownloadManager() ; 
-		                        ~DownloadManager() ; 
+                                DownloadManager() ; 
+                                ~DownloadManager() ; 
+        /**
+         * @brief Will add download into queue
+         * @param urlAddress url address of file to download
+         * @param destination where to put the file ( directory only ) 
+         */
         void                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
+        /**
+         * @brief Will force on manager to start downloading this file
+         * @param urlAddress url address of file to download
+         */
         void                    startDownload( const std::string & urlAddress ) ;
+        /**
+         * @brief will remove download 
+         * @param urlAddress 
+         */
         void                    removeDownload( const std::string & urlAddress ) ;
+        /**
+         * @brief Will return engine manager 
+         * @return 
+         */
         const EngineManager *   engineManager() const ; 
+        /**
+         * Will return percentage of all download 
+         * @return 
+         */
         int                     getPercentage() ; 
-	private : 
-        DownloadListType 		m_DownloadList ; 
+    private : 
+        DownloadListType        m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
         std::auto_ptr<EngineManager>   m_pEngineManager;
-
-
+        /**
+         * find download by url 
+         * @param pattern 
+         * @return 
+         */
         IDownload *             find(const std::string & pattern ) ;
+        /**
+         * Find position of download 
+         * @param url 
+         * @return 
+         */
+        int                     findPosition( const std::string & url ) ; 
+        /**
+         * Connect QObject signal/slot mechanism with signals from pDownload
+         * @param pDownload 
+         */
+        void                    connectWith( IDownload *pDownload ) ; 
+        /**
+         * Return position of download in container which send a signal
+         * @param sender - Download that sends the signal. Will be casted to IDownload*
+         * @return position in container. If not found -1. 
+         */
+        int                     getPositionWithinSlot( QObject * sender );
     private slots:
         void                    slot_listChanged() ; 
         void                    init();
-
-        void					whatAmIDoing(const DownloadState::States& what);
- 	    void					downloadStatus(const int & istate );
- 	    void					done();
- 	    void					downloadRate(const QString & dwnlRate);
-
-signals:
+        void                    statusChanged(DownloadState::States what);
+        void                    bytesRead(int read,int total);
+        void                    downloadDone();
+        void                    downloadRate(const QString & dwnlRate);
+    signals:
+        /**
+         * Will emit global progress. 
+         * @param value 
+         */
         void                    globalProgress(int value);
-        void                    statusChanged ( int at, const DownloadState::States & state  ) ; 
+        /**
+         * Will emit that download at 'at' changed its state. 
+         * @param at - download position
+         * @param state - changed state
+         */
+        void                    statusChanged ( int at, DownloadState::States state  ) ; 
+        
+        /**
+         * Will emit that download at 'at' postion finished downloading. 
+         * @param at 
+         */
+        void                    downloadDoneAt ( int at ) ;
+         
+        
+        /**
+         * Will emit if download at 'at' for some reasons will stop ( not user action )
+         * Probably network error, or drive full
+         * @param at 
+         */
+        void                    downloadOnHold( int at ) ;
+        
+        /**
+         * Will emit bytes downloaded 
+         * @param at - position
+         * @param read - how many have we read
+         * @param total - how big is file. 
+         */
+        void                    bytesReadAt ( int at, int read, int total ) ; 
 };
 #endif // DOWNLOADMANAGER_H

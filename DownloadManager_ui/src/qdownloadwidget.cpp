@@ -20,7 +20,7 @@
 #include "qdownloadwidget.h"
 #include <QPaintEvent>
 #include <QPainter>
-#include <QApplication> // for style in QApplication::style()
+#include <QApplication>
 #include <QtGui>
 #include "columnsconfigdialog.h"
 #include <sstream>
@@ -65,8 +65,6 @@ QDownloadWidget::~QDownloadWidget()
 {
     SaveColumns();
 }
-
-
 void QDownloadWidget::InitializeColumns()
 {
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnId, tr("id"),true) );

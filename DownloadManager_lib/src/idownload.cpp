@@ -34,8 +34,3 @@ unsigned int IDownload::GetProgress() const
      }
      return m_pDownloadInfo->m_Percentage ;
  }
-
-void IDownload::setDownloadManager(DownloadManager* manager)
-{
-    m_pDownloadManager = manager;
-}

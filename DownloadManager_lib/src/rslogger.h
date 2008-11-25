@@ -30,7 +30,8 @@
 #include "rscommon.h"
 
 
-#define RSDM_LOG_FUNC 	m_Logger.Write( __FUNCTION_NAME__ )
+#define RSDM_LOG_FUNC 	qDebug()<< __FUNCTION_NAME__ 
+#define LOG(a) qDebug()<< a 
 
 
 /*! \class RSLogger 

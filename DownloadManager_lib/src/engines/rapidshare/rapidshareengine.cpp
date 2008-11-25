@@ -1,6 +1,5 @@
 #include <map>
 
-
 #include "rapidshareengine.h"
 #include "qrapidsharedownload.h"
 
@@ -31,6 +30,11 @@ void RapidshareEngine::setOptionsForEngine(const std::map< std::string, boost::a
 };
 IDownload* RapidshareEngine::spawn() const 
 {
+    if (m_UserName.empty() || m_UserPass.empty() ) 
+    {
+        LOG(QString("UserName (%1) or password(%2) not set").arg( m_UserName.c_str() ).arg( m_UserPass.c_str() ) );
+        return NULL ; 
+    }
     QRapidshareDownload* pDownload = new QRapidshareDownload();
     pDownload->setUser( m_UserName.c_str(), m_UserPass.c_str() );
     return (IDownload*) pDownload;

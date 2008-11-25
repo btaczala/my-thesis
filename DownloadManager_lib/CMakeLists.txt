@@ -33,14 +33,22 @@ SET( DownloadManager_HDRS
     src/engines/rapidshare/qrapidshareuser.h
     src/engines/rapidshare/rapidshareengine.h
 )
-#SUBDIRS(src)
-QT4_WRAP_CPP(QT_MOC_SRC src/engines/rapidshare/qrapidsharedownload.h src/rapidsharedownloadmanager.h src/downloadmanager.h )
+SET ( DownloadManager_MOC_HDRS 
+    src/idownload.h
+    src/downloadmanager.h
+)
+SET ( PLUGINS_MOC_HDRS 
+    src/engines/rapidshare/qrapidsharedownload.h
+)
+
+QT4_WRAP_CPP(QT_MOC_SRC ${DownloadManager_MOC_HDRS} ${PLUGINS_MOC_HDRS} )
 INCLUDE(${QT_USE_FILE})
 include_directories(${Boost_INCLUDE_DIR})
 add_library( downloadmanager_lib STATIC ${QT_MOC_SRC} ${DownloadManager_SRCS} ${DownloadManager_HDRS} )
 target_link_libraries ( downloadmanager_lib ${QT_LIBRARIES} ) 
 
 if( BUILD_TEST_APP )
-ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp)
+QT4_WRAP_CPP(QTAPP_MOC_SRC qtestapp.h )
+ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp ${QTAPP_MOC_SRC})
 TARGET_LINK_LIBRARIES(qrsdmtest downloadmanager_lib)
 endif( BUILD_TEST_APP )

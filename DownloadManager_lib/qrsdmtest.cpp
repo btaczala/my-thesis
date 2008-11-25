@@ -1,3 +1,4 @@
+
 #include <QDialog>
 #include <QApplication>
 #include <QMainWindow>
@@ -8,12 +9,9 @@
 #include "src/downloadengine.h"
 #include "src/enginemanager.h"
 
-class QTwojStary : public QMainWindow
-{
-    Q_OBJECT
-public:
-    QTwojStary( QWidget *parent = NULL ) : QMainWindow(parent){};
-};
+#include "qtestapp.h"
+
+
 int main(int argc, char** argv)
 {
 	/*
@@ -28,7 +26,7 @@ int main(int argc, char** argv)
 	foo.Start() ;
 	tmp.show() ;
 	app.exec() ;
-	*/
+    */
     QApplication app(argc, argv); 
     DownloadManager dwnlMgr ; 
     
@@ -41,7 +39,8 @@ int main(int argc, char** argv)
 
 
     dwnlMgr.addDownload("http://rapidshare.com/files/115886102/Dj_Bobo-Planet_Colors-upload_by_kreciq.rar",QDir::homePath().toStdString() );
-    QTwojStary t ; 
+    QTestApp t ; 
+    t.setConnector( &dwnlMgr ) ;
     t.show();
 	return app.exec();
 }

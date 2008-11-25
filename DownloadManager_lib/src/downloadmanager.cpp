@@ -2,6 +2,7 @@
 #include "idownload.h"
 #include "engines/rapidshare/rapidshareengine.h"
 #include "enginemanager.h"
+#include "rslogger.h"
 
 #include <boost/bind.hpp>
 #include <QDebug>
@@ -16,10 +17,12 @@ DownloadManager::~DownloadManager()
 }
 void DownloadManager::init()
 {
-    ;
+    LOG("void DownloadManager::init()");
 }
 void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
+    LOG(QString("void DownloadManager::addDownload(const std::string & urlAddress = %1, const std::string & destination = %2)").arg(urlAddress.c_str() ).arg(destination.c_str() ));
+    
     IDownload *pDownload = NULL ; 
 
     if ( find(urlAddress ) != NULL ) 
@@ -29,10 +32,14 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     if ( !pEngine)
         return ; 
     pDownload = pEngine->spawn() ; 
-    pDownload->setDownloadManager( this );
-    pDownload->setConnections();
+    if ( pDownload == NULL ) 
+    {
+        LOG("Unable to add download");
+        return ; 
+    }
     pDownload->setUrlAddress(urlAddress) ;
     pDownload->setDestinationAddress(destination);
+    connectWith(pDownload);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
 
     QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
@@ -49,7 +56,6 @@ void DownloadManager::startDownload(const std::string &urlAddress)
 }
 void DownloadManager::slot_listChanged()
 {
-
 }
 const EngineManager *   DownloadManager::engineManager() const
 {
@@ -67,23 +73,20 @@ IDownload* DownloadManager::find(const std::string & urlAddress )
         return NULL ; 
     return it->get();
 }
-
-void DownloadManager::whatAmIDoing(const DownloadState::States& what)
+void DownloadManager::statusChanged(DownloadState::States what)
 {
     qDebug() << (int) what;
+    int pos = getPositionWithinSlot( sender() ) ;  
+    if ( pos !=-1 )
+        emit statusChanged(pos,what);
 }
 
-void DownloadManager::downloadStatus(const int & istate )
+void DownloadManager::downloadDone()
 {
-    qDebug() << istate;
-    emit globalProgress(getPercentage());
+    int pos = getPositionWithinSlot( sender() ) ;  
+    if ( pos !=-1 )
+        emit downloadDoneAt(pos); 
 }
-
-void DownloadManager::done()
-{
-    qDebug() << "done";
-}
-
 void DownloadManager::downloadRate(const QString & dwnlRate)
 {
     qDebug() << dwnlRate;
@@ -102,3 +105,35 @@ int DownloadManager::getPercentage()
     }
     return sum = ((double)sum/(double)total) * 100 ; 
 }
+void DownloadManager::connectWith(IDownload * pDownload)
+{
+    QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
+    QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
+};
+
+int DownloadManager::findPosition(const std::string & url)
+{
+    int pos = 0 ; 
+    for ( int z = 0 ; z < m_DownloadList.size() ; ++z ) 
+    {
+        if ( m_DownloadList[z]->urlAddress() == url ) 
+            return z ; 
+    }
+    return -1;
+}
+
+int DownloadManager::getPositionWithinSlot( QObject * sender )
+{
+    IDownload *pDownload = qobject_cast<IDownload*>( sender ); 
+    return findPosition( pDownload->urlAddress() ); 
+}
+
+void DownloadManager::bytesRead(int read, int total)
+{
+    int pos = getPositionWithinSlot( sender() ) ;  
+    if ( pos !=-1 )
+        emit bytesReadAt(pos,read,total);
+    
+}
+

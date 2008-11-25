@@ -28,6 +28,7 @@
 #else
 #define __FUNCTION_NAME__ __PRETTY_FUNCTION__
 #endif //WIN32
+
 QString TimeToString();
 /*! \enum RapidShareStateMachine
 * \brief hold state machine state. 
