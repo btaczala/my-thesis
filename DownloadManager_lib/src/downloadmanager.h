@@ -43,17 +43,14 @@ class DownloadManager : public QObject
         void                    removeDownload( const std::string & urlAddress ) ;
         const EngineManager *   engineManager() const ; 
         int                     getPercentage() ; 
-        void                    setSignalReceiver(QObject* tato);
 	private : 
         DownloadListType 		m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
-        
         std::auto_ptr<EngineManager>   m_pEngineManager;
 
 
         IDownload *             find(const std::string & pattern ) ;
-        QObject*                m_pSignalReceiver;
     private slots:
         void                    slot_listChanged() ; 
         void                    init();
@@ -65,8 +62,6 @@ class DownloadManager : public QObject
 
 signals:
         void                    globalProgress(int value);
-        
-
-
+        void                    statusChanged ( int at, const DownloadState::States & state  ) ; 
 };
 #endif // DOWNLOADMANAGER_H

@@ -7,11 +7,14 @@ find_package( Boost REQUIRED )
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(QT_USE_QTNETWORK 1)
 
+
 SUBDIRS(DownloadManager_lib)
 SUBDIRS(DownloadManager_ui)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/DownloadManager_ui)
 INCLUDE(${QT_USE_FILE})
 include_directories(QtRapidshareDownloadManager_corelib)
 include_directories(${Boost_INCLUDE_DIR})
+
 
 #ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp)
 

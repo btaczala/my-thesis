@@ -18,10 +18,6 @@ void DownloadManager::init()
 {
     ;
 }
-bool handle_tmpr ( const std::pair<std::string, boost::shared_ptr<DownloadEngine> > & en, const std::string & patt ) 
-{
-    return (en.second)->handleThisPattern(patt);
-}
 void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
     IDownload *pDownload = NULL ; 
@@ -105,10 +101,4 @@ int DownloadManager::getPercentage()
         total += (*it)->GetFileSize();
     }
     return sum = ((double)sum/(double)total) * 100 ; 
-}
-
-void DownloadManager::setSignalReceiver(QObject* tato)
-{
-    m_pSignalReceiver = tato;
-    QObject::connect(this, SIGNAL( globalProgress(int)), m_pSignalReceiver, SLOT(setValue (int)));
 }

@@ -10,6 +10,7 @@
 
 class QTwojStary : public QMainWindow
 {
+    Q_OBJECT
 public:
     QTwojStary( QWidget *parent = NULL ) : QMainWindow(parent){};
 };
@@ -37,6 +38,8 @@ int main(int argc, char** argv)
     options["RS_username"] = std::string("4625386");
     options["RS_userpassword"] = std::string("WM2FTZgx5Y");
     pEngine->setOptionsForEngine(options);
+
+
     dwnlMgr.addDownload("http://rapidshare.com/files/115886102/Dj_Bobo-Planet_Colors-upload_by_kreciq.rar",QDir::homePath().toStdString() );
     QTwojStary t ; 
     t.show();

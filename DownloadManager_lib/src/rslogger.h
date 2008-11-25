@@ -32,9 +32,9 @@
 
 #define RSDM_LOG_FUNC 	m_Logger.Write( __FUNCTION_NAME__ )
 
+
 /*! \class RSLogger 
 	\brief Class to log to files
-	
 	Class that log messages to corresponding files. 
 */
 class RSLogger
@@ -98,7 +98,7 @@ private:
 	std::auto_ptr<QMutex>	m_fileMutex;
 	std::auto_ptr<QString>	m_fileName;
 	std::auto_ptr<QFile>	m_fileLogger;
-	mutable unsigned int		m_NumberOfLogs;
+	mutable unsigned int    m_NumberOfLogs;
 	bool					m_bOpenedFile ;
 	bool					m_bIsOneLine ; 
 	QString					m_tmpOneLine ; 
