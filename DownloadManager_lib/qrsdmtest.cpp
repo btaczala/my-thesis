@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     std::map<std::string,boost::any> options ; 
     options["RS_username"] = std::string("4625386");
-    options["RS_userpassword"] = std::string("WM2FTZgx5Y");
+    options["RS_userpassword"] = std::string(" pass..... ");
     pEngine->setOptionsForEngine(options);
 
 
