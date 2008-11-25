@@ -28,7 +28,7 @@
 
 const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
-QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_pCurrentColumnContextAction( NULL ) 
+QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
 {
     InitializeColumns();
 
@@ -58,6 +58,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
     connect(Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
+    connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -156,24 +157,35 @@ void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* 
 {
     setColumnHidden(column->getId(), !(column->isVisible()));
 }
+void QDownloadWidget::columnHide() 
+{
+    for ( int i = 0 ; i < m_columns.size() ; ++i ) 
+    {
+        if ( m_columns[i].getId() == m_CurrentColumnID ) 
+        {
+            m_columns[i].setVisible( false ) ; 
+            columnChanged(&m_columns[i]);
+        }
+    }
+}
 
 void QDownloadWidget::contextMenu(QContextMenuEvent * event )
 {
     m_pContextMenu->removeAction( Actions::getAction( Actions::scHideCurrentColumnText ) ) ; 
     QHeaderView *head = header();
     QAbstractItemModel *model = head->model();
-    int index = head->logicalIndexAt(event->pos());
-    QVariant w = model->headerData(index,Qt::Horizontal);
+    m_CurrentColumnID = head->logicalIndexAt(event->pos());
+    QVariant w = model->headerData( m_CurrentColumnID , Qt::Horizontal );
     QString txt = w.toString();
     QAction *pAction = Actions::getAction( Actions::scHideCurrentColumnText ) ;
     pAction->setText( Actions::scHideCurrentColumnText.arg(txt));
     m_pContextMenu->addAction( pAction );
+    //connect ( pAction, SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
     contextMenuEvent(event);
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 {
-    
     //menu.
     m_pContextMenu->popup(mapToGlobal(event->pos()));
     m_pContextMenu->exec();

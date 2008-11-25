@@ -87,6 +87,7 @@ public slots:
     void onConfigureColumns();
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     void contextMenu(QContextMenuEvent * event );
+    void columnHide() ; 
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
@@ -101,8 +102,7 @@ protected:
 
     ColumnCollection m_columns;
     QPointer<QMenu>  m_pContextMenu ; 
-    QAction*         m_pCurrentColumnContextAction ; 
-    
+    int              m_CurrentColumnID ; 
 };
 
 namespace DownloadWidgetDelegates
