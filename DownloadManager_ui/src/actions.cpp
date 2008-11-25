@@ -20,13 +20,16 @@
 #include "actions.h"
 #include <memory>
 
-const QString Actions::scNewActionText = QObject::tr("New") ;
-const QString Actions::scStartRestoreActionText  = QObject::tr("Start\\Resume") ;
-const QString Actions::scStopActionText = QObject::tr("Stop") ;
-const QString Actions::scRemoveActionText = QObject::tr("Remove") ;
-const QString Actions::scQuitActionText = QObject::tr("Quit") ;
-const QString Actions::scHideUnHideAppActionText = QObject::tr("Hide\\Show App") ;
-const QString Actions::scConfigureColumnsActionText = QObject::tr("Configure Columns..") ;
+const QString Actions::scNewActionText = QObject::tr("&New") ;
+const QString Actions::scStartRestoreActionText  = QObject::tr("&Start\\Resume") ;
+const QString Actions::scStopActionText = QObject::tr("S&top") ;
+const QString Actions::scRemoveActionText = QObject::tr("&Remove") ;
+const QString Actions::scQuitActionText = QObject::tr("&Quit") ;
+const QString Actions::scHideUnHideAppActionText = QObject::tr("&Hide\\Show App") ;
+const QString Actions::scConfigureColumnsActionText = QObject::tr("&Configure Columns..") ;
+const QString Actions::scSettingsActionText = QObject::tr("&Settings...") ;
+const QString Actions::scAboutActionText = QObject::tr("&About") ;
+const QString Actions::scAboutQtActionText = QObject::tr("About &Qt") ;
 
 
 const Actions* Actions::instance()
@@ -40,10 +43,15 @@ Actions::Actions()
     m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( QIcon(":/new_file.png"),scNewActionText,NULL) );
     m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( QIcon(":/start_resume.png"),scStartRestoreActionText,NULL) );
     m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( QIcon(":/stop.png"),  scStopActionText,NULL) );
-    m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( QIcon(":/red_cross.png"), scRemoveActionText,NULL) );
+    m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( QIcon(":/remove.png"), scRemoveActionText,NULL) );
     m_ActionContainer[scQuitActionText] = QActionShPtr( new QAction( QIcon(":/exit.png"),scQuitActionText,NULL) );
     m_ActionContainer[scHideUnHideAppActionText] = QActionShPtr( new QAction( scHideUnHideAppActionText,NULL) );
     m_ActionContainer[scConfigureColumnsActionText] = QActionShPtr( new QAction( scConfigureColumnsActionText,NULL) );
+    m_ActionContainer[scSettingsActionText] = QActionShPtr( new QAction( QIcon(":/settings.png"),scSettingsActionText,NULL) );
+    m_ActionContainer[scAboutActionText] = QActionShPtr( new QAction( scAboutActionText,NULL) );
+    m_ActionContainer[scAboutQtActionText] = QActionShPtr( new QAction( scAboutQtActionText,NULL) );
+
+
 }
 QAction* Actions::getAction(const QString &actionName) 
 {

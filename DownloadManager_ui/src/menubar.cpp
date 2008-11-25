@@ -19,16 +19,26 @@
  ***************************************************************************/
 #include "menubar.h"
 #include "actions.h"
-MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_SettingsMenu(NULL)
+MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_SettingsMenu(NULL),m_HelpMenu(NULL)
 {
 	m_FileMenu = new QMenu( tr("File"),parent ) ; 
-    m_SettingsMenu = new QMenu( tr("Settings"),parent );
+    
     m_FileMenu->addAction( Actions::getAction( Actions::scNewActionText ) ) ; 
     m_FileMenu->addSeparator();
     m_FileMenu->addAction( Actions::getAction ( Actions::scHideUnHideAppActionText ) ) ;
     m_FileMenu->addAction( Actions::getAction ( Actions::scQuitActionText ) ) ;
 
+    m_SettingsMenu = new QMenu( tr("Options"),parent );
+    m_SettingsMenu->addAction( Actions::getAction( Actions::scConfigureColumnsActionText ) ) ; 
+    m_SettingsMenu->addAction( Actions::getAction( Actions::scSettingsActionText ) ) ; 
+
+    m_HelpMenu = new QMenu( tr("Help"),parent );
+    m_HelpMenu->addAction( Actions::getAction( Actions::scAboutActionText ) ) ; 
+    m_HelpMenu->addAction( Actions::getAction( Actions::scAboutQtActionText ) ) ; 
+
+
     addMenu(m_FileMenu);
     addMenu(m_SettingsMenu);
+    addMenu(m_HelpMenu);
 
 };

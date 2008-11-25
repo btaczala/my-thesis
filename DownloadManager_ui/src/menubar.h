@@ -32,6 +32,7 @@ public:
 private:
     QPointer<QMenu>			m_FileMenu ; 
     QPointer<QMenu>			m_SettingsMenu ; 
+    QPointer<QMenu>			m_HelpMenu ; 
 protected:
   
 };

@@ -36,10 +36,15 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget * parent = 0);
         ~MainWindow() throw() ; 
+    public slots:
+        void about();
     protected:
         void InitilizeToolbarWidget();
         void InitilizeDownloadWidget();
         void InitializeWidgets();
+        void InitializeMenuBar();
+
+        void InitializeActions();
     private:
         std::auto_ptr<MenuBar>         m_MenuBar; 
         std::auto_ptr<QToolBar>        m_ToolbarWidget; 

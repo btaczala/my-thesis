@@ -12,5 +12,7 @@
 		<file>start_resume_red.png</file>
 		<file>new_file.png</file>
 		<file>red_cross.png</file>
+		<file>remove.png</file>
+		<file>settings.png</file>
     </qresource>
 </RCC>

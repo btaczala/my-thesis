@@ -37,6 +37,9 @@ public:
     static const QString scQuitActionText ; 
     static const QString scHideUnHideAppActionText ; 
     static const QString scConfigureColumnsActionText;
+    static const QString scSettingsActionText;
+    static const QString scAboutActionText;
+    static const QString scAboutQtActionText;
 private:
     static const Actions* instance() ; 
     QAction* action(const QString & actionName ) const ; 

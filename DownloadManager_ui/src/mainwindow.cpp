@@ -27,12 +27,9 @@ MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
      m_ToolbarWidget(new QToolBar("Download Toolbar", this))
 {
-	QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
-	setMenuBar(menuBar);
 
     InitializeWidgets();
-    
-    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ; 
+    InitializeActions();
 };
 
 MainWindow::~MainWindow() throw()
@@ -41,6 +38,7 @@ MainWindow::~MainWindow() throw()
 
 void MainWindow::InitializeWidgets()
 {
+    InitializeMenuBar();
     InitilizeToolbarWidget();
     InitilizeDownloadWidget();
 
@@ -54,9 +52,15 @@ void MainWindow::InitializeWidgets()
     setGeometry(x, y, w, h);
 }
 
+void MainWindow::InitializeMenuBar()
+{
+    QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
+	setMenuBar(menuBar);
+}
+
 void MainWindow::InitilizeToolbarWidget()
 {
-    m_ToolbarWidget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    m_ToolbarWidget->setToolButtonStyle(Qt::ToolButtonIconOnly);
     m_ToolbarWidget->setFloatable(false);
     m_ToolbarWidget->setMovable(false);
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewActionText ) );
@@ -65,7 +69,11 @@ void MainWindow::InitilizeToolbarWidget()
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStopActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scRemoveActionText ) );
     m_ToolbarWidget->addSeparator();
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scSettingsActionText ) );
+    m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scQuitActionText ) );
+
+    m_ToolbarWidget->setIconSize(QSize(48,48));
 
     addToolBar(m_ToolbarWidget.get());
 }
@@ -73,6 +81,53 @@ void MainWindow::InitilizeToolbarWidget()
 void MainWindow::InitilizeDownloadWidget()
 {
     setCentralWidget(m_DownloadWidget.get());
+}
 
-    //connect(Actions::getAction( Actions::scStartRestoreActionText ), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(StartPauseSelectedDownload()));
+void MainWindow::InitializeActions()
+{
+    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ; 
+    connect( Actions::getAction(Actions::scAboutActionText), SIGNAL( triggered() ), this, SLOT( about() ) ) ; 
+    connect( Actions::getAction(Actions::scAboutQtActionText), SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) ) ; 
+}
+
+void MainWindow::about()
+{
+    QLabel *icon = new QLabel;
+    icon->setPixmap(QPixmap(":/user.png"));
+
+    QLabel *text = new QLabel;
+    text->setWordWrap(true);
+    text->setText("<p>The <b>QDownload Manager...</b> example demonstrates how to"
+                  " write a complete peer-to-peer file sharing"
+                  " application using Qt's network and thread classes.</p>"
+                  "<p>This feature complete client implementation of"
+                  " the BitTorrent protocol can efficiently"
+                  " maintain several hundred network connections"
+                  " simultaneously.</p>");
+
+    QPushButton *quitButton = new QPushButton("OK");
+
+    QHBoxLayout *topLayout = new QHBoxLayout;
+    topLayout->setMargin(10);
+    topLayout->setSpacing(10);
+    topLayout->addWidget(icon);
+    topLayout->addWidget(text);
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    bottomLayout->addStretch();
+    bottomLayout->addWidget(quitButton);
+    bottomLayout->addStretch();
+
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addLayout(topLayout);
+    mainLayout->addLayout(bottomLayout);
+
+    QDialog about(this);
+    about.setModal(true);
+    about.setWindowTitle(tr("About QDownload Manager..."));
+    about.setLayout(mainLayout);
+
+    connect(quitButton, SIGNAL(clicked()), &about, SLOT(close()));
+
+    about.exec();
 }
