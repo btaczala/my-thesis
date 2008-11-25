@@ -32,6 +32,8 @@ public:
     ColumnsConfigDialog(QDownloadWidget::ColumnCollection& columns, QWidget* parent = 0);
 private slots:
     void itemChanged(QListWidgetItem*);
+signals:
+    void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     
 protected:
     Ui_columnsconfig _ui;

@@ -69,6 +69,7 @@ public slots:
     void StopSelectedDownload();    
     void RemoveSelectedDownload();
     void onConfigureColumns();
+    void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 

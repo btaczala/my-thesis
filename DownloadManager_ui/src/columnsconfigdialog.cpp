@@ -44,4 +44,6 @@ void ColumnsConfigDialog::itemChanged(QListWidgetItem* item)
     QDownloadWidget::QDownloadWidgetColumnInfo* column = reinterpret_cast<QDownloadWidget::QDownloadWidgetColumnInfo*>(item->data(Qt::UserRole).value<void*>());
 
     column->setVisible(item->checkState()==Qt::Checked);
+
+    emit columnChanged(column);
 }

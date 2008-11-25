@@ -141,8 +141,17 @@ void QDownloadWidget::onConfigureColumns()
 {
     ColumnsConfigDialog dialog(m_columns, this);
 
-    if (dialog.exec() == QDialog::Accepted)
-        ReloadColumns();
+    connect(&dialog, SIGNAL(columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo*)), this, SLOT(columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo*)));
+
+    dialog.exec();
+}
+
+void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column)
+{
+    if (column->isVisible())
+        showColumn(column->getId());
+    else
+        hideColumn(column->getId());
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
