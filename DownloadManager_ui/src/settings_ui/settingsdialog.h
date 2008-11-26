@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Taczała   *
- *   b@kontrasty.szczecin.pl   *
+ *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,26 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef WIN32
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif // WIN32
+#ifndef SETTINGSDIALOG_H
+#define SETTINGSDIALOG_H
 
-#include <QCoreApplication>
-#include "mainwindow.h"
-int main(int argc, char *argv[])
-{	
-	#ifdef WIN32
-	QApplication::setStyle(new QCleanlooksStyle);
-	#endif
-	QApplication app(argc, argv);
-	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
-	int iRet = app.exec();
-#ifdef WIN32
-	//_CrtDumpMemoryLeaks();
-#endif // WIN32
-	return iRet;
+#include <QDialog>
+#include "isettingspage.h"
+
+class QListWidget;
+class QStackedWidget;
+class QListWidgetItem;
+
+class SettingsDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    SettingsDialog(QWidget* parent = 0);
+
+    void AddPage(ISettingsPage* page, bool activate = false);
+
+public slots:
+    void changePage(QListWidgetItem* current, QListWidgetItem* previous);
+
+protected: 
+    void Initialize();
+
+private:
+    QListWidget* m_contentsWidget;
+    QStackedWidget* m_pagesWidget;
 };
+
+
+#endif

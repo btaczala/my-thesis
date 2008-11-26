@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Taczała   *
- *   b@kontrasty.szczecin.pl   *
+ *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,26 +17,20 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef WIN32
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif // WIN32
+#ifndef ISETTINGSPAGE_H
+#define ISETTINGSPAGE_H
 
-#include <QCoreApplication>
-#include "mainwindow.h"
-int main(int argc, char *argv[])
-{	
-	#ifdef WIN32
-	QApplication::setStyle(new QCleanlooksStyle);
-	#endif
-	QApplication app(argc, argv);
-	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
-	int iRet = app.exec();
-#ifdef WIN32
-	//_CrtDumpMemoryLeaks();
-#endif // WIN32
-	return iRet;
+#include <QWidget>
+
+class ISettingsPage : public QWidget
+{
+    Q_OBJECT
+public:
+    ISettingsPage(QWidget* parent = 0) : QWidget(parent) {;}
+
+    virtual QIcon getIcon() = 0;
+    virtual QString getTitle() = 0;
+
 };
+
+#endif

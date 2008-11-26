@@ -22,6 +22,7 @@
 #include "menubar.h"
 #include "qdownloadwidget.h"
 #include "actions.h"
+#include "settings_ui/settingsdialog.h"
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
@@ -88,6 +89,14 @@ void MainWindow::InitializeActions()
     connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ; 
     connect( Actions::getAction(Actions::scAboutActionText), SIGNAL( triggered() ), this, SLOT( about() ) ) ; 
     connect( Actions::getAction(Actions::scAboutQtActionText), SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) ) ; 
+    connect( Actions::getAction(Actions::scSettingsActionText), SIGNAL( triggered()), this, SLOT(showSettingsDialog()));
+}
+
+void MainWindow::showSettingsDialog()
+{
+    SettingsDialog dialog(this);
+
+    dialog.exec();
 }
 
 void MainWindow::about()

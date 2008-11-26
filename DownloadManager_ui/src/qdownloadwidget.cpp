@@ -237,7 +237,7 @@ namespace DownloadWidgetDelegates
         progressBarOption.textAlignment = Qt::AlignCenter;
 	    progressBarOption.textVisible = true;	
 	    int iRow = index.row();
-	    int progress = 7;// should really be (qobject_cast<QDownloadWidget*>parent())->getProgress();
+	    int progress = 70;// should really be (qobject_cast<QDownloadWidget*>parent())->getProgress();
         // getProgress will return current progress. 
         // m_Progress will be set like:
         /* MainWindows          DownloadManager             IDownload

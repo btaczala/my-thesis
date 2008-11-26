@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow
         ~MainWindow() throw() ; 
     public slots:
         void about();
+        void showSettingsDialog();
     protected:
         void InitilizeToolbarWidget();
         void InitilizeDownloadWidget();
