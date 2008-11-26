@@ -17,28 +17,52 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ISETTINGSPAGE_H
-#define ISETTINGSPAGE_H
+#ifndef GENERALSETTINGSPAGE_H
+#define GENERALSETTINGSPAGE_H
 
-#include <QWidget>
-#include <QTabWidget>
-#include <QBoxLayout>
+#include <QDialog>
+#include "isettingspage.h"
 
-class ISettingsPage : public QWidget
+class QTabWidget;
+class QLineEdit;
+class QSpinBox;
+
+namespace general_settings_tabs
+{
+    class DownloadTab : public QWidget
+    {
+        Q_OBJECT
+    public:
+        DownloadTab(QWidget* parent = 0);
+    public slots:
+        void browseForDefaultFolder();
+        void delayStateChanged(int state);
+    private:
+        QLineEdit* m_defaultFolderEdit;
+        QSpinBox* m_downloadDelay;
+    };
+
+    class ApplicationTab : public QWidget
+    {
+        Q_OBJECT
+    public:
+        ApplicationTab(QWidget* parent = 0);        
+    };
+}
+
+class GeneralSettingsPage : public ISettingsPage
 {
     Q_OBJECT
 public:
-    ISettingsPage(QWidget* parent = 0) : QWidget(parent) 
-    {
-        m_tabWidget = new QTabWidget(this);
-    }
+    GeneralSettingsPage(QWidget* parent = 0);
 
-    virtual QIcon getIcon() const = 0;
-    virtual QString getTitle() const = 0;
+    virtual QIcon getIcon() const;
+    virtual QString getTitle() const;
 
-protected:
-    QTabWidget* m_tabWidget;
+protected: 
+    void Initialize();
 
 };
+
 
 #endif

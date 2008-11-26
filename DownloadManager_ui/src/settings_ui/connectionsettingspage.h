@@ -17,28 +17,23 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ISETTINGSPAGE_H
-#define ISETTINGSPAGE_H
+#ifndef CONNECTIONSETTINGSPAGE_H
+#define CONNECTIONSETTINGSPAGE_H
 
-#include <QWidget>
-#include <QTabWidget>
-#include <QBoxLayout>
+#include "isettingspage.h"
 
-class ISettingsPage : public QWidget
+class ConnectionSettingsPage : public ISettingsPage
 {
     Q_OBJECT
 public:
-    ISettingsPage(QWidget* parent = 0) : QWidget(parent) 
-    {
-        m_tabWidget = new QTabWidget(this);
-    }
+    ConnectionSettingsPage(QWidget* parent = 0);
 
-    virtual QIcon getIcon() const = 0;
-    virtual QString getTitle() const = 0;
+    virtual QIcon getIcon() const;
+    virtual QString getTitle() const;
 
-protected:
-    QTabWidget* m_tabWidget;
-
+protected: 
+    void Initialize();
 };
+
 
 #endif

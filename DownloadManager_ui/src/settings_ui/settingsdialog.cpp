@@ -20,11 +20,15 @@
 
 #include <QtGui>
 #include "settingsdialog.h"
+#include "generalsettingspage.h"
+#include "connectionsettingspage.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) 
     :QDialog(parent)
 {
     Initialize();
+    AddPage(new GeneralSettingsPage(this), true);
+    AddPage(new ConnectionSettingsPage(this));
 }
 
 
@@ -32,9 +36,9 @@ void SettingsDialog::Initialize()
 {
     m_contentsWidget = new QListWidget;
     m_contentsWidget->setViewMode(QListView::IconMode);
-    m_contentsWidget->setIconSize(QSize(96, 84));
+    m_contentsWidget->setIconSize(QSize(48, 48));
     m_contentsWidget->setMovement(QListView::Static);
-    m_contentsWidget->setMaximumWidth(128);
+    m_contentsWidget->setMaximumWidth(90);
     m_contentsWidget->setSpacing(12);
 
     m_pagesWidget = new QStackedWidget;
@@ -45,19 +49,17 @@ void SettingsDialog::Initialize()
 
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
-    QHBoxLayout *horizontalLayout = new QHBoxLayout;
-    horizontalLayout->addWidget(m_contentsWidget);
-    horizontalLayout->addWidget(m_pagesWidget, 1);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->addStretch(1);
     buttonsLayout->addWidget(closeButton);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addLayout(horizontalLayout);
-    mainLayout->addStretch(1);
-    mainLayout->addSpacing(12);
-    mainLayout->addLayout(buttonsLayout);
+    QGridLayout* mainLayout = new QGridLayout;
+    mainLayout->setColumnMinimumWidth(1, 360);
+    mainLayout->setRowMinimumHeight(0, 400);
+    mainLayout->addWidget(m_contentsWidget, 0, 0);
+    mainLayout->addWidget(m_pagesWidget, 0, 1);
+    mainLayout->addLayout(buttonsLayout,1, 1);
     setLayout(mainLayout);
 
     setWindowTitle(tr("Config Dialog"));

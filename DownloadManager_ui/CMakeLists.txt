@@ -26,6 +26,8 @@ SET( APP_SRCS
     src/actions.cpp
 	src/columnsconfigdialog.cpp
 	src/settings_ui/settingsdialog.cpp
+	src/settings_ui/generalsettingspage.cpp
+	src/settings_ui/connectionsettingspage.cpp
 )
 SET( APP_HDRS
     src/mainwindow.h
@@ -36,6 +38,8 @@ SET( APP_HDRS
     src/columnsconfigdialog.h
 	src/settings_ui/settingsdialog.h
 	src/settings_ui/isettingspage.h
+	src/settings_ui/generalsettingspage.h
+	src/settings_ui/connectionsettingspage.h
 )
 SET( APP_MOC_HDRS
     src/mainwindow.h
@@ -45,6 +49,8 @@ SET( APP_MOC_HDRS
     src/toolbar.h
 	src/settings_ui/settingsdialog.h
 	src/settings_ui/isettingspage.h
+	src/settings_ui/generalsettingspage.h
+	src/settings_ui/connectionsettingspage.h
 )
 SET( APP_UI_FORMS src/ui/columnsConfig.ui
     )

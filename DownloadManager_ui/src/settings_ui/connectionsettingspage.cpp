@@ -17,28 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ISETTINGSPAGE_H
-#define ISETTINGSPAGE_H
 
-#include <QWidget>
-#include <QTabWidget>
-#include <QBoxLayout>
+#include <QtGui>
+#include "connectionsettingspage.h"
 
-class ISettingsPage : public QWidget
+ConnectionSettingsPage::ConnectionSettingsPage(QWidget *parent) 
+    :ISettingsPage(parent)
 {
-    Q_OBJECT
-public:
-    ISettingsPage(QWidget* parent = 0) : QWidget(parent) 
-    {
-        m_tabWidget = new QTabWidget(this);
-    }
+    Initialize();
+}
 
-    virtual QIcon getIcon() const = 0;
-    virtual QString getTitle() const = 0;
+QIcon ConnectionSettingsPage::getIcon() const
+{
+    return QIcon(":/network_settings.png");
+}
 
-protected:
-    QTabWidget* m_tabWidget;
+QString ConnectionSettingsPage::getTitle() const
+{
+    return tr("Connection");
+}
 
-};
+void ConnectionSettingsPage::Initialize()
+{    
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(m_tabWidget);
+    mainLayout->setMargin(0);
 
-#endif
+    setLayout(mainLayout);
+}
+
