@@ -17,33 +17,26 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CONNECTIONSETTINGSPAGE_H
-#define CONNECTIONSETTINGSPAGE_H
+#ifndef SERVERSETTINGSPAGE_H
+#define SERVERSETTINGSPAGE_H
 
 #include "isettingspage.h"
 
-namespace connection_settings_page
+namespace server_settings_page
 {
-    class ConnecionTab : public QWidget
+    class ServerTab : public QWidget
     {
         Q_OBJECT
     public:
-        ConnecionTab(QWidget* parent = 0);
-    };
-
-    class ProxyTab : public QWidget
-    {
-        Q_OBJECT
-    public:
-        ProxyTab(QWidget* parent = 0);
+        ServerTab(QWidget* parent = 0);
     };
 }
 
-class ConnectionSettingsPage : public ISettingsPage
+class ServerSettingsPage : public ISettingsPage
 {
     Q_OBJECT
 public:
-    ConnectionSettingsPage(QWidget* parent = 0);
+    ServerSettingsPage(QWidget* parent = 0);
 
     virtual QIcon getIcon() const;
     virtual QString getTitle() const;

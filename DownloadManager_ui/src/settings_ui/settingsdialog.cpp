@@ -22,6 +22,7 @@
 #include "settingsdialog.h"
 #include "generalsettingspage.h"
 #include "connectionsettingspage.h"
+#include "serversettingspage.h"
 
 SettingsDialog::SettingsDialog(QWidget *parent) 
     :QDialog(parent)
@@ -29,6 +30,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     Initialize();
     AddPage(new GeneralSettingsPage(this), true);
     AddPage(new ConnectionSettingsPage(this));
+    AddPage(new ServerSettingsPage(this));
 }
 
 
@@ -38,7 +40,8 @@ void SettingsDialog::Initialize()
     m_contentsWidget->setViewMode(QListView::IconMode);
     m_contentsWidget->setIconSize(QSize(48, 48));
     m_contentsWidget->setMovement(QListView::Static);
-    m_contentsWidget->setMaximumWidth(90);
+    m_contentsWidget->setMinimumWidth(86);
+    m_contentsWidget->setMaximumWidth(86);
     m_contentsWidget->setSpacing(12);
 
     m_pagesWidget = new QStackedWidget;

@@ -19,28 +19,27 @@
  ***************************************************************************/
 
 #include <QtGui>
-#include "connectionsettingspage.h"
+#include "serversettingspage.h"
 
-ConnectionSettingsPage::ConnectionSettingsPage(QWidget *parent) 
+ServerSettingsPage::ServerSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
 {
     Initialize();
 }
 
-QIcon ConnectionSettingsPage::getIcon() const
+QIcon ServerSettingsPage::getIcon() const
 {
-    return QIcon(":/network_settings.png");
+    return QIcon(":/server_settings.png");
 }
 
-QString ConnectionSettingsPage::getTitle() const
+QString ServerSettingsPage::getTitle() const
 {
-    return tr("Connection");
+    return tr("Servers\nsettings");
 }
 
-void ConnectionSettingsPage::Initialize()
+void ServerSettingsPage::Initialize()
 {   
-    m_tabWidget->addTab(new connection_settings_page::ConnecionTab, tr("Connection"));
-    m_tabWidget->addTab(new connection_settings_page::ProxyTab, tr("Proxy"));
+    m_tabWidget->addTab(new server_settings_page::ServerTab, tr("Download servers"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(m_tabWidget);
@@ -49,22 +48,19 @@ void ConnectionSettingsPage::Initialize()
     setLayout(mainLayout);
 }
 
-namespace connection_settings_page
+namespace server_settings_page
 {
-    ConnecionTab::ConnecionTab(QWidget *parent)
+    ServerTab::ServerTab(QWidget *parent)
         : QWidget(parent)
     {
-        const short int labelWidth = 120;
+        
+        const short int labelWidth = 80;
 
-        QLabel* bandwidthLabel = new QLabel(tr("Bandwidth limit [kB]:"));
-        bandwidthLabel->setMinimumWidth(labelWidth);
-        QLineEdit* bandwidthEdit = new QLineEdit("0");
-        QHBoxLayout* bandwidthLayout = new QHBoxLayout;
-        bandwidthLayout->addWidget(bandwidthLabel);
-        bandwidthLayout->addWidget(bandwidthEdit);
-        bandwidthLayout->addWidget(new QLabel("(0 - unlimited)"));
-        bandwidthLayout->addStretch(1);
-
+        QComboBox* enginesCombo = new QComboBox;
+        enginesCombo->setEditable(false);
+        enginesCombo->setInsertPolicy(QComboBox::InsertAlphabetically);
+        enginesCombo->addItem("Rapidshare");
+        
         QLabel* downloadsLabel = new QLabel(tr("Simultanious downloads:"));
         downloadsLabel->setMinimumWidth(labelWidth);
         QSpinBox* downloadsSpin = new QSpinBox;
@@ -76,38 +72,9 @@ namespace connection_settings_page
         downloadsLayout->addWidget(downloadsSpin);
         downloadsLayout->addStretch(1);
 
-        QVBoxLayout* layout = new QVBoxLayout;
-        layout->addSpacing(25);
-        layout->addLayout(bandwidthLayout);
-        layout->addSpacing(12);
-        layout->addLayout(downloadsLayout);
-        layout->addStretch(1);
+        QCheckBox* credentialsCheck = new QCheckBox(tr("Use credentials"));
 
-        setLayout(layout);
-    }
-
-
-    ProxyTab::ProxyTab(QWidget *parent)
-        :QWidget(parent)
-    {
-        QCheckBox* useProxyCheck = new QCheckBox;
-        useProxyCheck->setText(tr("Use proxy server"));
-
-        const short int labelWidth = 80;
-
-        QLabel* serverLabel = new QLabel(tr("Proxy server:"));
-        serverLabel->setMinimumWidth(labelWidth);
-        QLineEdit* serverEdit = new QLineEdit;
-        QLabel* portLabel = new QLabel(tr("Port:"));
-        QLineEdit* portEdit = new QLineEdit;
-        portEdit->setMaximumWidth(60);
-        QHBoxLayout* serverLayout = new QHBoxLayout;
-        serverLayout->addWidget(serverLabel);
-        serverLayout->addWidget(serverEdit);
-        serverLayout->addWidget(portLabel);
-        serverLayout->addWidget(portEdit);
-
-        QLabel* userLabel = new QLabel(tr("Proxy user:"));
+        QLabel* userLabel = new QLabel(tr("User:"));
         userLabel->setMinimumWidth(labelWidth);
         QLineEdit* userEdit = new QLineEdit;
         QHBoxLayout* userLayout = new QHBoxLayout;
@@ -115,7 +82,7 @@ namespace connection_settings_page
         userLayout->addWidget(userEdit);
         userLayout->addStretch(1);
 
-        QLabel* passwordLabel = new QLabel(tr("Proxy password:"));
+        QLabel* passwordLabel = new QLabel(tr("Password:"));
         passwordLabel->setMinimumWidth(labelWidth);
         QLineEdit* passwordEdit = new QLineEdit;
         passwordEdit->setEchoMode(QLineEdit::Password);
@@ -126,12 +93,14 @@ namespace connection_settings_page
 
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addSpacing(25);
-        layout->addWidget(useProxyCheck);
+        layout->addWidget(enginesCombo);
+        layout->addSpacing(20);
+        layout->addLayout(downloadsLayout);
         layout->addSpacing(12);
-        layout->addLayout(serverLayout);
-        layout->addSpacing(12);
+        layout->addWidget(credentialsCheck);
+        layout->addSpacing(6);
         layout->addLayout(userLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(6);
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);
