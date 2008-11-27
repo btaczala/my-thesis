@@ -17,6 +17,7 @@ DownloadEngine::DownloadEngine(const std::string & engineName ) : m_EngineName(e
 }
 DownloadEngine::~DownloadEngine()
 {
+
 }
 const DownloadEngine::StringList& DownloadEngine::patterns() const
 {
@@ -41,4 +42,8 @@ bool DownloadEngine::handleThisPattern( const std::string & pattern )
             return true ; 
     }
     return false ; 
+}
+void DownloadEngine::setOptionsForEngine(const OptionsContainer& options)
+{ 
+    m_Options.reset( new OptionsContainer( options ));
 }

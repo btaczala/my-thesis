@@ -17,9 +17,9 @@ SET( DownloadManager_SRCS
     src/rslogger.cpp 
     src/rscommon.cpp 
     src/enginemanager.cpp
+    src/optionscontainer.cpp
     src/engines/rapidshare/qrapidsharedownload.cpp
     src/engines/rapidshare/qrapidshareuser.cpp
-    src/engines/rapidshare/rapidshareengine.cpp
 ) 
 SET( DownloadManager_HDRS
     src/downloadmanager.h
@@ -29,9 +29,11 @@ SET( DownloadManager_HDRS
     src/rslogger.h 
     src/rscommon.h
     src/enginemanager.h
+    src/engine.h
+    src/engine.inl
+    src/optionscontainer.h
     src/engines/rapidshare/qrapidsharedownload.h
     src/engines/rapidshare/qrapidshareuser.h
-    src/engines/rapidshare/rapidshareengine.h
 )
 SET ( DownloadManager_MOC_HDRS 
     src/idownload.h

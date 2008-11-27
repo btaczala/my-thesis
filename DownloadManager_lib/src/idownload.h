@@ -17,6 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
 #ifndef IDOWNLOADMANAGER_H
 #define IDOWNLOADMANAGER_H
 #include <memory>
@@ -49,11 +50,13 @@ public:
     } m_State ; 
 };
 
+class OptionsContainer;
+
 class IDownload : public QObject
 {
     Q_OBJECT
 	public :
-		IDownload () ;
+		IDownload (OptionsContainer* options = NULL );
 		virtual ~IDownload() ;
         DownloadState*                      downloadInfo () const ; 
 		virtual void                        start() = 0 ; 
@@ -75,6 +78,7 @@ class IDownload : public QObject
 		std::string						    m_UrlAddress ; 
 		std::string						    m_FileDestination ;
         mutable unsigned int				m_Progress;
+        OptionsContainer*                   m_Options;
     signals :
         //virtual void                        downloadStatus(const int & istate ) = 0;
         virtual void                        bytesRead( int read, int howMany ) = 0 ; 

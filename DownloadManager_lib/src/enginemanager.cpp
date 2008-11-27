@@ -1,7 +1,9 @@
 #include "enginemanager.h"
 #include "downloadengine.h"
+#include "engine.h"
+
 #ifdef ENGINES_BUILT_IN
-#include "engines/rapidshare/rapidshareengine.h"
+#include "engines/rapidshare/qrapidsharedownload.h"
 #endif
 #include <boost/bind.hpp>
 /////////////////////////////////////////////////
@@ -28,10 +30,27 @@ void EngineManager::loadEngines(const std::string &path)
     if ( !path.empty() ) 
         setEnginesDirPath(path);
 #ifdef ENGINES_BUILT_IN
-    boost::shared_ptr<DownloadEngine> pRSEngine ( new RapidshareEngine() ) ; 
-    m_Engines[pRSEngine->name()] = pRSEngine; 
+    /*
+    pierwsze dwa :
+    * http
+    * ftp
+    ...
+
+    * rapidshare
+    * megaupload
+    * porntube
+
+    */
+    //boost::shared_ptr<DownloadEngine> pRSEngine ( new RapidshareEngine() ) ;
+    DownloadEngine::StringList sl;
+    sl.push_back("rapidshare");
+    sl.push_back("rs");
+    sl.push_back("rapids");
+
+    boost::shared_ptr<DownloadEngine> pRSEngine ( new Engine<QRapidshareDownload>("rapidshare"));    
+    pRSEngine->setPatterns(sl);
+    m_Engines[pRSEngine->name()] = pRSEngine;
 #endif 
-    
     
     /*
     loadLibrary () and so on 
@@ -46,10 +65,28 @@ DownloadEngine * EngineManager::findEngine(const std::string & engineName ) cons
     return it->second.get() ; 
 };
 
-const DownloadEngine * EngineManager::findEngineWithPattern(const std::string & UrlPattern ) 
+const DownloadEngine * EngineManager::findEngineWithPattern(const std::string & UrlPattern ) // http://rapidshare.com/files/kupa.rar
 {
+    // protocols 
+    // http
+    // ftp
+    /*
+        
+
+    */
     EngineMap::iterator it = std::find_if ( m_Engines.begin(),m_Engines.end(), boost::bind(ifEngineHandlePattern,_1,UrlPattern) == true ) ; 
     if( it == m_Engines.end() ) 
         return NULL ; 
+    
+    if ( it->second.get()->name() == "http" )
+        // szukaj innego, od 
+    {
+        EngineMap::iterator tmp = it;
+        EngineMap::iterator it2 = std::find_if( ++it,m_Engines.end(), boost::bind(ifEngineHandlePattern,_1,UrlPattern) == true );
+        if ( it2 == m_Engines.end() ) 
+            return tmp->second.get();
+        return it2->second.get();
+    }
+
     return it->second.get();
 };

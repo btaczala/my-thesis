@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Taczała                                  *
- *   b@kontrasty.szczecin.pl                                               *
+ *   Copyright (C) 2008 by Bartek Tacza?a 								   *
+ *   b@kontrasty.szczecin.pl   											   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,33 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef RAPIDSHAREENGINE_H
-#define RAPIDSHAREENGINE_H
-
-
-#include <map>  
-#include <algorithm>
+#ifndef OPTIONSCONTAINER_H
+#define OPTIONSCONTAINER_H
+#include <string>
 #include <boost/any.hpp>
-
-#include "downloadengine.h"
-
-#define  RS_USER_NAME std::string("RS_username")
-#define  RS_USER_PASS "RS_userpassword"
+#include <vector>
+#include <map>
 
 static const std::string scRS_USER_NAME = std::string("RS_username");
 static const std::string scRS_USER_PASS = std::string("RS_userpassword");
 
-
-class RapidshareEngine : public DownloadEngine
+class OptionsContainer
 {
-    public:
-        RapidshareEngine();
-        virtual void            setOptionsForEngine( const std::map<std::string, boost::any> & options ) ; 
-        virtual IDownload *     spawn() const; 
-        const std::string &     username() const; 
-        const std::string &     userpass() const; 
-    private:
-        std::string             m_UserName ;
-        std::string             m_UserPass ;
+public:
+
+    typedef std::map<std::string, boost::any> Options;
+
+    OptionsContainer();
+
+    OptionsContainer( const OptionsContainer& options );
+
+    void clone( Options& options ) const;
+
+    void addOption( const std::string& key, const boost::any& value);
+    boost::any getOption( const std::string& key );
+
+private:
+    Options m_Options;
 };
-#endif // RAPIDSHAREENGINE_H
+
+#endif //OPTIONSCONTAINER_H
+

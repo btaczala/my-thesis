@@ -39,6 +39,7 @@
   * 
   */
  
+
 class QRapidshareDownload :  public IDownload
 {
 Q_OBJECT
@@ -56,7 +57,7 @@ Q_OBJECT
      };
     // Ctors:
     
-    QRapidshareDownload(/*const QString & _UrlFileAddress, const QString & _fileDest*/);
+    QRapidshareDownload( OptionsContainer* options = NULL );
     virtual                             ~QRapidshareDownload();
     //from IDownlo
     void                                start(); 
@@ -64,7 +65,7 @@ Q_OBJECT
     void                                restart(); 
     
     void                                setUser(const QRapidshareUser & rsUser );
-    void                                setUser(const QString& rsName,  const QString& pass);   
+    void                                setUser(const std::string& rsName,  const std::string& pass);   
     void                                setRapidshareUser(const QRapidshareUser & _usr );
     QRapidshareUser*                    getUser() const ;
  

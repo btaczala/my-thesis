@@ -1,6 +1,6 @@
 #include "downloadmanager.h"
+#include "downloadengine.h"
 #include "idownload.h"
-#include "engines/rapidshare/rapidshareengine.h"
 #include "enginemanager.h"
 #include "rslogger.h"
 

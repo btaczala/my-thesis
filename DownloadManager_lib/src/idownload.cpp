@@ -1,8 +1,9 @@
 #include "idownload.h"
-IDownload::IDownload() : m_pDownloadInfo( new DownloadState )
+IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadState ), m_Options( options )
 {
     m_pDownloadInfo->m_Percentage = 0;
-};
+}
+
 IDownload::~IDownload(){};
 
 void IDownload::setUrlAddress(const std::string & urlAddrr)

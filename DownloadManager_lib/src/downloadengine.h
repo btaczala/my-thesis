@@ -16,28 +16,37 @@
 #include <vector>
 #include <map>
 #include <boost/any.hpp>
+
+#include "optionscontainer.h"
 class IDownload ; 
 /**
 	@author 
 */
 
+class OptionsContainer;
+
 class DownloadEngine{
     public:
         //FIXME: should be QList<QRegExp> 
-        typedef                 std::vector<std::string>  StringList ; 
+        typedef                 std::vector<std::string>  StringList; 
+        
+
                                 DownloadEngine(const std::string & engineName );
         virtual                 ~DownloadEngine();
         virtual bool            handleThisPattern( const std::string & pattern ) ; 
         virtual IDownload *     spawn() const = 0; 
-        virtual void            setOptionsForEngine( const std::map<std::string, boost::any> & options ) = 0 ; 
-        void                    setPatterns(const StringList & patt ) ;
+        void                    setPatterns(const StringList & patt );
+        void                    setOptionsForEngine(const OptionsContainer& options);
         const StringList &      patterns() const ; 
         const std::string &     name() const ;
         int                     getPercent();
+    
     protected:
-        StringList              m_UrlPatterns ; 
+        StringList                          m_UrlPatterns ; 
+        std::auto_ptr<OptionsContainer>     m_Options;
     private:
-        std::string             m_EngineName ; 
+        std::string                         m_EngineName ; 
+        
 
 };
 

@@ -1,11 +1,14 @@
 #include <QDebug>
+#include <Boost/any.hpp>
 
 #include "qrapidsharedownload.h"
+#include "optionscontainer.h"
+#include "rscommon.h"
 
  
  
- QRapidshareDownload::QRapidshareDownload() 
- : m_apHttpObj( new QHttp() )
+QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(options)
+ , m_apHttpObj( new QHttp() )
  , m_apHttpRequestHeader(new QHttpRequestHeader() )
  , m_apRSUser(NULL)
  , m_apFileUrl( new QUrl() )
@@ -29,6 +32,14 @@
 
     m_errorsList.append(RsErrors::err2);
     m_errorsList.append(RsErrors::err5);
+
+    if( m_Options )
+    {
+        setUser(  boost::any_cast<std::string>( m_Options->getOption( scRS_USER_NAME )),
+                  boost::any_cast<std::string>( m_Options->getOption( scRS_USER_PASS )));
+    }
+    else
+        Q_ASSERT(false);
  }
 
  QRapidshareDownload::~QRapidshareDownload()
@@ -504,10 +515,10 @@
     RSDM_LOG_FUNC ;
     m_apRSUser.reset(new QRapidshareUser(rsUser));  
  }
- void QRapidshareDownload::setUser(const QString& rsName,  const QString& rsPass)
+ void QRapidshareDownload::setUser(const std::string& rsName,  const std::string& rsPass)
  {
     RSDM_LOG_FUNC ;
-    setUser(QRapidshareUser(rsName,rsPass));
+    setUser(QRapidshareUser(rsName.c_str(),rsPass.c_str()));
  }
 
  void QRapidshareDownload::timerEvent(QTimerEvent *event)

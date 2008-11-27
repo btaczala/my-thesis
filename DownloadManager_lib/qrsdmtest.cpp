@@ -3,11 +3,11 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QDir>
-#include <boost/any.hpp>
 
 #include "src/downloadmanager.h"
 #include "src/downloadengine.h"
 #include "src/enginemanager.h"
+#include "src/optionscontainer.h"
 
 #include "qtestapp.h"
 
@@ -32,15 +32,16 @@ int main(int argc, char** argv)
     
     DownloadEngine * pEngine = dwnlMgr.engineManager()->findEngine("rapidshare") ;
 
-    std::map<std::string,boost::any> options ; 
-    options["RS_username"] = std::string("4625386");
-    options["RS_userpassword"] = std::string(" pass..... ");
-    pEngine->setOptionsForEngine(options);
+    OptionsContainer* options = new OptionsContainer();
+    options->addOption(scRS_USER_NAME, std::string("4625386"));
+    options->addOption(scRS_USER_PASS, std::string("pass..... "));
+    pEngine->setOptionsForEngine( *options );
+    delete options;
 
-
-    dwnlMgr.addDownload("http://rapidshare.com/files/115886102/Dj_Bobo-Planet_Colors-upload_by_kreciq.rar",QDir::homePath().toStdString() );
+    dwnlMgr.addDownload("http://rapidshare.com/files/165900690/Puszcza_bukowa_.mp3",QDir::homePath().toStdString() );
     QTestApp t ; 
     t.setConnector( &dwnlMgr ) ;
     t.show();
+    
 	return app.exec();
 }
