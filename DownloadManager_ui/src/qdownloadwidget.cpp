@@ -239,7 +239,7 @@ namespace DownloadWidgetDelegates
 	    int iRow = index.row();
 	    int progress = 70;// should really be (qobject_cast<QDownloadWidget*>parent())->getProgress();
         // getProgress will return current progress. 
-        // m_Progress will be set like:
+        // m_Progress will be set like:QDownloadWidget
         /* MainWindows          DownloadManager             IDownload
             |   getProgressAt(int)  |                           |
             |-----------------------|                           |

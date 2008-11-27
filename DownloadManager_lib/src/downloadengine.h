@@ -16,6 +16,7 @@
 #include <vector>
 #include <map>
 #include <boost/any.hpp>
+#include <memory>
 
 #include "optionscontainer.h"
 class IDownload ; 
