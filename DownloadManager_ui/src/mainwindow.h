@@ -22,6 +22,7 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <memory>
+
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
 	@author Tomasz Czyzewski <tomasz.czy@gmail.com>
@@ -49,6 +50,6 @@ class MainWindow : public QMainWindow
     private:
         std::auto_ptr<MenuBar>         m_MenuBar; 
         std::auto_ptr<QToolBar>        m_ToolbarWidget; 
-        std::auto_ptr<QDownloadWidget> m_DownloadWidget;        
+        std::auto_ptr<QDownloadWidget> m_DownloadWidget;
 };
 #endif

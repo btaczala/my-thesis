@@ -126,7 +126,7 @@
 // 	QRapidshareDownload * pDownload = m_RapidshareDownloads.at(at);
 // 	if( pDownload )
 // 	{
-// 		if( pDownload->GetState() == PAUSED || pDownload->GetProgress() != 0 ) 
+// 		if( pDownload->state() == PAUSED || pDownload->GetProgress() != 0 ) 
 // 			pDownload->Resume();
 // 		else
 // 			pDownload->Download();
@@ -182,14 +182,14 @@
 // 		rsd = m_RapidshareDownloads.at(k);
 // 		if( rsd )
 // 		{
-// 			if( rsd->GetState() == STOPPED  || rsd->GetState() == GET_FIRST || rsd->GetState() == GET_SECOND || rsd->GetState() == POST_FIRST )
+// 			if( rsd->state() == STOPPED  || rsd->state() == GET_FIRST || rsd->state() == GET_SECOND || rsd->state() == POST_FIRST )
 // 			{
 // 				if(rsd->GetUser() == NULL)
 // 					rsd->SetUser(*m_apRapidshareUser);
 // 				rsd->Download() ; // redownload
 // 				++m_iCurrentDownload ;
 // 			}
-// 			else if ( rsd->GetState() == PAUSED) 
+// 			else if ( rsd->state() == PAUSED) 
 // 			{
 // 				if( rsd->GetUser() == NULL ) {
 // 					if( m_apRapidshareUser.get () != NULL ) 
@@ -260,7 +260,7 @@
 // 		return;
 // 	}
 // 	QRapidshareDownload* pRSDownload = m_RapidshareDownloads.at(iPos);
-// 	RapidShareStateMachine rssmState = pRSDownload->GetState() ;
+// 	RapidShareStateMachine rssmState = pRSDownload->state() ;
 // 	if( rssmState!=STOPPED && rssmState != DONE && rssmState != FAILED )
 // 	{
 // 		pRSDownload->abort();
@@ -344,7 +344,7 @@
 // 				m_apSettings->setValue( settingPath, settingValue ) ; 
 // 
 // 				settingPath = scRsdm_SettingsDownloadListState.arg( i ) ;
-// 				settingValue = StateToString2( pDownload->GetState() );
+// 				settingValue = StateToString2( pDownload->state() );
 // 				m_apSettings->setValue( settingPath, settingValue ) ; 
 // 
 // 				settingPath = scRsdm_SettingsDownloadListPercentage.arg(i ) ;

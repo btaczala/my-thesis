@@ -47,7 +47,7 @@ void EngineManager::loadEngines(const std::string &path)
     sl.push_back("rs");
     sl.push_back("rapids");
 
-    boost::shared_ptr<DownloadEngine> pRSEngine ( new Engine<QRapidshareDownload>("rapidshare"));    
+    boost::shared_ptr<DownloadEngine> pRSEngine ( new Engine<QRapidshareDownload>("rapidshare"));
     pRSEngine->setPatterns(sl);
     m_Engines[pRSEngine->name()] = pRSEngine;
 #endif 
@@ -71,7 +71,6 @@ const DownloadEngine * EngineManager::findEngineWithPattern(const std::string & 
     // http
     // ftp
     /*
-        
 
     */
     EngineMap::iterator it = std::find_if ( m_Engines.begin(),m_Engines.end(), boost::bind(ifEngineHandlePattern,_1,UrlPattern) == true ) ; 

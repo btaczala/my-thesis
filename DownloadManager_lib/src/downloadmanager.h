@@ -22,7 +22,9 @@
 #include <vector> 
 #include <map>
 #include <boost/shared_ptr.hpp>
+
 #include <QObject>
+#include <QMutex>
 
 #include "idownload.h"
 
@@ -30,6 +32,7 @@
 class IDownload ; 
 class DownloadEngine ;
 class EngineManager;
+
 class DownloadManager : public QObject
 {
     Q_OBJECT
@@ -69,12 +72,35 @@ class DownloadManager : public QObject
          * Will return percentage of all download 
          * @return 
          */
-        int                     getPercentage() ; 
+        int                     percentage() ; 
+        enum DownloadManagerState
+        {
+            DOWNLOADING = 0, 
+            STOPPED,
+        };
+        /**
+         * @brief Changes state of Download manager 
+         * Will change current state of download manager. If state is changed, update() will be invoked. 
+         * @param state 
+         */
+        void setState ( DownloadManagerState state ) ; 
+        DownloadManagerState state () const ; 
     private : 
         DownloadListType        m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
         unsigned int            m_iCurrentDownloadingFiles ; 
+        struct 
+        {
+            unsigned int m_CurrentDownloadingFiles ; 
+            unsigned int m_MaxDownloadingFiles ; 
+            unsigned int m_LastStartedFilePosition; 
+        } m_DownloadManagerSettings ; 
+        DownloadManagerState m_State ; 
         std::auto_ptr<EngineManager>   m_pEngineManager;
+        QMutex                         m_Mutex ; 
+        /*
+            FUNCTIONS
+        */
         /**
          * find download by url 
          * @param pattern 
@@ -98,6 +124,13 @@ class DownloadManager : public QObject
          * @return position in container. If not found -1. 
          */
         int                     getPositionWithinSlot( QObject * sender );
+        /**
+         * @brief Decides if download is possible
+         * Check download manager state, and decides if we can start next download. 
+         * This has to be invoked this lock
+         * @return true if we can start next download
+         */
+        bool                    canIDownload() const ;
     private slots:
         void                    slot_listChanged() ; 
         void                    init();
@@ -105,6 +138,11 @@ class DownloadManager : public QObject
         void                    bytesRead(int read,int total);
         void                    downloadDone();
         void                    downloadRate(const QString & dwnlRate);
+        /**
+         * @brief  Updates list of download. 
+         * This signal can be invoked by others. 
+         */
+        void                    update() ; 
     signals:
         /**
          * Will emit global progress. 

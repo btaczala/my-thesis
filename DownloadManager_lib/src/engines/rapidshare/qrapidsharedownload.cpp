@@ -74,7 +74,8 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
          // resume downloading 
     }
     m_rssmState = GET_FIRST;
-    m_pDownloadInfo->m_State = DownloadState::INIT;
+    // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
+    m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
     emit statusChanged( m_pDownloadInfo->m_State );
 
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );

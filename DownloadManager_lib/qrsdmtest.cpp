@@ -32,16 +32,24 @@ int main(int argc, char** argv)
     
     DownloadEngine * pEngine = dwnlMgr.engineManager()->findEngine("rapidshare") ;
 
-    OptionsContainer* options = new OptionsContainer();
-    options->addOption(scRS_USER_NAME, std::string("4625386"));
-    options->addOption(scRS_USER_PASS, std::string("pass..... "));
-    pEngine->setOptionsForEngine( *options );
-    delete options;
+    OptionsContainer options ;//= new OptionsContainer();
+    options.addOption(scRS_USER_NAME, std::string("4625386"));
+    options.addOption(scRS_USER_PASS, std::string("maggot666_rs"));
+    pEngine->setOptionsForEngine( options ); 
+    //delete options;
+    /*
+    http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar
+    http://rapidshare.com/files/166196575/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part2.rar
+    http://rapidshare.com/files/166201581/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part3.rar
+    http://rapidshare.com/files/166212106/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part4.rar
+    */
 
-    dwnlMgr.addDownload("http://rapidshare.com/files/165900690/Puszcza_bukowa_.mp3",QDir::homePath().toStdString() );
+    dwnlMgr.addDownload("http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath().toStdString() );
+    dwnlMgr.addDownload("http://rapidshare.com/files/166196575/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part2.rar",QDir::homePath().toStdString() );
+    dwnlMgr.addDownload("http://rapidshare.com/files/166201581/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part3.rar",QDir::homePath().toStdString() );
+    dwnlMgr.addDownload("http://rapidshare.com/files/166212106/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part4.rar",QDir::homePath().toStdString() );
     QTestApp t ; 
     t.setConnector( &dwnlMgr ) ;
     t.show();
-    
 	return app.exec();
 }

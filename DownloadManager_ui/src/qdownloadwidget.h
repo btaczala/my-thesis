@@ -49,7 +49,6 @@ public:
     class QDownloadWidgetColumnInfo
     {
     public:
-        
         QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible) // has to be const when passing temporary object
         {
             _id = id; _colName = colName; _visible = visible;
@@ -112,7 +111,6 @@ namespace DownloadWidgetDelegates
         horizonatalMargin = 3,
         verticalMargin = 1,
     };
-    
     class QDownloadIconedItemDelegate : public QItemDelegate
     {
 	    Q_OBJECT

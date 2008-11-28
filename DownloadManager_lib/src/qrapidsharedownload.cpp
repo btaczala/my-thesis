@@ -483,7 +483,7 @@ void QRapidshareDownload::SetUser(const QString& rsName,  const QString& rsPass)
 	RSDM_LOG_FUNC ;
 	SetUser(QRapidshareUser(rsName,rsPass));
 }
-RapidShareStateMachine QRapidshareDownload::GetState() const 
+RapidShareStateMachine QRapidshareDownload::state() const 
 {
 	RSDM_LOG_FUNC ;
 	return m_downloadInfo.m_State.m_rssmState;

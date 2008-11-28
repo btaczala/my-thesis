@@ -94,10 +94,10 @@ public:
 	void								SetRapidshareUser(const QRapidshareUser & _usr ) ;
 
 	/*!
-	 * GetState - Return state of download
+	 * state - Return state of download
 	 * \return RapidShareStateMachine - state of RapidShareStateMachine
 	*/
-	RapidShareStateMachine				GetState() const ;
+	RapidShareStateMachine				state() const ;
 	unsigned int						GetProgress() const  ;
 	unsigned int						GetBytesDownloaded() const ; 
 	unsigned int						GetFileSize() const ; 

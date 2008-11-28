@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza?a 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Tacza?a                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,18 +31,19 @@
 struct DownloadState
 {
 public:
-	typedef unsigned int UInt ; 
-	typedef unsigned long ULong ; 
-	UInt 					m_DownloadFileSize ; 
-	UInt					m_BytesDownloaded ; 
-	int						bytesReadCurrent;
-	int						bytesReadPreviously;
-	unsigned long			m_bytesToRead ;
-	unsigned long			m_Percentage ;	
+    typedef unsigned int UInt ; 
+    typedef unsigned long ULong ; 
+    UInt                    m_DownloadFileSize ; 
+    UInt                    m_BytesDownloaded ; 
+    int                     bytesReadCurrent;
+    int                     bytesReadPreviously;
+    unsigned long           m_bytesToRead ;
+    unsigned long           m_Percentage ;  
     enum States
     {
-        INIT = 0,
-        STOPPED,
+        // ?: is it a proper state ? 
+        //INIT = 0,
+        STOPPED = 0,
         DOWNLOADING,
         PAUSED,
         DONE,
@@ -55,29 +56,29 @@ class OptionsContainer;
 class IDownload : public QObject
 {
     Q_OBJECT
-	public :
-		IDownload (OptionsContainer* options = NULL );
-		virtual ~IDownload() ;
+    public :
+        IDownload (OptionsContainer* options = NULL );
+        virtual ~IDownload() ;
         DownloadState*                      downloadInfo () const ; 
-		virtual void                        start() = 0 ; 
-		virtual void                        stop() = 0 ; // abort () 
-		virtual void                        restart() = 0 ;
-        DownloadState::States               GetState() const {return m_pDownloadInfo->m_State; };
+        virtual void                        start() = 0 ; 
+        virtual void                        stop() = 0 ; // abort () 
+        virtual void                        restart() = 0 ;
+        DownloadState::States               state() const {return m_pDownloadInfo->m_State; };
         void                                SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
-        unsigned int                        GetBytesDownloaded() const { 	return m_pDownloadInfo->m_BytesDownloaded ;  };
+        unsigned int                        GetBytesDownloaded() const {    return m_pDownloadInfo->m_BytesDownloaded ;  };
         unsigned int                        GetFileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
-        void                                SetFileSize( const unsigned int & fileSize ) { 	m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
+        void                                SetFileSize( const unsigned int & fileSize ) {  m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
         unsigned int                        GetProgress() const;
-		
-		void                                setUrlAddress ( const std::string & urlAddrr ) ; 
-		const std::string&                  urlAddress() const ; 
-		const std::string&                  destinationAddress() const ; 
-		void                                setDestinationAddress ( const std::string & localAddress  ) ; 
-	protected :
-        std::auto_ptr< DownloadState >		m_pDownloadInfo ; 
-		std::string						    m_UrlAddress ; 
-		std::string						    m_FileDestination ;
-        mutable unsigned int				m_Progress;
+        
+        void                                setUrlAddress ( const std::string & urlAddrr ) ; 
+        const std::string&                  urlAddress() const ; 
+        const std::string&                  destinationAddress() const ; 
+        void                                setDestinationAddress ( const std::string & localAddress  ) ; 
+    protected :
+        std::auto_ptr< DownloadState >      m_pDownloadInfo ; 
+        std::string                         m_UrlAddress ; 
+        std::string                         m_FileDestination ;
+        mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
     signals :
         //virtual void                        downloadStatus(const int & istate ) = 0;

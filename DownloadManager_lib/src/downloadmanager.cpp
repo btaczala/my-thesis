@@ -5,12 +5,15 @@
 #include "rslogger.h"
 
 #include <boost/bind.hpp>
+
 #include <QDebug>
 #include <QTimer>
+#include <QMutexLocker>
 
-DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0),m_pEngineManager(new EngineManager())
+DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0),m_pEngineManager(new EngineManager()), m_State ( STOPPED )
 {
-    QTimer::singleShot(1000,this,SLOT(init()));
+    //QTimer::singleShot(1000,this,SLOT(init()));
+    init();
 }
 DownloadManager::~DownloadManager()
 {
@@ -18,6 +21,11 @@ DownloadManager::~DownloadManager()
 void DownloadManager::init()
 {
     LOG("void DownloadManager::init()");
+    m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
+    m_DownloadManagerSettings.m_MaxDownloadingFiles = 3 ;
+    m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
+    setState ( DOWNLOADING ) ; 
+    
 }
 void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
@@ -42,8 +50,9 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     connectWith(pDownload);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
 
-    QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
-    pDownload->start();
+    //QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
+    update() ; 
+    //pDownload->start();
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {
@@ -91,7 +100,7 @@ void DownloadManager::downloadRate(const QString & dwnlRate)
 {
     qDebug() << dwnlRate;
 }
-int DownloadManager::getPercentage() 
+int DownloadManager::percentage() 
 {
     DownloadListType::iterator it = m_DownloadList.begin(); 
     DownloadListType::iterator itEnd = m_DownloadList.end(); 
@@ -107,7 +116,7 @@ int DownloadManager::getPercentage()
 }
 void DownloadManager::connectWith(IDownload * pDownload)
 {
-    QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
 };
@@ -135,5 +144,61 @@ void DownloadManager::bytesRead(int read, int total)
     if ( pos !=-1 )
         emit bytesReadAt(pos,read,total);
     
+}
+
+void DownloadManager::update()
+{
+
+    QMutexLocker localMutex(&m_Mutex);
+    if ( m_State == DOWNLOADING ) 
+    {
+        DownloadListType::iterator it = m_DownloadList.begin() ; 
+        DownloadListType::iterator itEnd = m_DownloadList.end() ; 
+        IDownload *pDownload = NULL ;//it->get() ; 
+        int counter = 0 ; 
+        for ( it ; it!=itEnd ; ++it ) 
+        {
+            if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles >=m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
+                break ; 
+            pDownload = it->get() ; 
+            DownloadState::States state = pDownload->state();
+            if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED ) 
+                continue ; 
+            if ( canIDownload() ) 
+            {
+                pDownload->start() ; 
+                m_DownloadManagerSettings.m_LastStartedFilePosition = counter ; 
+                m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
+            };
+            counter++;
+        }
+    }
+    else
+    {
+        // stop ( pause ) all downloads
+        ;
+    }
+}
+
+void DownloadManager::setState(DownloadManagerState state)
+{
+    if ( state == m_State ) 
+        return ; 
+    m_State = state ; 
+    update() ; 
+};
+
+bool DownloadManager::canIDownload() const
+{
+    if ( state() == DOWNLOADING ) 
+    {
+        if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles < m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
+            return true ; 
+    }
+    return false ; 
+};
+DownloadManager::DownloadManagerState DownloadManager::state() const
+{
+    return m_State ; 
 }
 

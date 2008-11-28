@@ -21,11 +21,11 @@
 #include "optionscontainer.h"
 class IDownload ; 
 /**
-	@author 
+    @author tdubik@gmail.com
+    @author w0lanto@gmail.com
 */
 
 class OptionsContainer;
-
 class DownloadEngine{
     public:
         //FIXME: should be QList<QRegExp> 
@@ -40,14 +40,12 @@ class DownloadEngine{
         void                    setOptionsForEngine(const OptionsContainer& options);
         const StringList &      patterns() const ; 
         const std::string &     name() const ;
-        int                     getPercent();
-    
+        int                     percent();
     protected:
         StringList                          m_UrlPatterns ; 
         std::auto_ptr<OptionsContainer>     m_Options;
     private:
         std::string                         m_EngineName ; 
-        
 
 };
 
