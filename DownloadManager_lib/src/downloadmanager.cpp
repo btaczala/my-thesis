@@ -56,6 +56,7 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {
+    LOG(QString("void DownloadManager::startDownload(const std::string &urlAddress=%1)").arg(urlAddress.c_str() ) );
     IDownload *pDownload ; 
     pDownload = find(urlAddress) ; 
     if ( pDownload == NULL ) 
@@ -77,6 +78,7 @@ const std::string & name_hlpr(const DownloadManager::IDownloadSmartPtr & pDownlo
     
 IDownload* DownloadManager::find(const std::string & urlAddress ) 
 {
+    LOG(QString("IDownload* DownloadManager::find(const std::string & urlAddress=%1) ").arg(urlAddress.c_str() ) );
     DownloadListType::iterator it = std::find_if ( m_DownloadList.begin(),m_DownloadList.end(), boost::bind(name_hlpr,_1) == urlAddress ) ;
     if ( it == m_DownloadList.end() )
         return NULL ; 
@@ -89,7 +91,6 @@ void DownloadManager::statusChanged(DownloadState::States what)
     if ( pos !=-1 )
         emit statusChanged(pos,what);
 }
-
 void DownloadManager::downloadDone()
 {
     int pos = getPositionWithinSlot( sender() ) ;  
@@ -120,11 +121,10 @@ void DownloadManager::connectWith(IDownload * pDownload)
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
 };
-
 int DownloadManager::findPosition(const std::string & url)
 {
     int pos = 0 ; 
-    for ( int z = 0 ; z < m_DownloadList.size() ; ++z ) 
+    for ( unsigned int z = 0 ; z < m_DownloadList.size() ; ++z ) 
     {
         if ( m_DownloadList[z]->urlAddress() == url ) 
             return z ; 
@@ -137,15 +137,12 @@ int DownloadManager::getPositionWithinSlot( QObject * sender )
     IDownload *pDownload = qobject_cast<IDownload*>( sender ); 
     return findPosition( pDownload->urlAddress() ); 
 }
-
 void DownloadManager::bytesRead(int read, int total)
 {
     int pos = getPositionWithinSlot( sender() ) ;  
     if ( pos !=-1 )
-        emit bytesReadAt(pos,read,total);
-    
+        emit bytesReadAt(pos,read,total);    
 }
-
 void DownloadManager::update()
 {
 
@@ -201,4 +198,12 @@ DownloadManager::DownloadManagerState DownloadManager::state() const
 {
     return m_State ; 
 }
-
+IDownload * DownloadManager::downloadAt(unsigned int position)
+{
+    if ( position >= m_DownloadList.size() || position < 0 ) 
+    {
+        LOG(QString("Unable to get Download. List size=%1, position requested=%2").arg(m_DownloadList.size()).arg(position) );
+        return NULL ; 
+    };
+    return m_DownloadList[position].get() ;
+};

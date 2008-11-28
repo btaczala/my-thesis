@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include <QtGui>
+#include <QKeyEvent>
 #include "mainwindow.h"
 #include "menubar.h"
 #include "qdownloadwidget.h"
@@ -28,7 +29,6 @@ MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
      m_ToolbarWidget(new QToolBar("Download Toolbar", this))
 {
-
     InitializeWidgets();
     InitializeActions();
 };
@@ -139,4 +139,13 @@ void MainWindow::about()
     connect(quitButton, SIGNAL(clicked()), &about, SLOT(close()));
 
     about.exec();
+}
+void MainWindow::keyPressEvent(QKeyEvent *event ) 
+{
+    
+    if ( event->key() == Qt::Key_V && event->modifiers() == Qt::ControlModifier )
+    {
+        m_DownloadWidget->addDownload( "http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath() );
+    }
+    
 }

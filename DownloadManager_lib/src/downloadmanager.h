@@ -85,6 +85,8 @@ class DownloadManager : public QObject
          */
         void setState ( DownloadManagerState state ) ; 
         DownloadManagerState state () const ; 
+
+        IDownload *downloadAt ( unsigned int position ) ; 
     private : 
         DownloadListType        m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 

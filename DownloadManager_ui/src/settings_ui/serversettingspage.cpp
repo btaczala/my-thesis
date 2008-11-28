@@ -73,22 +73,25 @@ namespace server_settings_page
         downloadsLayout->addStretch(1);
 
         QCheckBox* credentialsCheck = new QCheckBox(tr("Use credentials"));
+        connect(credentialsCheck,SIGNAL( stateChanged ( int ) ), this, SLOT( useCredentialChecked( int ) ) );
 
         QLabel* userLabel = new QLabel(tr("User:"));
         userLabel->setMinimumWidth(labelWidth);
-        QLineEdit* userEdit = new QLineEdit;
+        m_UserEdit = new QLineEdit;
+        m_UserEdit->setDisabled(true);
         QHBoxLayout* userLayout = new QHBoxLayout;
         userLayout->addWidget(userLabel);
-        userLayout->addWidget(userEdit);
+        userLayout->addWidget(m_UserEdit);
         userLayout->addStretch(1);
 
         QLabel* passwordLabel = new QLabel(tr("Password:"));
         passwordLabel->setMinimumWidth(labelWidth);
-        QLineEdit* passwordEdit = new QLineEdit;
-        passwordEdit->setEchoMode(QLineEdit::Password);
+        m_PasswordEdit = new QLineEdit;
+        m_PasswordEdit->setDisabled(true);
+        m_PasswordEdit->setEchoMode(QLineEdit::Password);
         QHBoxLayout* passwordLayout = new QHBoxLayout;
         passwordLayout->addWidget(passwordLabel);
-        passwordLayout->addWidget(passwordEdit);
+        passwordLayout->addWidget(m_PasswordEdit);
         passwordLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
@@ -104,5 +107,18 @@ namespace server_settings_page
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);
+    }
+    void ServerTab::useCredentialChecked(int state ) 
+    {
+        if ( state == Qt::Unchecked ) 
+        {
+            m_UserEdit->setDisabled(true);
+            m_PasswordEdit->setDisabled(true);
+        }
+        if ( state == Qt::Checked ) 
+        {
+            m_UserEdit->setDisabled(false);
+            m_PasswordEdit->setDisabled(false);
+        }   
     }
 }

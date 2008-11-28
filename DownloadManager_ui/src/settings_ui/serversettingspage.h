@@ -21,6 +21,7 @@
 #define SERVERSETTINGSPAGE_H
 
 #include "isettingspage.h"
+class QLineEdit;
 
 namespace server_settings_page
 {
@@ -29,6 +30,12 @@ namespace server_settings_page
         Q_OBJECT
     public:
         ServerTab(QWidget* parent = 0);
+    private slots:
+        void useCredentialChecked( int state ) ; 
+    private:
+        QLineEdit* m_UserEdit;
+        QLineEdit* m_PasswordEdit;
+
     };
 }
 

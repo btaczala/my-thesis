@@ -1,6 +1,6 @@
  /***************************************************************************
-  *   Copyright (C) 2008 by Bartek Tacza�a                                 *
-  *   b@kontrasty.szczecin.pl                                                  *
+  *   Copyright (C) 2008 by Bartek Taczala                                  *
+  *   b@kontrasty.szczecin.pl                                               *
   *                                                                         *
   *   This program is free software; you can redistribute it and/or modify  *
   *   it under the terms of the GNU General Public License as published by  *

@@ -58,14 +58,17 @@ SET( APP_MOC_HDRS
 SET( APP_UI_FORMS src/ui/columnsConfig.ui
     )
 SET(APP_RSC src/resources/main_resources.qrc )
-#ADD_DEFINITIONS( -Wall )
 
 INCLUDE( ${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})  
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
+INCLUDE_DIRECTORIES( "../proxy_lib/src" )
+INCLUDE_DIRECTORIES( "../DownloadManager_lib/src" )
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})
 QT4_WRAP_UI (APP_UI_HDRS ${APP_UI_FORMS} )
 QT4_WRAP_CPP (APP_MOC_SRCS ${APP_MOC_HDRS})
+#message ( STATUS ${proxy_lib} ) 
+#message ( STATUS ${QT_LIBRARIES} ) 
 
 ADD_EXECUTABLE( DownloadManager_ui ${VS_SUBSYSTEM} ${APP_UI_HDRS} ${APP_MOC_SRCS} ${APP_SRCS} ${APP_RSC_SCRS} ${APP_HDRS} )
-TARGET_LINK_LIBRARIES(DownloadManager_ui ${QT_LIBRARIES})
+TARGET_LINK_LIBRARIES(DownloadManager_ui ${QT_LIBRARIES} proxy_lib downloadmanager_lib )

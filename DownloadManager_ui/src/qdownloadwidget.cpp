@@ -26,6 +26,9 @@
 #include <sstream>
 #include "actions.h"
 
+#include <proxy.h>
+#include <downloadmanager.h>
+
 const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
@@ -43,7 +46,12 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
 
     QIcon itemIcon(QPixmap(":/download_item.png"));
 
+
+    /*
+    QTreeWidgetItem* item = new QTreeWidgetItem();
+
     QTreeWidgetItem* item = new QTreeWidgetItem(StandardItem);
+
     item->setText(0, "movie.avi");
     item->setIcon(0, itemIcon);
     item->setText(4, "Downloading");
@@ -56,11 +64,20 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     item1->setText(4, "Downloading");
     item1->setData(0, Qt::UserRole, QVariant(false));
     addTopLevelItem(item1);
+    */
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
     connect(Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
     connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
+
+    connect( Proxy::downloadManager(),SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
+    connect( Proxy::downloadManager(),SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
+    connect( Proxy::downloadManager(),SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
+    connect( Proxy::downloadManager(),SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
+    connect( Proxy::downloadManager(),SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
+
+     
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -162,6 +179,7 @@ void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* 
 
 void QDownloadWidget::columnHide() 
 {
+
     for (QDownloadWidget::ColumnCollection::size_type i = 0 ; i < m_columns.size() ; ++i ) 
     {
         if ( m_columns[i].getId() == m_CurrentColumnID ) 
@@ -193,7 +211,38 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
     m_pContextMenu->popup(mapToGlobal(event->pos()));
     m_pContextMenu->exec();
 }
-
+void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
+{
+    DownloadManager *pDwnlManager =  Proxy::downloadManager() ; 
+    pDwnlManager->addDownload(url.toStdString(),fileDestination.toStdString());
+    
+    QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
+    pItem->setText(0, url);
+    //pItem->setIcon(0, itemIcon);
+    pItem->setText(4, "");
+    pItem->setSizeHint(0, QSize(100, 20));
+    addTopLevelItem(pItem);
+}
+void QDownloadWidget::statusChanged( int position, DownloadState::States status )
+{
+    QWidget::update();
+};
+void QDownloadWidget::downloadDoneAt( int position)
+{
+    QWidget::update();
+};
+void QDownloadWidget::downloadOnHold( int position)
+{
+    QWidget::update();
+};
+void QDownloadWidget::globalProgressChanged( int value)
+{
+    QWidget::update();
+};
+void QDownloadWidget::bytesReadAt(int position,int read,int total)
+{
+    emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
+};
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
 {
@@ -203,16 +252,15 @@ QTestWidget::QTestWidget(QWidget* parent)
     downloadsLayout->addSpacing(0);
     downloadsLayout->addWidget(downloadsLabel);
     downloadsLayout->addStretch(1);
-
     setLayout(downloadsLayout);
 }
 
 namespace DownloadWidgetDelegates
 {
-    DownloadItemDelegate::DownloadItemDelegate(QObject* parent)
+    DownloadItemDelegate::DownloadItemDelegate(QObject *parent)
         : QItemDelegate(parent)
     {
-        connect(parent, SIGNAL(activated(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
+        
     }
 
     void DownloadItemDelegate::itemActivated(const QModelIndex& index)
@@ -295,7 +343,11 @@ namespace DownloadWidgetDelegates
         progressBarOption.textAlignment = Qt::AlignCenter;
 	    progressBarOption.textVisible = true;	
 	    int iRow = index.row();
-	    int progress = 70;// should really be (qobject_cast<QDownloadWidget*>parent())->getProgress();
+        int progress = 0 ; 
+        IDownload *pDownload = Proxy::downloadManager()->downloadAt( iRow ) ; 
+        if ( pDownload ) 
+            progress = pDownload->GetProgress() ; 
+	    
         // getProgress will return current progress. 
         // m_Progress will be set like:QDownloadWidget
         /* MainWindows          DownloadManager             IDownload
@@ -319,9 +371,7 @@ namespace DownloadWidgetDelegates
 	    progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
         painter->restore();
-
     }
-
     void DownloadItemDelegate::drawDetailedItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
         QSize size = QItemDelegate::sizeHint(option, index);

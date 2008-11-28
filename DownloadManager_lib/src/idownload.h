@@ -31,6 +31,7 @@
 struct DownloadState
 {
 public:
+    DownloadState() : m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0){};
     typedef unsigned int UInt ; 
     typedef unsigned long ULong ; 
     UInt                    m_DownloadFileSize ; 
@@ -43,8 +44,8 @@ public:
     {
         // ?: is it a proper state ? 
         // with this commented out, qrapidshare engine doesn't work. ( response html is written as result file ). 
-        //INIT = 0,
-        STOPPED = 0,
+        INIT = 0,
+        STOPPED ,
         DOWNLOADING,
         PAUSED,
         DONE,

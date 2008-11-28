@@ -31,6 +31,7 @@
 
 class QDownloadWidget;
 class MenuBar;
+class QKeyEvent;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -47,6 +48,7 @@ class MainWindow : public QMainWindow
         void InitializeMenuBar();
 
         void InitializeActions();
+        virtual void keyPressEvent(QKeyEvent *event);
     private:
         std::auto_ptr<MenuBar>         m_MenuBar; 
         std::auto_ptr<QToolBar>        m_ToolbarWidget; 

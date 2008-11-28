@@ -25,6 +25,8 @@
 #include <vector>
 #include <QPointer>
 
+#include <idownload.h>
+
 class QPaintEvent;
 class QContextMenuEvent;
 
@@ -80,6 +82,7 @@ public:
 	QDownloadWidget(QWidget * parent = 0);
 	~QDownloadWidget(); 
 
+    void addDownload ( const QString & url, const QString & fileDestination ) ; 
     class QDownloadWidgetColumnInfo
     {
     public:
@@ -102,9 +105,6 @@ public:
         void setVisible(bool visible) { _visible = visible; }
 
         static const QString settingsName;
-
-
-
     private:
         int _id;
         QString _colName;
@@ -127,6 +127,12 @@ public slots:
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     void contextMenu(QContextMenuEvent * event );
     void columnHide(); 
+
+    void globalProgressChanged( int value ) ; 
+    void statusChanged( int position, DownloadState::States status );
+    void downloadDoneAt( int position );
+    void downloadOnHold( int position ) ; 
+    void bytesReadAt( int position , int read , int total );
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
@@ -137,7 +143,6 @@ private:
 protected:
     virtual void paintEvent(QPaintEvent *event);
     virtual void contextMenuEvent(QContextMenuEvent * event );
-
 
     ColumnCollection m_columns;
     QPointer<QMenu>  m_pContextMenu ; 
