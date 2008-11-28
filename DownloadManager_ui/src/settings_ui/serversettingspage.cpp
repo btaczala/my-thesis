@@ -24,6 +24,7 @@
 #include <proxy.h>
 #include <settings.h>
 #include <optionscontainer.h>
+#include <rslogger.h>
 
 ServerSettingsPage::ServerSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
@@ -91,7 +92,7 @@ namespace server_settings_page
         QLabel* passwordLabel = new QLabel(tr("Password:"));
         passwordLabel->setMinimumWidth(labelWidth);
         m_PasswordEdit = new QLineEdit;
-        m_PasswordEdit->setDisabled(true);
+        //m_PasswordEdit->setDisabled(true);
         m_PasswordEdit->setEchoMode(QLineEdit::Password);
         QHBoxLayout* passwordLayout = new QHBoxLayout;
         passwordLayout->addWidget(passwordLabel);
@@ -112,18 +113,23 @@ namespace server_settings_page
         layout->addStretch(1);
         setLayout(layout);
 
-         std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("username") );
+        std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("username") );
         std::string userPass = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("password") ) ; 
+        LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName.c_str() ).arg( userPass.c_str() ));
         if ( userName.empty() || userPass.empty() ) 
-            credentialsCheck->setDisabled(true);
+            credentialsCheck->setCheckState( Qt::Unchecked );
         else
         {
-            credentialsCheck->setDisabled(false);
+            credentialsCheck->setCheckState( Qt::Checked );
             m_UserEdit->setText( userName.c_str() ) ; 
             m_PasswordEdit->setText( userPass.c_str() ) ; 
         }
-        
-
+        useCredentialChecked(credentialsCheck->checkState());
+    }
+    ServerTab::~ ServerTab()
+    {
+        Proxy::settings()->setValue( "username",m_UserEdit->text(),Settings::PLUGINS,"rapidshare");
+        Proxy::settings()->setValue( "password",m_PasswordEdit->text(),Settings::PLUGINS,"rapidshare");
     }
     void ServerTab::useCredentialChecked(int state ) 
     {
@@ -139,3 +145,4 @@ namespace server_settings_page
         }   
     }
 }
+

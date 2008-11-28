@@ -25,12 +25,20 @@
 
 #include <QCoreApplication>
 #include "mainwindow.h"
+#include <proxy.h>
+#include <settings.h>
 int main(int argc, char *argv[])
 {	
 	#ifdef WIN32
 	QApplication::setStyle(new QCleanlooksStyle);
 	#endif
 	QApplication app(argc, argv);
+    
+    QCoreApplication::setOrganizationName("Yattaman");
+    QCoreApplication::setApplicationName("QRapidshare");
+    //Proxy::init() ; 
+    Proxy::settings()->loadSettings();
+    
 	Q_INIT_RESOURCE(main_resources);
 	MainWindow window;
 	window.show();

@@ -27,6 +27,7 @@
 #include "actions.h"
 
 #include <proxy.h>
+#include <settings.h>
 #include <downloadmanager.h>
 
 const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
@@ -74,9 +75,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     connect( Proxy::downloadManager(),SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
     connect( Proxy::downloadManager(),SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
     connect( Proxy::downloadManager(),SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
-    connect( Proxy::downloadManager(),SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
-
-     
+    connect( Proxy::downloadManager(),SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );     
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -93,12 +92,14 @@ void QDownloadWidget::InitializeColumns()
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
 
+    // Proxy::settings()->value(QString, context).value<QString>() 
     QStringList headers;
 
-    QSettings setts("Yattaman", "QDownloadManager");
+    //QSettings setts("Yattaman", "QDownloadManager");
 
-    QString columns = setts.value(QDownloadWidgetColumnInfo::settingsName).value<QString>();
-
+    //QString columns = setts.value(QDownloadWidgetColumnInfo::settingsName).value<QString>();
+    
+    QString columns = Proxy::settings()->value( QDownloadWidgetColumnInfo::settingsName, Settings::UI).value<QString>();
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
         headers << i->getName();
@@ -127,7 +128,7 @@ void QDownloadWidget::ReloadColumns(bool readSettings)
 
 void QDownloadWidget::SaveColumns()
 {
-    QSettings setts("Yattaman", "QDownloadManager");
+    //QSettings setts("Yattaman", "QDownloadManager");
     std::stringstream ss;
     for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
@@ -137,8 +138,8 @@ void QDownloadWidget::SaveColumns()
         if (i->isVisible())
             ss << i->getName().toStdString();
     }
-
-    setts.setValue(QDownloadWidgetColumnInfo::settingsName, QString(ss.str().c_str()));
+    Proxy::settings()->setValue(QDownloadWidgetColumnInfo::settingsName, QString( ss.str().c_str() ), Settings::UI ) ; 
+    //setts.setValue(QDownloadWidgetColumnInfo::settingsName, QString(ss.str().c_str()));
 }
 
 void QDownloadWidget::paintEvent( QPaintEvent *event )

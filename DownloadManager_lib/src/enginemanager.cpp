@@ -89,3 +89,8 @@ const DownloadEngine * EngineManager::findEngineWithPattern(const std::string & 
 
     return it->second.get();
 };
+
+const EngineManager::EngineMap & EngineManager::engines() const
+{
+    return m_Engines;
+}

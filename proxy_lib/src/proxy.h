@@ -14,8 +14,16 @@ class Proxy
          * @brief Will return Download Manager 
          */
 		static DownloadManager * downloadManager() ; 
+        /**
+         * @brief Will return Engine Manager 
+         */
 		static const EngineManager * engineManager() ; 
+        /**
+         * @brief Will return Global Settings
+         */
 		static Settings * settings();
+        
+        static void init();
 	private:
 		static Proxy* proxy() ;
 		Proxy() ; 

@@ -55,7 +55,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
  {
     RSDM_LOG_FUNC ;
     
-    setUrlFileAddress( m_UrlAddress.c_str() );
+     setUrlFileAddress( m_UrlAddress.c_str() );
     //invalid url set
     if( m_apFileUrl->isEmpty())
         return;

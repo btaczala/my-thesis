@@ -27,6 +27,8 @@ public:
     
     DownloadEngine *        findEngine(const std::string & engineName ) const; 
     const DownloadEngine *  findEngineWithPattern(const std::string & UrlPattern);
+    
+    const EngineMap &       engines() const ; 
 private:
     mutable EngineMap       m_Engines ; 
     std::string             m_EnginesDirPath ; 
