@@ -21,6 +21,6 @@ class Proxy
 		Proxy() ; 
 		Proxy(const Proxy & rhs) ; // hidden 
 		std::auto_ptr<DownloadManager>		m_apDownloadManager ; 
-		
+        std::auto_ptr<Settings>		        m_apSettings ; 
 };
 #endif //__PROXY_H__

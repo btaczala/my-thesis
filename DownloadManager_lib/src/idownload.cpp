@@ -1,5 +1,33 @@
 #include "idownload.h"
 #include "rslogger.h"
+QString DownloadStateToString( DownloadState::States state ) 
+{
+    switch ( state ) 
+    {
+        
+    case DownloadState::INIT :
+        return QObject::tr("Initialization");
+        break ; 
+    case DownloadState::STOPPED:
+        return QObject::tr("Stopped");
+        break ; 
+    case DownloadState::DOWNLOADING:
+        return QObject::tr("Downloading");
+        break ; 
+    case DownloadState::PAUSED:
+        return QObject::tr("Paused");
+        break ; 
+    case DownloadState::DONE:
+        return QObject::tr("Finished");
+        break ; 
+    case DownloadState::FAILED:
+        return QObject::tr("Failed");
+        break ; 
+    default:
+        return "";
+    };
+}
+
 IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadState ), m_Options( options )
 {
     m_pDownloadInfo->m_Percentage = 0;

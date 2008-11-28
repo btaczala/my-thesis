@@ -13,10 +13,12 @@ INCLUDE_DIRECTORIES ( "../DownloadManager_lib/src" )
 
 SET( Proxy_SRCS 
 	src/proxy.cpp
+	src/settings.cpp
 ) 
 
 SET( Proxy_HDRS
     src/proxy.h
+	src/settings.h
 )
 
 add_library( proxy_lib STATIC ${Proxy_SRCS} ${Proxy_HDRS} )

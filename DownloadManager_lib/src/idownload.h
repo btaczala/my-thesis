@@ -18,8 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef IDOWNLOADMANAGER_H
-#define IDOWNLOADMANAGER_H
+#ifndef IDOWNLOAD_H
+#define IDOWNLOAD_H
 #include <memory>
 #include <string>
 #include <QObject>
@@ -53,6 +53,7 @@ public:
     } m_State ; 
 };
 
+QString DownloadStateToString( DownloadState::States state ) ;
 class OptionsContainer;
 
 class IDownload : public QObject
@@ -88,4 +89,4 @@ class IDownload : public QObject
         virtual void                        statusChanged( DownloadState::States status ) = 0 ;
         virtual void                        downloadRate(const QString & dwnlRate) = 0 ; 
 };
-#endif //  IDOWNLOADMANAGER_H
+#endif //  IDOWNLOAD_H

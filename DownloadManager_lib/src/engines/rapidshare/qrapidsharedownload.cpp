@@ -5,7 +5,8 @@
 #include "optionscontainer.h"
 #include "rscommon.h"
 
- 
+// FIXME:
+// #include <proxy.h>
  
 QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(options)
  , m_apHttpObj( new QHttp() )
@@ -35,8 +36,10 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if( m_Options )
     {
-        setUser(  boost::any_cast<std::string>( m_Options->option( scRS_USER_NAME )),
-                  boost::any_cast<std::string>( m_Options->option( scRS_USER_PASS )));
+        // FIXME:
+        //setUser( boost::any_cast<std::string>( Proxy::Settings()->optionsForEngine("rapidshare")->option("username") ),boost::any_cast<std::string>( Proxy::Settings()->optionsForEngine("rapidshare")->option("password") ) ); 
+        setUser(  boost::any_cast<std::string>( m_Options->option( "username" )),
+                  boost::any_cast<std::string>( m_Options->option( "password" )));
     }
     else
         Q_ASSERT(false);

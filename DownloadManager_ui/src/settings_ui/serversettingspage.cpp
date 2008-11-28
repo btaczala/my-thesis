@@ -21,6 +21,10 @@
 #include <QtGui>
 #include "serversettingspage.h"
 
+#include <proxy.h>
+#include <settings.h>
+#include <optionscontainer.h>
+
 ServerSettingsPage::ServerSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
 {
@@ -73,12 +77,12 @@ namespace server_settings_page
         downloadsLayout->addStretch(1);
 
         QCheckBox* credentialsCheck = new QCheckBox(tr("Use credentials"));
+        
         connect(credentialsCheck,SIGNAL( stateChanged ( int ) ), this, SLOT( useCredentialChecked( int ) ) );
 
         QLabel* userLabel = new QLabel(tr("User:"));
         userLabel->setMinimumWidth(labelWidth);
         m_UserEdit = new QLineEdit;
-        m_UserEdit->setDisabled(true);
         QHBoxLayout* userLayout = new QHBoxLayout;
         userLayout->addWidget(userLabel);
         userLayout->addWidget(m_UserEdit);
@@ -107,6 +111,19 @@ namespace server_settings_page
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);
+
+         std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("username") );
+        std::string userPass = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("password") ) ; 
+        if ( userName.empty() || userPass.empty() ) 
+            credentialsCheck->setDisabled(true);
+        else
+        {
+            credentialsCheck->setDisabled(false);
+            m_UserEdit->setText( userName.c_str() ) ; 
+            m_PasswordEdit->setText( userPass.c_str() ) ; 
+        }
+        
+
     }
     void ServerTab::useCredentialChecked(int state ) 
     {

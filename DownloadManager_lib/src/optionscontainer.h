@@ -24,8 +24,8 @@
 #include <vector>
 #include <map>
 
-static const std::string scRS_USER_NAME = std::string("RS_username");
-static const std::string scRS_USER_PASS = std::string("RS_userpassword");
+//static const std::string scRS_USER_NAME = std::string("RS_username");
+//static const std::string scRS_USER_PASS = std::string("RS_userpassword");
 
 class OptionsContainer
 {

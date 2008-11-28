@@ -44,7 +44,6 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     setAlternatingRowColors( true );
     setRootIsDecorated( false );
 
-    QIcon itemIcon(QPixmap(":/download_item.png"));
 
 
     /*
@@ -201,13 +200,11 @@ void QDownloadWidget::contextMenu(QContextMenuEvent * event )
     QAction *pAction = Actions::getAction( Actions::scHideCurrentColumnText ) ;
     pAction->setText( Actions::scHideCurrentColumnText.arg(txt));
     m_pContextMenu->addAction( pAction );
-    //connect ( pAction, SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
     contextMenuEvent(event);
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 {
-    //menu.
     m_pContextMenu->popup(mapToGlobal(event->pos()));
     m_pContextMenu->exec();
 }
@@ -215,17 +212,22 @@ void QDownloadWidget::addDownload( const QString & url, const QString & fileDest
 {
     DownloadManager *pDwnlManager =  Proxy::downloadManager() ; 
     pDwnlManager->addDownload(url.toStdString(),fileDestination.toStdString());
+    QIcon itemIcon(QPixmap(":/download_item.png"));
     
     QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
     pItem->setText(0, url);
-    //pItem->setIcon(0, itemIcon);
+    pItem->setIcon(0, itemIcon);
+    pItem->setText(1, fileDestination);
+    pItem->setText(2, QString("0/0"));
     pItem->setText(4, "");
     pItem->setSizeHint(0, QSize(100, 20));
     addTopLevelItem(pItem);
 }
 void QDownloadWidget::statusChanged( int position, DownloadState::States status )
 {
-    QWidget::update();
+    QTreeWidgetItem *pItem = topLevelItem(position);
+    if ( pItem ) 
+        pItem->setText(4,DownloadStateToString(status));
 };
 void QDownloadWidget::downloadDoneAt( int position)
 {
@@ -241,7 +243,12 @@ void QDownloadWidget::globalProgressChanged( int value)
 };
 void QDownloadWidget::bytesReadAt(int position,int read,int total)
 {
+    int read_kBytes = read / 1024 ; 
+    int total_kBytes = total / 1024 ; 
     emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
+    QTreeWidgetItem *pItem = topLevelItem(position);
+    if ( pItem ) 
+        pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
 };
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
