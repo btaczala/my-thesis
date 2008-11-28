@@ -43,16 +43,18 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
 
     QIcon itemIcon(QPixmap(":/download_item.png"));
 
-    QTreeWidgetItem* item = new QTreeWidgetItem();
+    QTreeWidgetItem* item = new QTreeWidgetItem(StandardItem);
     item->setText(0, "movie.avi");
     item->setIcon(0, itemIcon);
     item->setText(4, "Downloading");
-    item->setSizeHint(0, QSize(100, 20));
+    item->setData(0, Qt::UserRole, QVariant(false));
     addTopLevelItem(item);
-    QTreeWidgetItem* item1 = new QTreeWidgetItem();
+
+    QTreeWidgetItem* item1 = new QTreeWidgetItem(StandardItem);
     item1->setText(0, "music.mp3");
     item1->setIcon(0, itemIcon);
     item1->setText(4, "Downloading");
+    item1->setData(0, Qt::UserRole, QVariant(false));
     addTopLevelItem(item1);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
@@ -64,6 +66,8 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
 QDownloadWidget::~QDownloadWidget()
 {
     SaveColumns();
+
+    delete m_downloadItemDelegate;
 }
 void QDownloadWidget::InitializeColumns()
 {
@@ -90,9 +94,9 @@ void QDownloadWidget::InitializeColumns()
     
     ReloadColumns();
 
-//    header()->setResizeMode(QHeaderView::FixStretched);
+    m_downloadItemDelegate = new DownloadWidgetDelegates::DownloadItemDelegate(this);
 
-    setItemDelegateForColumn(QDownloadWidgetColumnInfo::ColumnProgress, new DownloadWidgetDelegates::QDownloadProgressDelegate(this));
+    setItemDelegate(m_downloadItemDelegate);
 }
 
 void QDownloadWidget::ReloadColumns(bool readSettings)
@@ -155,9 +159,10 @@ void QDownloadWidget::columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* 
 {
     setColumnHidden(column->getId(), !(column->isVisible()));
 }
+
 void QDownloadWidget::columnHide() 
 {
-    for ( int i = 0 ; i < m_columns.size() ; ++i ) 
+    for (QDownloadWidget::ColumnCollection::size_type i = 0 ; i < m_columns.size() ; ++i ) 
     {
         if ( m_columns[i].getId() == m_CurrentColumnID ) 
         {
@@ -189,48 +194,101 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
     m_pContextMenu->exec();
 }
 
+QTestWidget::QTestWidget(QWidget* parent)
+    :QWidget(parent)
+{
+    QLabel* downloadsLabel = new QLabel(tr("Downloads details"));
+    downloadsLabel->setMinimumWidth(180);
+    QVBoxLayout* downloadsLayout = new QVBoxLayout;
+    downloadsLayout->addSpacing(0);
+    downloadsLayout->addWidget(downloadsLabel);
+    downloadsLayout->addStretch(1);
+
+    setLayout(downloadsLayout);
+}
 
 namespace DownloadWidgetDelegates
 {
-    QDownloadIconedItemDelegate::QDownloadIconedItemDelegate(QObject *parent)
+    DownloadItemDelegate::DownloadItemDelegate(QObject* parent)
         : QItemDelegate(parent)
     {
-        
+        connect(parent, SIGNAL(activated(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
     }
 
-    void QDownloadIconedItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    void DownloadItemDelegate::itemActivated(const QModelIndex& index)
     {
-        painter->save();
-
-        if (option.state & QStyle::State_Selected)
-        {
-            painter->fillRect(option.rect, option.palette.highlight());  
-            painter->setPen(option.palette.highlightedText().color());
-        }
-
         QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
         QTreeWidgetItem* item = p->topLevelItem(index.row());
 
-        QRect rect = option.rect;
-        rect.setX( rect.x() + horizonatalMargin);
-        rect.setY( rect.y() + verticalMargin);       
+        QDownloadWidget::ItemType type = static_cast<QDownloadWidget::ItemType>(item->data(0, Qt::UserRole).value<int>());
+       
 
-       /* QIcon ico(m_icon.scaled(16,16));
-        ico.paint(painter, rect, Qt::AlignLeft);*/
+        if (type != QDownloadWidget::DetailedItem)
+        {
+            item->setData(0, Qt::UserRole, QVariant(QDownloadWidget::DetailedItem));
 
-        rect.setX( rect.x() + 16 + horizonatalMargin);
-        painter->drawText(rect,  item->text(index.column()));
-
-        painter->restore();
+            QTestWidget* test = new QTestWidget;
+            test->setParent(qobject_cast<QAbstractItemView *>(parent())->viewport());
+            m_details[index.row()] = test;
+        }
+        else
+        {
+            item->setData(0, Qt::UserRole, QVariant(QDownloadWidget::StandardItem));
+            m_details[index.row()]->hide();
+            m_details[index.row()]->deleteLater();
+            m_details.remove(index.row());
+        }
     }
 
-    void QDownloadProgressDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    QSize DownloadItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
+        QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
+        QTreeWidgetItem* item = p->topLevelItem(index.row());
+        
+        QDownloadWidget::ItemType type = static_cast<QDownloadWidget::ItemType>(item->data(0, Qt::UserRole).value<int>());
+
+        if (type == QDownloadWidget::DetailedItem)
+        {
+            return QSize(option.rect.width(), 120);
+        }
+        
+        return QItemDelegate::sizeHint(option, index);
+    }
+
+    void DownloadItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
+        QTreeWidgetItem* item = p->topLevelItem(index.row());
+        
+        QDownloadWidget::ItemType type = static_cast<QDownloadWidget::ItemType>(item->data(0, Qt::UserRole).value<int>());
+
+        if (type == QDownloadWidget::DetailedItem)
+        {
+            drawDetailedItem(painter, option, index);
+            return;
+        }
+
+        drawStandardItem(painter, option, index);
+    }
+
+    void DownloadItemDelegate::drawStandardItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        QSize size = QItemDelegate::sizeHint(option, index);
+        
+        QStyleOptionViewItem opt(option);
+        opt.rect.setHeight(size.height()+2);
+
+        if (index.column() != QDownloadWidget::QDownloadWidgetColumnInfo::ColumnProgress)
+        {
+            QItemDelegate::paint(painter, opt, index);
+            return;
+        }
+        
         painter->save();
         QStyleOptionProgressBar progressBarOption;
     	progressBarOption.state = QStyle::State_Enabled;
 	    progressBarOption.direction = QApplication::layoutDirection();
-	    progressBarOption.rect = option.rect;
+	    progressBarOption.rect = opt.rect;
 	    progressBarOption.fontMetrics = QApplication::fontMetrics();
 	    progressBarOption.minimum = 0;
 	    progressBarOption.maximum = 100;
@@ -261,6 +319,34 @@ namespace DownloadWidgetDelegates
 	    progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
         painter->restore();
+
     }
 
+    void DownloadItemDelegate::drawDetailedItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+        QSize size = QItemDelegate::sizeHint(option, index);
+        
+        QStyleOptionViewItem opt(option);
+        
+        if (index.column() == 0)
+            opt.rect.setHeight(size.height());
+        else
+            opt.rect.setHeight(size.height()+2);
+
+        QItemDelegate::paint(painter, opt, index);
+
+        if (index.column() != 0)
+        {
+            return; 
+        }
+        
+        QWidget* widget = m_details[index.row()];
+        
+        QRect rect(option.rect);
+        rect.setWidth(qobject_cast<QDownloadWidget*>(parent())->width());
+        rect.setY(rect.y() + size.height() + 1);
+        widget->setGeometry(rect);
+        
+        widget->show();
+    }
 }

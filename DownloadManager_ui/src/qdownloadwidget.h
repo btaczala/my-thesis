@@ -39,6 +39,40 @@ signals:
     void contextMenu(QContextMenuEvent* event);
 };
 
+class QTestWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    QTestWidget(QWidget* parent = 0);
+};
+
+namespace DownloadWidgetDelegates
+{
+    enum DownloadViewItemMargins
+    {
+        horizonatalMargin = 3,
+        verticalMargin = 1,
+    };
+
+    class DownloadItemDelegate : public QItemDelegate
+    {
+        Q_OBJECT
+    public:
+        DownloadItemDelegate(QObject* parent);
+        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+        virtual QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+    public slots:
+        void itemActivated(const QModelIndex& index);
+
+    protected:
+        void drawStandardItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+        void drawDetailedItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
+    private:
+        QMap<int, QWidget*> m_details;
+    };
+
+};
+
 class QDownloadWidget : public QTreeWidget
 {
 	Q_OBJECT
@@ -79,6 +113,12 @@ public:
 
     typedef std::vector<QDownloadWidgetColumnInfo> ColumnCollection;
 
+    enum ItemType
+    {
+        StandardItem,
+        DetailedItem
+    };
+
 public slots:
     void StartPauseSelectedDownload();
     void StopSelectedDownload();    
@@ -86,7 +126,7 @@ public slots:
     void onConfigureColumns();
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     void contextMenu(QContextMenuEvent * event );
-    void columnHide() ; 
+    void columnHide(); 
     
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
@@ -102,30 +142,7 @@ protected:
     ColumnCollection m_columns;
     QPointer<QMenu>  m_pContextMenu ; 
     int              m_CurrentColumnID ; 
-};
+    DownloadWidgetDelegates::DownloadItemDelegate* m_downloadItemDelegate;
 
-namespace DownloadWidgetDelegates
-{
-    enum DownloadViewItemMargins
-    {
-        horizonatalMargin = 3,
-        verticalMargin = 1,
-    };
-    class QDownloadIconedItemDelegate : public QItemDelegate
-    {
-	    Q_OBJECT
-    public:
-        QDownloadIconedItemDelegate(QObject *parent ) ; 
-        virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
-
-    };
-
-    class QDownloadProgressDelegate :	public QItemDelegate
-    {
-	    Q_OBJECT
-    public:
-        QDownloadProgressDelegate(QObject *parent ) : QItemDelegate(parent){}; 
-	    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const ;
-    };
 };
 #endif // QDOWNLOADWIDGET_H
