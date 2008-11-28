@@ -42,6 +42,7 @@ public:
     enum States
     {
         // ?: is it a proper state ? 
+        // with this commented out, qrapidshare engine doesn't work. ( response html is written as result file ). 
         //INIT = 0,
         STOPPED = 0,
         DOWNLOADING,

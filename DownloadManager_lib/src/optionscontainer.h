@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza?a 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Tacza?a                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,7 +40,7 @@ public:
     void clone( Options& options ) const;
 
     void addOption( const std::string& key, const boost::any& value);
-    boost::any getOption( const std::string& key );
+    boost::any option( const std::string& key );
 
 private:
     Options m_Options;

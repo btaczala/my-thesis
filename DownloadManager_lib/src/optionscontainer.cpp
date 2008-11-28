@@ -25,7 +25,7 @@ void OptionsContainer::addOption( const std::string& key, const boost::any& valu
     m_Options[ key ] = value;
 }
  
-boost::any OptionsContainer::getOption( const std::string& key )
+boost::any OptionsContainer::option( const std::string& key )
 {
     Options::const_iterator it = m_Options.find(key);
 

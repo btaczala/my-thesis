@@ -35,8 +35,8 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if( m_Options )
     {
-        setUser(  boost::any_cast<std::string>( m_Options->getOption( scRS_USER_NAME )),
-                  boost::any_cast<std::string>( m_Options->getOption( scRS_USER_PASS )));
+        setUser(  boost::any_cast<std::string>( m_Options->option( scRS_USER_NAME )),
+                  boost::any_cast<std::string>( m_Options->option( scRS_USER_PASS )));
     }
     else
         Q_ASSERT(false);
