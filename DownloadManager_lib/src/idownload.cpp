@@ -65,7 +65,7 @@ unsigned int IDownload::GetProgress() const
  			m_pDownloadInfo->m_Percentage = (double)((double)m_pDownloadInfo->m_BytesDownloaded  / (double)m_pDownloadInfo->m_DownloadFileSize  ) * 100 ; 
  		}
      }
-     LOG( QString("GetProgress() returns %1").arg( m_pDownloadInfo->m_Percentage ) );
+//      LOG( QString("GetProgress() returns %1").arg( m_pDownloadInfo->m_Percentage ) );
      return m_pDownloadInfo->m_Percentage ;
  }
 
