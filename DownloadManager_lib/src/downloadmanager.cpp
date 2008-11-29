@@ -17,6 +17,11 @@ DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadin
 }
 DownloadManager::~DownloadManager()
 {
+    DownloadListType::iterator itEnd = m_DownloadList.end() ;
+    for ( DownloadListType::iterator it = m_DownloadList.begin() ; it != itEnd ; ++it ) 
+    {
+        (*it)->stop();
+    }
 }
 void DownloadManager::init()
 {

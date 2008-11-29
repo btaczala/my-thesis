@@ -36,8 +36,6 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if( m_Options )
     {
-        // FIXME:
-        //setUser( boost::any_cast<std::string>( Proxy::Settings()->optionsForEngine("rapidshare")->option("username") ),boost::any_cast<std::string>( Proxy::Settings()->optionsForEngine("rapidshare")->option("password") ) ); 
         setUser(  boost::any_cast<std::string>( m_Options->option( "username" )),
                   boost::any_cast<std::string>( m_Options->option( "password" )));
     }
