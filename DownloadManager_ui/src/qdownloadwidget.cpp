@@ -300,14 +300,14 @@ namespace DownloadWidgetDelegates
     {
         QDownloadWidget* p = qobject_cast<QDownloadWidget*>(parent());
         QTreeWidgetItem* item = p->topLevelItem(index.row());
-        
-        QDownloadWidget::ItemType type = static_cast<QDownloadWidget::ItemType>(item->data(0, Qt::UserRole).value<int>());
-
-        if (type == QDownloadWidget::DetailedItem)
+        if( item )
         {
-            return QSize(option.rect.width(), 120);
+            QDownloadWidget::ItemType type = static_cast<QDownloadWidget::ItemType>(item->data(0, Qt::UserRole).value<int>());
+            if (type == QDownloadWidget::DetailedItem)
+            {
+                return QSize(option.rect.width(), 120);
+            } 
         }
-        
         return QItemDelegate::sizeHint(option, index);
     }
 
