@@ -35,6 +35,6 @@ boost::any OptionsContainer::option( const std::string& key )
     {
         return it->second;
     }
-    Q_ASSERT(false);
-	return false;
+    //Q_ASSERT(false);
+	return std::string("");
 }
