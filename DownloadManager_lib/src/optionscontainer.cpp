@@ -1,3 +1,5 @@
+#include <QtGlobal>
+
 #include "optionscontainer.h"
 
 OptionsContainer::OptionsContainer()
@@ -33,5 +35,6 @@ boost::any OptionsContainer::option( const std::string& key )
     {
         return it->second;
     }
-    return NULL;
+    Q_ASSERT(false);
+	return false;
 }

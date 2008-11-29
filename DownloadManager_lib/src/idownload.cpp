@@ -38,6 +38,7 @@ IDownload::~IDownload(){};
 void IDownload::setUrlAddress(const std::string & urlAddrr)
 {
     m_UrlAddress = urlAddrr ; 
+    setFileName();
 }
 const std::string & IDownload::urlAddress() const
 {
@@ -54,7 +55,6 @@ const std::string & IDownload::destinationAddress() const
 
 unsigned int IDownload::GetProgress() const 
  {
-     int tmp = m_pDownloadInfo->m_Percentage ;
      if( m_pDownloadInfo->m_Percentage != 100 )
      {
  	    if ( m_pDownloadInfo->m_BytesDownloaded != 0 && m_pDownloadInfo->m_DownloadFileSize != 0)
@@ -65,3 +65,10 @@ unsigned int IDownload::GetProgress() const
      LOG( QString("GetProgress() returns %1").arg( m_pDownloadInfo->m_Percentage ) );
      return m_pDownloadInfo->m_Percentage ;
  }
+
+void IDownload::setFileName()
+{
+    QString tmp(m_UrlAddress.c_str());
+    tmp = tmp.right(tmp.length() -tmp.lastIndexOf("/") - 1);
+    m_FileName = tmp.toStdString();
+}

@@ -1,9 +1,10 @@
-	#include "enginemanager.h"
+#include "enginemanager.h"
 #include "downloadengine.h"
 #include "engine.h"
 
 #ifdef ENGINES_BUILT_IN
 #include "engines/rapidshare/qrapidsharedownload.h"
+#include "engines/http/httpdownload.h"
 #endif
 #include <boost/bind.hpp>
 /////////////////////////////////////////////////
@@ -42,6 +43,13 @@ void EngineManager::loadEngines(const std::string &path)
 
     */
     //boost::shared_ptr<DownloadEngine> pRSEngine ( new RapidshareEngine() ) ;
+    DownloadEngine::StringList slHttp;
+    slHttp.push_back("http");
+    
+    boost::shared_ptr<DownloadEngine> pRSEngineHttp ( new Engine<HttpDownload>("http"));
+    pRSEngineHttp->setPatterns(slHttp);
+    m_Engines[pRSEngineHttp->name()] = pRSEngineHttp;
+    
     DownloadEngine::StringList sl;
     sl.push_back("rapidshare");
     sl.push_back("rs");

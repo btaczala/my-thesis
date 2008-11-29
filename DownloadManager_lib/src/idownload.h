@@ -76,11 +76,14 @@ class IDownload : public QObject
         void                                setUrlAddress ( const std::string & urlAddrr ) ; 
         const std::string&                  urlAddress() const ; 
         const std::string&                  destinationAddress() const ; 
-        void                                setDestinationAddress ( const std::string & localAddress  ) ; 
+        void                                setDestinationAddress ( const std::string & localAddress  ) ;
+    protected:
+        void                                setFileName();
     protected :
         std::auto_ptr< DownloadState >      m_pDownloadInfo ; 
         std::string                         m_UrlAddress ; 
         std::string                         m_FileDestination ;
+        std::string                         m_FileName;
         mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
     signals :
