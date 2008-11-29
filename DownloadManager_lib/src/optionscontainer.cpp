@@ -1,4 +1,6 @@
 #include <QtGlobal>
+#include <QString>
+#include <rslogger.h>
 
 #include "optionscontainer.h"
 
@@ -35,6 +37,5 @@ boost::any OptionsContainer::option( const std::string& key )
     {
         return it->second;
     }
-    //Q_ASSERT(false);
-	return std::string("");
+	return boost::any(std::string(""));
 }
