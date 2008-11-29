@@ -21,6 +21,9 @@
 #include <QtGui>
 #include "generalsettingspage.h"
 
+#include <proxy.h>
+#include <settings.h>
+
 GeneralSettingsPage::GeneralSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
 {
@@ -61,6 +64,8 @@ namespace general_settings_tabs
     {
         QLabel* defaultFolderLabel = new QLabel(tr("Default download folder:"));
         m_defaultFolderEdit = new QLineEdit();
+        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory",Settings::NOSUBGROUP).value<QString>() ;
+        m_defaultFolderEdit->setText( defaultDir.isEmpty() ? QDir::homePath() : defaultDir ) ;
         QPushButton* defaultFolderButton = new QPushButton(tr("Browse..."));
 
         connect(defaultFolderButton, SIGNAL(clicked()), this, SLOT(browseForDefaultFolder()));
@@ -119,6 +124,7 @@ namespace general_settings_tabs
             return;
 
         m_defaultFolderEdit->setText(dir);
+        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir,Settings::NOSUBGROUP ) ; 
     }
 
     void DownloadTab::delayStateChanged(int state)

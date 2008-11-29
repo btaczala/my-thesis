@@ -22,6 +22,10 @@
 
 #include <QDialog>
 #include "isettingspage.h"
+/** 
+ * @author Tomasz Czyzewski 
+ * @author Bartek Taczala
+ */
 
 class QTabWidget;
 class QLineEdit;
@@ -46,7 +50,7 @@ namespace general_settings_tabs
     {
         Q_OBJECT
     public:
-        ApplicationTab(QWidget* parent = 0);        
+        ApplicationTab(QWidget* parent = 0);
     };
 }
 

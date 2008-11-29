@@ -17,7 +17,8 @@ class Settings
         {
             LIBRARY = 0, 
             UI,
-            PLUGINS
+            PLUGINS,
+            NOSUBGROUP  // all others 
         };
         /**
          * @var typedef for map of plugins settings 
@@ -63,6 +64,9 @@ class Settings
          */
         void saveSettings() ;
         
+        QString defaultDownloadDirectory() const ; 
+        void    setDefaultDownloadDirectory() ;
+        
 	private:
         /**
          * load plugin options. sets group to "Plugin"
@@ -76,6 +80,7 @@ class Settings
          * load plugin options. sets group to "Lib"
          */
         void loadLibOptions() ;  
+        
 		
 		PluginsOptions m_PluginsOptions ; 
         QSettings       m_Settings ; 

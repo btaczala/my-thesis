@@ -110,3 +110,8 @@ void Settings::loadPluginsOptions()
     }
     m_Settings.endGroup();
 };
+
+void Settings::loadUIOptions()
+{
+    
+}

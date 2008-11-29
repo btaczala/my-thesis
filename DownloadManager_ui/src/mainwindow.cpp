@@ -145,7 +145,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event )
     if ( event->key() == Qt::Key_V && event->modifiers() == Qt::ControlModifier )
     {
         //m_DownloadWidget->addDownload( "http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath() );
-        m_DownloadWidget->addDownload("http://download.kde.org/stable/4.1.3/src/kdeaccessibility-4.1.3.tar.bz2",QDir::homePath());
+        //m_DownloadWidget->addDownload("http://download.kde.org/stable/4.1.3/src/kdeaccessibility-4.1.3.tar.bz2",QDir::homePath());
+        QClipboard *clipboard = QApplication::clipboard();
+        QString text = clipboard->text(QClipboard::Clipboard);
+        QStringList urls = text.split( QRegExp("\\s+") );
+        Q_FOREACH(QString one, urls ) 
+        {
+            m_DownloadWidget->addDownload( one, QDir::homePath() ) ; 
+        }
     }
-    
 }
