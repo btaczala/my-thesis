@@ -17,11 +17,14 @@ DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadin
 }
 DownloadManager::~DownloadManager()
 {
+    RSDM_LOG_FUNC;
     DownloadListType::iterator itEnd = m_DownloadList.end() ;
     for ( DownloadListType::iterator it = m_DownloadList.begin() ; it != itEnd ; ++it ) 
     {
         (*it)->stop();
+        (*it)->disconnect();
     }
+    disconnect();
 }
 void DownloadManager::init()
 {

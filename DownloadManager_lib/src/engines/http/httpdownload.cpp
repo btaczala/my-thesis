@@ -22,31 +22,33 @@
 #include <QDebug>
 
 #include "httpdownload.h"
+#include "rslogger.h"
 
 HttpDownload::HttpDownload(OptionsContainer* options): IDownload(options)
-, m_apHttpObj( new QHttp() )
+//, m_HttpObj( QHttp() )
 , m_apHttpRequestHeader(new QHttpRequestHeader() )
 , m_apFile(new QFile() )
 {
 	
-    QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( dataSendProgress( int,int ) ), this, SLOT(  dataSendProgress( int,int ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( responseHeaderReceived( const QHttpResponseHeader & ) ), this, SLOT(  responseHeaderReceived( const QHttpResponseHeader & ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( dataReadProgress( int,int ) ), this, SLOT(  dataReadProgress( int,int ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( done( bool ) ), this, SLOT(  done( bool ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( authenticationRequired(  const QString , quint16 , QAuthenticator *) ), this, SLOT(  authenticationRequired(  const QString , quint16 , QAuthenticator *)  ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ), this, SLOT(  proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ) );
-    QObject::connect( m_apHttpObj.get(), SIGNAL( readyRead ( QHttpResponseHeader ) ), this, SLOT(  readyRead ( QHttpResponseHeader ) ) );   
-	
+    QObject::connect( &m_HttpObj, SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( dataSendProgress( int,int ) ), this, SLOT(  dataSendProgress( int,int ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( responseHeaderReceived( const QHttpResponseHeader & ) ), this, SLOT(  responseHeaderReceived( const QHttpResponseHeader & ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( dataReadProgress( int,int ) ), this, SLOT(  dataReadProgress( int,int ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( done( bool ) ), this, SLOT(  done( bool ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( authenticationRequired(  const QString , quint16 , QAuthenticator *) ), this, SLOT(  authenticationRequired(  const QString , quint16 , QAuthenticator *)  ) );
+    QObject::connect( &m_HttpObj, SIGNAL( proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ), this, SLOT(  proxyAuthenticationRequired ( QNetworkProxy , QAuthenticator * ) ) );
+    QObject::connect( &m_HttpObj, SIGNAL( readyRead ( QHttpResponseHeader ) ), this, SLOT(  readyRead ( QHttpResponseHeader ) ) );
 }
 
 HttpDownload::~HttpDownload()
 {
-    m_apHttpObj.get()->disconnect();
+    RSDM_LOG_FUNC;
+    disconnect();
+    m_HttpObj.disconnect();
+    //delete &m_HttpObj;
 }
-
 void HttpDownload::start()
 {
     // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
@@ -65,8 +67,8 @@ void HttpDownload::start()
     m_apHttpRequestHeader->setValue("Host",  url.host() );
     m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
     m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
-    m_apHttpObj->setHost(  url.host() );
-    m_apHttpObj->request( *( m_apHttpRequestHeader ) );
+    m_HttpObj.setHost(  url.host() );
+    m_HttpObj.request( *( m_apHttpRequestHeader ) );
     
 }
 
@@ -77,7 +79,7 @@ void HttpDownload::stop()
        || m_pDownloadInfo->m_State  == DownloadState::FAILED)
         return ; 
     m_pDownloadInfo->m_State  = DownloadState::PAUSED ;
-    m_apHttpObj->abort();
+    m_HttpObj.abort();
     emit statusChanged( m_pDownloadInfo->m_State );
 }
 void HttpDownload::restart()
@@ -96,7 +98,7 @@ void HttpDownload::requestFinished(const int & idReq, const bool & isFalse)
     m_apFile->close();
     if( isFalse )
     {
-        qDebug() << m_apHttpObj->errorString() ;
+        qDebug() << m_HttpObj.errorString() ;
         return ; 
     }
     
@@ -117,7 +119,7 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     // support for Direct downloads
     char *buff = NULL ; 
     qint64 iBytes2 = 0;
-    qint64 bytes = m_apHttpObj->bytesAvailable();
+    qint64 bytes = m_HttpObj.bytesAvailable();
     m_readedBytes+=bytes;
     
     int bytesDownloadedOverall = (m_pDownloadInfo->m_DownloadFileSize - total) > 0 ?  m_pDownloadInfo->m_DownloadFileSize - total : 0 ; 
@@ -132,7 +134,7 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
     m_pDownloadInfo->bytesReadCurrent = done ; 
     buff = new char[bytes];
-    iBytes2 = m_apHttpObj->read(buff, bytes);
+    iBytes2 = m_HttpObj.read(buff, bytes);
     if ( -1 == iBytes2)
         qDebug()<<("ERROR while reading from Http stream ");
     else
@@ -179,7 +181,7 @@ void HttpDownload::done(const bool & error)
 {
 	if( error )
     {
-        qDebug() << m_apHttpObj->errorString();
+        qDebug() << m_HttpObj.errorString();
         return ;
     }
     

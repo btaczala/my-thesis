@@ -19,9 +19,9 @@
  ***************************************************************************/
 #include "rslogger.h"
 //
-const char* const RSLogger::sm_TimeFormat= "dd.MM.yyyy - hh:mm:ss.zzz ";
-const QString RSLogger::rsEndLine = QString ( "__endline__");
-RSLogger::RSLogger( const QString & fileName ) : m_fileMutex( new QMutex() ), m_fileName(NULL), m_fileLogger(NULL), m_bOpenedFile(false), m_NumberOfLogs(0), m_bIsOneLine( true )
+// const char* const RSLogger::sm_TimeFormat= "dd.MM.yyyy - hh:mm:ss.zzz ";
+// const QString RSLogger::rsEndLine = QString ( "__endline__");
+/*RSLogger::RSLogger( const QString & fileName ) : m_fileMutex( new QMutex() ), m_fileName(NULL), m_fileLogger(NULL), m_bOpenedFile(false), m_NumberOfLogs(0), m_bIsOneLine( true )
 {
 	QString fn = fileName;
 	if( ! fileName.isEmpty() )
@@ -77,10 +77,10 @@ QString RSLogger::GetCurrentTime() const
 QString RSLogger::createLogEntry(const QString & toLog) const 
 {
 	QString logEntry = GetCurrentTime();
-	logEntry +=toLog;
-	return logEntry;
-}
-void RSLogger::writeToFile( const QString & toLog ) const 
+	logEntry +=toLog;*/
+// 	return logEntry;
+// }
+/*void RSLogger::writeToFile( const QString & toLog ) const 
 {
 	QByteArray log ;
 	log.append(toLog);
@@ -126,7 +126,7 @@ void RSLogger::SetFile(const QString & fileName )
 	
 }
 RSLogger& RSLogger::operator<<(const QString & toLog)
-{
+{*/
 	/*
 	if( toLog.contains(rsEndLine) )
 	{
@@ -142,23 +142,23 @@ RSLogger& RSLogger::operator<<(const QString & toLog)
 		m_tmpOneLine += toLog ; 
 	}*/
 	
-	QString log = toLog ; 
-	if(log.contains("err:"))
-		Error(log.remove("err:"));
-	else
-		Write(toLog);
-	return *this;
-}
-RSLogger& RSLogger::operator<<(const int & toLog)
-{
-	operator<<(QString::number(toLog));
-	//Write(QString::number(toLog));
-	return *this;
-};
-ILogable::ILogable(const QString & fileName) : m_Logger(fileName)
-{
-	;
-}
+// 	QString log = toLog ; 
+// 	if(log.contains("err:"))
+// 		Error(log.remove("err:"));
+// 	else
+// 		Write(toLog);
+// 	return *this;
+// }
+// RSLogger& RSLogger::operator<<(const int & toLog)
+// {
+// 	operator<<(QString::number(toLog));
+// 	//Write(QString::number(toLog));
+// 	return *this;
+// };
+// ILogable::ILogable(const QString & fileName) : m_Logger(fileName)
+// {
+// 	;
+// }
 void DebugUtils::q_Warn( const QString & toWarn, const char * functionName )
 {
 	qDebug() << "Warning: " ;

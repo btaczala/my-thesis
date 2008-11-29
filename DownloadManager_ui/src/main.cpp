@@ -37,8 +37,6 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("Yattaman");
     QCoreApplication::setApplicationName("QRapidshare");
     //Proxy::init() ; 
-    Proxy::settings()->loadSettings();
-    
 	Q_INIT_RESOURCE(main_resources);
 	MainWindow window;
 	window.show();

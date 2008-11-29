@@ -16,7 +16,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
  , m_apFile(new QFile() )
  , m_timerId(0)
  , m_readedBytes(0)
- , m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) )
+//  , m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) )
  
  {
     RSDM_LOG_FUNC ;

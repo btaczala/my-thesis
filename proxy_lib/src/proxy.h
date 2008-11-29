@@ -2,7 +2,7 @@
 #define __PROXY_H__
 
 #include <string>
-#include <memory>
+#include <boost/shared_ptr.hpp>
 
 class DownloadManager ; 
 class EngineManager ; 
@@ -10,10 +10,11 @@ class Settings;
 class Proxy 
 {
     public:
+        ~Proxy();
         /**
          * @brief Will return Download Manager 
          */
-		static DownloadManager * downloadManager() ; 
+       static DownloadManager * downloadManager() ; 
         /**
          * @brief Will return Engine Manager 
          */
@@ -22,13 +23,14 @@ class Proxy
          * @brief Will return Global Settings
          */
 		static Settings * settings();
-        
         static void init();
+        
+        static void setDownloadManager( DownloadManager *ptr ) ; 
 	private:
 		static Proxy* proxy() ;
 		Proxy() ; 
 		Proxy(const Proxy & rhs) ; // hidden 
-		std::auto_ptr<DownloadManager>		m_apDownloadManager ; 
-        std::auto_ptr<Settings>		        m_apSettings ; 
+        DownloadManager*                        m_pDownloadManager ;  
+        boost::shared_ptr<Settings>		        m_apSettings ; 
 };
 #endif //__PROXY_H__

@@ -6,15 +6,18 @@
 #include <downloadengine.h>
 #include <enginemanager.h>
 #include <QStringList>
+#include <rslogger.h>
 
 
 
 Settings::Settings()
 {
     // read all plugins options ;)
-    
-    
 };
+Settings::~ Settings()
+{
+    RSDM_LOG_FUNC;
+}
 OptionsContainer * Settings::optionsForEngine(const std::string & name )
 {
     return m_PluginsOptions[name].get();
@@ -105,11 +108,5 @@ void Settings::loadPluginsOptions()
         m_Settings.endGroup();
         m_PluginsOptions[ it->first ] = shOptions ; 
     }
-    /*
-    std::string us = m_Settings.value("rapidshare/username").value<QString>().toStdString() ;
-    std::string pass = m_Settings.value("rapidshare/password").value<QString>().toStdString() ;
-    shOptions->addOption("username",us);
-    shOptions->addOption("password",pass);
-    */
     m_Settings.endGroup();
 };

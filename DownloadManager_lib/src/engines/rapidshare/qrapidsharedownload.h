@@ -105,7 +105,7 @@ Q_OBJECT
     QFile                               m_FileLog;
     int                                 m_timerId;
     qint64                              m_readedBytes;
-    RSLogger                            m_Logger;
+//     RSLogger                            m_Logger;
     QList<const char*>                  m_errorsList;
     RS_State                            m_rssmState;
 

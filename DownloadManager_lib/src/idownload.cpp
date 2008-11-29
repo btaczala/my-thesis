@@ -33,7 +33,10 @@ IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadS
     m_pDownloadInfo->m_Percentage = 0;
 }
 
-IDownload::~IDownload(){};
+IDownload::~IDownload()
+{
+    RSDM_LOG_FUNC;
+};
 
 void IDownload::setUrlAddress(const std::string & urlAddrr)
 {

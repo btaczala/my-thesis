@@ -27,6 +27,7 @@ class Settings
          * @brief Ctor
          */
 		Settings();
+        ~Settings();
         /**
          * @brief Return options for plugin
          * @param name name of plugin 

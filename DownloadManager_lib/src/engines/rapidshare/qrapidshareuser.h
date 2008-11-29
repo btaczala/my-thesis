@@ -25,7 +25,7 @@
 #include <QDebug>
 #include "rslogger.h"
 #include "rscommon.h"
-class QRapidshareUser : public ILogable
+class QRapidshareUser //: public ILogable
 {
 public:
 	QRapidshareUser(const QString &userName, const QString &pass);

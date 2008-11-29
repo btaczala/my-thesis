@@ -27,8 +27,10 @@
 
 #include <idownload.h>
 
+
 class QPaintEvent;
 class QContextMenuEvent;
+class DownloadManager;
 
 class QDownloadHeaderView : public QHeaderView
 {
@@ -148,6 +150,8 @@ protected:
     QPointer<QMenu>  m_pContextMenu ; 
     int              m_CurrentColumnID ; 
     DownloadWidgetDelegates::DownloadItemDelegate* m_downloadItemDelegate;
+public:
+    DownloadManager*  m_apDownloadManager ; 
 
 };
 #endif // QDOWNLOADWIDGET_H

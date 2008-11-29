@@ -20,11 +20,11 @@
 #include "qrapidshareuser.h"
 //
 QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass ) 
- : ILogable("qrapidshareuser"), m_apUserName( QString(userName) ), m_apUserPass(QString ( pass ) )
+ : /*ILogable("qrapidshareuser"), */m_apUserName( QString(userName) ), m_apUserPass(QString ( pass ) )
 {
 	RSDM_LOG_FUNC ;
 };
-QRapidshareUser::QRapidshareUser(const QRapidshareUser & _cpy) : ILogable("qrapidshareuser")
+QRapidshareUser::QRapidshareUser(const QRapidshareUser & _cpy)// : ILogable("qrapidshareuser")
 {
 	RSDM_LOG_FUNC ;
 	m_apUserName = _cpy.getUserName();

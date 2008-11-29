@@ -10,7 +10,7 @@
 #include "src/optionscontainer.h"
 
 #include "qtestapp.h"
-
+#include "../proxy_lib/src/proxy.h"
 
 int main(int argc, char** argv)
 {
@@ -28,9 +28,8 @@ int main(int argc, char** argv)
 	app.exec() ;
     */
     QApplication app(argc, argv); 
-    DownloadManager dwnlMgr ; 
-    
-    DownloadEngine * pEngine = dwnlMgr.engineManager()->findEngine("http") ;
+    DownloadManager *dwnlMgr = new DownloadManager();///*Proxy::downloadManager() ; 
+    DownloadEngine * pEngine = dwnlMgr->engineManager()->findEngine("http") ;
 
     OptionsContainer options ;//= new OptionsContainer();
     options.addOption("username", std::string("4625386"));
@@ -47,9 +46,10 @@ int main(int argc, char** argv)
    // dwnlMgr.addDownload("http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath().toStdString() );
     //dwnlMgr.addDownload("http://rapidshare.com/files/166196575/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part2.rar",QDir::homePath().toStdString() );
     //dwnlMgr.addDownload("http://rapidshare.com/files/166201581/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part3.rar",QDir::homePath().toStdString() );
-    dwnlMgr.addDownload("http://sui-side.com/pinio/dach.jpg",QDir::homePath().toStdString() );
+    dwnlMgr->addDownload("http://sui-side.com/pinio/dach.jpg",QDir::homePath().toStdString() );
     QTestApp t ; 
-    t.setConnector( &dwnlMgr ) ;
+    t.setConnector( dwnlMgr ) ;
     t.show();
+    //delete dwnlMgr;
 	return app.exec();
 }

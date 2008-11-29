@@ -30,12 +30,17 @@
 #include <settings.h>
 #include <downloadmanager.h>
 
+#include <rslogger.h>
+#include <downloadmanager.h>
+
 const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
 {
     InitializeColumns();
-
+    m_apDownloadManager  = new DownloadManager();
+    Proxy::setDownloadManager(m_apDownloadManager);
+    Proxy::settings()->loadSettings();
     setHeader(new QDownloadHeaderView(this));
     
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
@@ -68,21 +73,26 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
-    connect(Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
+    connect( Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
     connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
 
-    connect( Proxy::downloadManager(),SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
-    connect( Proxy::downloadManager(),SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
-    connect( Proxy::downloadManager(),SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
-    connect( Proxy::downloadManager(),SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
-    connect( Proxy::downloadManager(),SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );     
+    connect( m_apDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
+    connect( m_apDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
+    connect( m_apDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
+    connect( m_apDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
+    connect( m_apDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
 }
 
 QDownloadWidget::~QDownloadWidget()
 {
+    RSDM_LOG_FUNC;
     SaveColumns();
-
+    disconnect();
     delete m_downloadItemDelegate;
+    
+    delete m_apDownloadManager;
+    m_apDownloadManager = NULL ; 
+    Proxy::setDownloadManager(NULL);
 }
 void QDownloadWidget::InitializeColumns()
 {
@@ -211,10 +221,9 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 }
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
-    DownloadManager *pDwnlManager =  Proxy::downloadManager() ; 
-    pDwnlManager->addDownload(url.toStdString(),fileDestination.toStdString());
+    m_apDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString());
     QIcon itemIcon(QPixmap(":/download_item.png"));
-    
+
     QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
     pItem->setText(0, url);
     pItem->setIcon(0, itemIcon);
@@ -223,7 +232,7 @@ void QDownloadWidget::addDownload( const QString & url, const QString & fileDest
     pItem->setText(4, "");
     pItem->setSizeHint(0, QSize(100, 20));
     addTopLevelItem(pItem);
-}
+};
 void QDownloadWidget::statusChanged( int position, DownloadState::States status )
 {
     QTreeWidgetItem *pItem = topLevelItem(position);
@@ -352,7 +361,9 @@ namespace DownloadWidgetDelegates
 	    progressBarOption.textVisible = true;	
 	    int iRow = index.row();
         int progress = 0 ; 
-        IDownload *pDownload = Proxy::downloadManager()->downloadAt( iRow ) ; 
+        QDownloadWidget* a = qobject_cast<QDownloadWidget*>(parent());
+         
+        IDownload *pDownload = a->m_apDownloadManager->downloadAt( iRow ) ;
         if ( pDownload ) 
             progress = pDownload->GetProgress() ; 
 	    

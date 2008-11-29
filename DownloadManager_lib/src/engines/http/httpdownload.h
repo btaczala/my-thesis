@@ -21,6 +21,7 @@
 #define HTTPDOWNLOAD_H
 
 #include <memory>
+#include <boost/shared_ptr.hpp>
 #include <QObject>
 #include <QHttp>
 #include <QFile>
@@ -52,7 +53,7 @@ Q_OBJECT
     void                                renameFile();
  private:
     QString                             m_DownloadServerHost ;
-    std::auto_ptr<QHttp>                m_apHttpObj;
+    QHttp                               m_HttpObj;
     std::auto_ptr<QHttpRequestHeader>   m_apHttpRequestHeader;
     std::auto_ptr<QFile>                m_apFile;
     qint64                              m_readedBytes;
