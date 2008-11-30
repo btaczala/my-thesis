@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza�a 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Tacza�a                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -79,12 +79,19 @@ namespace DownloadWidgetDelegates
 
 class QDownloadWidget : public QTreeWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QDownloadWidget(QWidget * parent = 0);
-	~QDownloadWidget(); 
+    QDownloadWidget(QWidget * parent = 0);
+    ~QDownloadWidget(); 
 
+    /**
+     * If engine found url will be added to download manager list, and to treewidget. 
+     * @param url 
+     * @param fileDestination 
+     */
     void addDownload ( const QString & url, const QString & fileDestination ) ; 
+    
+
     class QDownloadWidgetColumnInfo
     {
     public:
@@ -123,7 +130,7 @@ public:
 
 public slots:
     void StartPauseSelectedDownload();
-    void StopSelectedDownload();    
+    void StopSelectedDownload();
     void RemoveSelectedDownload();
     void onConfigureColumns();
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
@@ -135,7 +142,6 @@ public slots:
     void downloadDoneAt( int position );
     void downloadOnHold( int position ) ; 
     void bytesReadAt( int position , int read , int total );
-    
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void InitializeColumns();
@@ -151,7 +157,7 @@ protected:
     int              m_CurrentColumnID ; 
     DownloadWidgetDelegates::DownloadItemDelegate* m_downloadItemDelegate;
 public:
-    DownloadManager*  m_apDownloadManager ; 
+    DownloadManager*  m_pDownloadManager ; 
 
 };
 #endif // QDOWNLOADWIDGET_H

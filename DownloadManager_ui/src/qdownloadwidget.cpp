@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza�a 								   *
- *   b@kontrasty.szczecin.pl   											   *
+ *   Copyright (C) 2008 by Bartek Tacza�a                                  *
+ *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,8 +38,8 @@ const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDown
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
 {
     InitializeColumns();
-    m_apDownloadManager  = new DownloadManager();
-    Proxy::setDownloadManager(m_apDownloadManager);
+    m_pDownloadManager  = new DownloadManager();
+    Proxy::setDownloadManager(m_pDownloadManager);
     Proxy::settings()->loadSettings();
     setHeader(new QDownloadHeaderView(this));
     
@@ -76,11 +76,11 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     connect( Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
     connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
 
-    connect( m_apDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
-    connect( m_apDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
-    connect( m_apDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
-    connect( m_apDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
-    connect( m_apDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
+    connect( m_pDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
+    connect( m_pDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
+    connect( m_pDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
+    connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
+    connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -90,8 +90,8 @@ QDownloadWidget::~QDownloadWidget()
     disconnect();
     delete m_downloadItemDelegate;
     
-    delete m_apDownloadManager;
-    m_apDownloadManager = NULL ; 
+    delete m_pDownloadManager;
+    m_pDownloadManager = NULL ; 
     Proxy::setDownloadManager(NULL);
 }
 void QDownloadWidget::InitializeColumns()
@@ -154,8 +154,8 @@ void QDownloadWidget::SaveColumns()
 
 void QDownloadWidget::paintEvent( QPaintEvent *event )
 {
-	// to add some of specu drawning 
-	QTreeWidget::paintEvent(event);
+    // to add some of specu drawning 
+    QTreeWidget::paintEvent(event);
 }
 
 void QDownloadWidget::StartPauseSelectedDownload()
@@ -165,7 +165,17 @@ void QDownloadWidget::StartPauseSelectedDownload()
 
 void QDownloadWidget::StopSelectedDownload()
 {
-    ;
+    QList<QTreeWidgetItem*> list = selectedItems() ;
+    if ( list.empty() ) 
+        m_pDownloadManager->setState( DownloadManager::STOPPED ) ; 
+    int index = -1; 
+    Q_FOREACH( QTreeWidgetItem * pItem, list ) 
+    {
+        index = indexOfTopLevelItem(pItem) ;
+        if ( index == -1 ) 
+            continue ; 
+        m_pDownloadManager->stopDownload( index ) ; 
+    }
 }
 
 void QDownloadWidget::RemoveSelectedDownload()
@@ -221,7 +231,7 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 }
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
-    if ( ! m_apDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
+    if ( ! m_pDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
         return ; 
     QIcon itemIcon(QPixmap(":/download_item.png"));
 
@@ -352,22 +362,22 @@ namespace DownloadWidgetDelegates
         
         painter->save();
         QStyleOptionProgressBar progressBarOption;
-    	progressBarOption.state = QStyle::State_Enabled;
-	    progressBarOption.direction = QApplication::layoutDirection();
-	    progressBarOption.rect = opt.rect;
-	    progressBarOption.fontMetrics = QApplication::fontMetrics();
-	    progressBarOption.minimum = 0;
-	    progressBarOption.maximum = 100;
+        progressBarOption.state = QStyle::State_Enabled;
+        progressBarOption.direction = QApplication::layoutDirection();
+        progressBarOption.rect = opt.rect;
+        progressBarOption.fontMetrics = QApplication::fontMetrics();
+        progressBarOption.minimum = 0;
+        progressBarOption.maximum = 100;
         progressBarOption.textAlignment = Qt::AlignCenter;
-	    progressBarOption.textVisible = true;	
-	    int iRow = index.row();
+        progressBarOption.textVisible = true;   
+        int iRow = index.row();
         int progress = 0 ; 
         QDownloadWidget* a = qobject_cast<QDownloadWidget*>(parent());
          
-        IDownload *pDownload = a->m_apDownloadManager->downloadAt( iRow ) ;
+        IDownload *pDownload = a->m_pDownloadManager->downloadAt( iRow ) ;
         if ( pDownload ) 
             progress = pDownload->GetProgress() ; 
-	    
+        
         // getProgress will return current progress. 
         // m_Progress will be set like:QDownloadWidget
         /* MainWindows          DownloadManager             IDownload
@@ -386,9 +396,9 @@ namespace DownloadWidgetDelegates
 
         */
         if(progress == -1 )
-		    progress = 0;
+            progress = 0;
         progressBarOption.progress = progress < 0 ? 0 : progress;
-	    progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
+        progressBarOption.text = QString().sprintf("%d%%", progressBarOption.progress);
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
         painter->restore();
     }
@@ -416,7 +426,7 @@ namespace DownloadWidgetDelegates
         rect.setWidth(qobject_cast<QDownloadWidget*>(parent())->width());
         rect.setY(rect.y() + size.height() + 1);
         widget->setGeometry(rect);
-        
         widget->show();
     }
 }
+

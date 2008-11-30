@@ -79,6 +79,38 @@ void DownloadManager::startDownload(const std::string &urlAddress)
     pDownload->start() ; 
     QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
 }
+void DownloadManager::startDownload(int position)
+{
+}
+void DownloadManager::stopDownload(const std::string & urlAddress)
+{
+    LOG(QString("void DownloadManager::stopDownload(const std::string &urlAddress=%1)").arg(urlAddress.c_str() ) );
+    IDownload *pDownload = find(urlAddress ) ;
+    if ( pDownload == NULL ) 
+    {
+        LOG(QString("Unable to stop download %1").arg( urlAddress.c_str() ) ) ; 
+        return ;
+    }
+    DownloadState::States state = pDownload->state();
+    if ( state == DownloadState::INIT || state == DownloadState::DOWNLOADING ) 
+    {
+        state = DownloadState::PAUSED ; 
+        pDownload->SetState(DownloadState::PAUSED);
+        pDownload->stop();
+        m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
+        update();
+    };
+}
+void DownloadManager::stopDownload(int position)
+{
+    if ( position >= m_DownloadList.size() || position < 0 ) 
+    {
+        return ; 
+    }
+    IDownload *pDownload = m_DownloadList[position].get();
+    stopDownload(pDownload->urlAddress());
+}
+
 void DownloadManager::slot_listChanged()
 {
 }
@@ -190,9 +222,17 @@ void DownloadManager::update()
     }
     else
     {
-        // stop ( pause ) all downloads
-        ;
+        DownloadListType::iterator it = m_DownloadList.begin() ; 
+        DownloadListType::iterator itEnd = m_DownloadList.end() ;
+        IDownload *pDownload = NULL ;//it->get() ; 
+        int counter = 0 ; 
+        for ( it ; it!=itEnd ; ++it ) 
+        {
+            pDownload = it->get() ; 
+            pDownload->stop() ; 
+        };
     }
+    m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ; 
 }
 
 void DownloadManager::setState(DownloadManagerState state)
@@ -223,3 +263,4 @@ IDownload * DownloadManager::downloadAt(unsigned int position)
     };
     return m_DownloadList[position].get() ;
 };
+

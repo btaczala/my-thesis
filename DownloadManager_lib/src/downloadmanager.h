@@ -60,6 +60,21 @@ class DownloadManager : public QObject
          */
         void                    startDownload( const std::string & urlAddress ) ;
         /**
+         * @brief Will force on manager to start downloading this file
+         * @param position position within list  
+         */
+        void                    startDownload( int position ) ;
+        /**
+         * @brief Will force on manager to stop downloading this file
+         * @param urlAddress 
+         */
+        void                    stopDownload ( const std::string & urlAddress ) ; 
+        /**
+         * @brief Will force on manager to stop downloading this file
+         * @param position position within list  
+         */
+        void                    stopDownload ( int position ) ;
+        /**
          * @brief will remove download 
          * @param urlAddress 
          */
