@@ -21,6 +21,7 @@
 #include <memory>
 
 const QString Actions::scNewActionText = QObject::tr("&New") ;
+const QString Actions::scNewGroupActionText = QObject::tr("New &Group") ;
 const QString Actions::scStartRestoreActionText  = QObject::tr("&Start\\Resume") ;
 const QString Actions::scStopActionText = QObject::tr("S&top") ;
 const QString Actions::scRemoveActionText = QObject::tr("&Remove") ;
@@ -42,6 +43,7 @@ Actions::Actions()
 {
     // the actions will be orphans, 
     m_ActionContainer[scNewActionText] = QActionShPtr( new QAction( QIcon(":/new_file.png"),scNewActionText,NULL) );
+    m_ActionContainer[scNewGroupActionText] = QActionShPtr( new QAction( QIcon(":/new_group.png"),scNewGroupActionText,NULL) );
     m_ActionContainer[scStartRestoreActionText] = QActionShPtr( new QAction( QIcon(":/start_resume.png"),scStartRestoreActionText,NULL) );
     m_ActionContainer[scStopActionText] = QActionShPtr( new QAction( QIcon(":/stop.png"),  scStopActionText,NULL) );
     m_ActionContainer[scRemoveActionText] = QActionShPtr( new QAction( QIcon(":/remove.png"), scRemoveActionText,NULL) );

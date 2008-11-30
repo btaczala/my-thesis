@@ -64,9 +64,8 @@ bool DownloadManager::addDownload(const std::string & urlAddress, const std::str
     connectWith(pDownload);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
 
-    //QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
+    
     update() ; 
-    //pDownload->start();
     return true ; 
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
@@ -97,7 +96,8 @@ void DownloadManager::stopDownload(const std::string & urlAddress)
         state = DownloadState::PAUSED ; 
         pDownload->SetState(DownloadState::PAUSED);
         pDownload->stop();
-        m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
+        //m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
+        decreaseNumberOfCurrentDownloads();
         update();
     };
 }
@@ -109,6 +109,40 @@ void DownloadManager::stopDownload(int position)
     }
     IDownload *pDownload = m_DownloadList[position].get();
     stopDownload(pDownload->urlAddress());
+}
+void DownloadManager::startPause(const std::string & urlAddress)
+{
+    LOG(QString("void DownloadManager::startPause(const std::string &urlAddress=%1)").arg(urlAddress.c_str() ) );
+    IDownload *pDownload = find(urlAddress ) ;
+    if ( pDownload == NULL ) 
+    {
+        LOG(QString("Unable to stop download %1").arg( urlAddress.c_str() ) ) ; 
+        return ;
+    }
+    DownloadState::States state = pDownload->state();
+    if ( state == DownloadState::INIT || state == DownloadState::DOWNLOADING ) 
+    {
+        state = DownloadState::PAUSED ; 
+        pDownload->SetState(DownloadState::PAUSED);
+        decreaseNumberOfCurrentDownloads();
+        pDownload->stop();
+        //m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
+        //update();
+    }
+    else if ( state == DownloadState::PAUSED || state == DownloadState::STOPPED ) 
+    {
+        increaseNumberOfCurrentDownloads();
+        pDownload->restart() ; 
+    };
+}
+void DownloadManager::startPause(int position)
+{
+    if ( position >= m_DownloadList.size() || position < 0 ) 
+    {
+        return ; 
+    }
+    IDownload *pDownload = m_DownloadList[position].get();
+    startPause(pDownload->urlAddress());
 }
 
 void DownloadManager::slot_listChanged()
@@ -136,7 +170,8 @@ void DownloadManager::statusChanged(DownloadState::States what)
 //     qDebug() << (int) what;
     if ( what == DownloadState::DONE || what == DownloadState::FAILED || what == DownloadState::PAUSED ) 
     {
-        m_DownloadManagerSettings.m_CurrentDownloadingFiles-- ; 
+        //m_DownloadManagerSettings.m_CurrentDownloadingFiles-- ; 
+        decreaseNumberOfCurrentDownloads();
         update() ; 
     }
     int pos = getPositionWithinSlot( sender() ) ;  
@@ -204,18 +239,20 @@ void DownloadManager::update()
         DownloadListType::iterator itEnd = m_DownloadList.end() ; 
         IDownload *pDownload = NULL ;//it->get() ; 
         int counter = 0 ; 
+        DownloadState::States state ;
         for ( it ; it!=itEnd ; ++it ) 
         {
             if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles >=m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
                 break ; 
             pDownload = it->get() ; 
-            DownloadState::States state = pDownload->state();
+            state = pDownload->state();
             if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED || state == DownloadState::INIT ) 
                 continue ; 
             if ( canIDownload() ) 
             {
                 pDownload->start() ; 
-                m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
+                //m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
+                increaseNumberOfCurrentDownloads();
             };
             counter++;
         }
@@ -231,8 +268,9 @@ void DownloadManager::update()
             pDownload = it->get() ; 
             pDownload->stop() ; 
         };
+        m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ; 
     }
-    m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ; 
+    
 }
 
 void DownloadManager::setState(DownloadManagerState state)
@@ -263,4 +301,21 @@ IDownload * DownloadManager::downloadAt(unsigned int position)
     };
     return m_DownloadList[position].get() ;
 };
+
+void DownloadManager::decreaseNumberOfCurrentDownloads()
+{
+    if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles == 0 ) 
+        return ; 
+    else 
+        --m_DownloadManagerSettings.m_CurrentDownloadingFiles;
+}
+
+void DownloadManager::increaseNumberOfCurrentDownloads()
+{
+    ++m_DownloadManagerSettings.m_CurrentDownloadingFiles;
+    if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles >= m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
+        LOG("Something is wrong");
+    
+}
+
 

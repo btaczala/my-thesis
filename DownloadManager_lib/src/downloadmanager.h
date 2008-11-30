@@ -75,6 +75,14 @@ class DownloadManager : public QObject
          */
         void                    stopDownload ( int position ) ;
         /**
+         * @brief Start is download is paused, pause if it's started. :) 
+         * This is the only method which can invoke IDownload::resume() method. 
+         * @param position position within list  
+         */
+        void                    startPause ( int position ) ; 
+        void                    startPause ( const std::string & urlAddress  ) ; 
+        
+        /**
          * @brief will remove download 
          * @param urlAddress 
          */
@@ -148,6 +156,9 @@ class DownloadManager : public QObject
          * @return true if we can start next download
          */
         bool                    canIDownload() const ;
+        
+        void                    decreaseNumberOfCurrentDownloads();
+        void                    increaseNumberOfCurrentDownloads();
     private slots:
         void                    slot_listChanged() ; 
         void                    init();

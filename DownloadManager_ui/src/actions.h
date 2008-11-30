@@ -31,6 +31,7 @@ public:
     static QAction* getAction(const QString & actionName ) ; 
 
     static const QString scNewActionText ; 
+    static const QString scNewGroupActionText ; 
     static const QString scStartRestoreActionText ; 
     static const QString scStopActionText ; 
     static const QString scRemoveActionText ; 

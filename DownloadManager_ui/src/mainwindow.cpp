@@ -68,6 +68,7 @@ void MainWindow::InitilizeToolbarWidget()
     m_ToolbarWidget->setFloatable(false);
     m_ToolbarWidget->setMovable(false);
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewActionText ) );
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewGroupActionText ) );
     m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStopActionText ) );
@@ -95,6 +96,7 @@ void MainWindow::InitializeActions()
     connect( Actions::getAction(Actions::scSettingsActionText), SIGNAL( triggered()), this, SLOT(showSettingsDialog()));
     
     connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget.get() ,SLOT( StopSelectedDownload() ));
+    connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
 }
 
 void MainWindow::showSettingsDialog()

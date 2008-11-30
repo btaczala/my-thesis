@@ -31,7 +31,7 @@
 struct DownloadState
 {
 public:
-    DownloadState() : m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0){};
+    DownloadState() : m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0), m_State(STOPPED){};
     typedef unsigned int UInt ; 
     typedef unsigned long ULong ; 
     UInt                    m_DownloadFileSize ; 
@@ -64,7 +64,7 @@ class IDownload : public QObject
         virtual ~IDownload() ;
         DownloadState*                      downloadInfo () const ; 
         virtual void                        start() = 0 ; 
-        virtual void                        stop() = 0 ; // abort () 
+        virtual void                        stop() = 0 ; // abort () // it's pause
         virtual void                        restart() = 0 ;
         DownloadState::States               state() const {return m_pDownloadInfo->m_State; };
         void                                SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };

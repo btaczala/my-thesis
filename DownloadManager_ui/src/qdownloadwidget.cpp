@@ -160,7 +160,22 @@ void QDownloadWidget::paintEvent( QPaintEvent *event )
 
 void QDownloadWidget::StartPauseSelectedDownload()
 {
-  
+    QList<QTreeWidgetItem*> list = selectedItems() ; 
+    if ( list.empty() ) 
+    {
+        LOG(QString(" Unable to get selected downloads" ) );
+        return ; 
+    };
+    int index = -1; 
+    Q_FOREACH( QTreeWidgetItem * pItem, list ) 
+    {
+        
+        index = indexOfTopLevelItem(pItem) ;
+        if ( index == -1 ) 
+            continue ; 
+           m_pDownloadManager->startPause( index ) ; 
+        
+    }
 }
 
 void QDownloadWidget::StopSelectedDownload()
