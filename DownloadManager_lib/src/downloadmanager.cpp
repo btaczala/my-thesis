@@ -30,28 +30,34 @@ void DownloadManager::init()
 {
     LOG("void DownloadManager::init()");
     m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
-    m_DownloadManagerSettings.m_MaxDownloadingFiles = 3 ;
+    m_DownloadManagerSettings.m_MaxDownloadingFiles = 2 ;
     m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
     setState ( DOWNLOADING ) ; 
     
 }
-void DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
+bool DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
     LOG(QString("void DownloadManager::addDownload(const std::string & urlAddress = %1, const std::string & destination = %2)").arg(urlAddress.c_str() ).arg(destination.c_str() ));
     
     IDownload *pDownload = NULL ; 
 
     if ( find(urlAddress ) != NULL ) 
-        return ; // already in download 
+    {
+        LOG(QString("Download %1 already in list").arg( urlAddress.c_str() ) ) ;
+        return false; // already in download 
+    }
     
     const DownloadEngine *pEngine = m_pEngineManager->findEngineWithPattern(urlAddress);
     if ( !pEngine)
-        return ; 
+    {
+        LOG(QString("There is no registered engine that handles pattern %1").arg( urlAddress.c_str() ) ) ;
+        return false; 
+    }
     pDownload = pEngine->spawn() ; 
     if ( pDownload == NULL ) 
     {
         LOG("Unable to add download");
-        return ; 
+        return false; 
     }
     pDownload->setUrlAddress(urlAddress) ;
     pDownload->setDestinationAddress(destination);
@@ -61,6 +67,7 @@ void DownloadManager::addDownload(const std::string & urlAddress, const std::str
     //QTimer::singleShot(1000,this,SLOT(slot_listChanged()));
     update() ; 
     //pDownload->start();
+    return true ; 
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {
@@ -94,7 +101,12 @@ IDownload* DownloadManager::find(const std::string & urlAddress )
 }
 void DownloadManager::statusChanged(DownloadState::States what)
 {
-    qDebug() << (int) what;
+//     qDebug() << (int) what;
+    if ( what == DownloadState::DONE || what == DownloadState::FAILED || what == DownloadState::PAUSED ) 
+    {
+        m_DownloadManagerSettings.m_CurrentDownloadingFiles-- ; 
+        update() ; 
+    }
     int pos = getPositionWithinSlot( sender() ) ;  
     if ( pos !=-1 )
         emit statusChanged(pos,what);
@@ -153,7 +165,6 @@ void DownloadManager::bytesRead(int read, int total)
 }
 void DownloadManager::update()
 {
-
     QMutexLocker localMutex(&m_Mutex);
     if ( m_State == DOWNLOADING ) 
     {
@@ -167,12 +178,11 @@ void DownloadManager::update()
                 break ; 
             pDownload = it->get() ; 
             DownloadState::States state = pDownload->state();
-            if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED ) 
+            if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED || state == DownloadState::INIT ) 
                 continue ; 
             if ( canIDownload() ) 
             {
                 pDownload->start() ; 
-                m_DownloadManagerSettings.m_LastStartedFilePosition = counter ; 
                 m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
             };
             counter++;
@@ -187,8 +197,6 @@ void DownloadManager::update()
 
 void DownloadManager::setState(DownloadManagerState state)
 {
-    if ( state == m_State ) 
-        return ; 
     m_State = state ; 
     update() ; 
 };

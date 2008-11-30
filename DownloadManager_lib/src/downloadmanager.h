@@ -51,8 +51,9 @@ class DownloadManager : public QObject
          * @brief Will add download into queue
          * @param urlAddress url address of file to download
          * @param destination where to put the file ( directory only ) 
+         * @return if any engine handles pattern, returns true, otherwise false. 
          */
-        void                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
+        bool                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
         /**
          * @brief Will force on manager to start downloading this file
          * @param urlAddress url address of file to download
@@ -95,7 +96,6 @@ class DownloadManager : public QObject
         {
             unsigned int m_CurrentDownloadingFiles ; 
             unsigned int m_MaxDownloadingFiles ; 
-            unsigned int m_LastStartedFilePosition; 
         } m_DownloadManagerSettings ; 
         DownloadManagerState m_State ; 
         std::auto_ptr<EngineManager>   m_pEngineManager;

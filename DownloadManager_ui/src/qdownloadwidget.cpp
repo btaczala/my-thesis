@@ -221,7 +221,8 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 }
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
-    m_apDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString());
+    if ( ! m_apDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
+        return ; 
     QIcon itemIcon(QPixmap(":/download_item.png"));
 
     QTreeWidgetItem *pItem = new QTreeWidgetItem(this);

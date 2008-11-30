@@ -16,6 +16,7 @@ Settings::Settings()
 };
 Settings::~ Settings()
 {
+    m_Settings.sync();
     RSDM_LOG_FUNC;
 }
 OptionsContainer * Settings::optionsForEngine(const std::string & name )
@@ -46,6 +47,9 @@ void Settings::setValue(const QString & valName, const QVariant & value, Context
                 m_Settings.endGroup();
             m_Settings.endGroup();
             break ; 
+        default:
+            m_Settings.setValue(valName,value);
+            break; 
     }
 }
 
@@ -72,6 +76,9 @@ QVariant Settings::value(const QString & valName, Context context, const QString
             if ( !subGroup.isEmpty() )
                 m_Settings.endGroup();
             m_Settings.endGroup();
+            break ; 
+        default:
+            ret = m_Settings.value( valName );
             break ; 
     }
     return ret ; 

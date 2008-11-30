@@ -13,7 +13,6 @@ SET( DownloadManager_SRCS
     src/downloadmanager.cpp
     src/downloadengine.cpp
     src/idownload.cpp
-    src/rapidsharedownloadmanager.cpp 
     src/rslogger.cpp 
     src/rscommon.cpp 
     src/enginemanager.cpp
@@ -26,7 +25,6 @@ SET( DownloadManager_HDRS
     src/downloadmanager.h
     src/downloadengine.h
     src/idownload.h
-    src/rapidsharedownloadmanager.h 
     src/rslogger.h 
     src/rscommon.h
     src/enginemanager.h

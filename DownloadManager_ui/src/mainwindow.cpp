@@ -25,6 +25,9 @@
 #include "actions.h"
 #include "settings_ui/settingsdialog.h"
 
+#include <proxy.h>
+#include <settings.h>
+
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
      m_ToolbarWidget(new QToolBar("Download Toolbar", this))
@@ -151,7 +154,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event )
         QStringList urls = text.split( QRegExp("\\s+") );
         Q_FOREACH(QString one, urls ) 
         {
-            m_DownloadWidget->addDownload( one, QDir::homePath() ) ; 
+            m_DownloadWidget->addDownload( one, Proxy::settings()->value("DefaultDownloadDirectory", Settings::NOSUBGROUP ).value<QString>() );
         }
     }
 }

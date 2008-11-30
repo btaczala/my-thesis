@@ -7,19 +7,19 @@
 
 // FIXME:
 // #include <proxy.h>
- 
+
 QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(options)
- , m_apHttpObj( new QHttp() )
- , m_apHttpRequestHeader(new QHttpRequestHeader() )
- , m_apRSUser(NULL)
- , m_apFileUrl( new QUrl() )
- , m_apFile(new QFile() )
- , m_timerId(0)
- , m_readedBytes(0)
+, m_apHttpObj( new QHttp() )
+, m_apHttpRequestHeader(new QHttpRequestHeader() )
+, m_apRSUser(NULL)
+, m_apFileUrl( new QUrl() )
+, m_apFile(new QFile() )
+, m_timerId(0)
+, m_readedBytes(0)
 //  , m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) )
- 
- {
-    RSDM_LOG_FUNC ;
+
+{
+//     RSDM_LOG_FUNC ;
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
     QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
@@ -37,23 +37,23 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     if( m_Options )
     {
         setUser(  boost::any_cast<std::string>( m_Options->option( "username" )),
-                  boost::any_cast<std::string>( m_Options->option( "password" )));
+                boost::any_cast<std::string>( m_Options->option( "password" )));
     }
     else
         Q_ASSERT(false);
- }
+}
 
- QRapidshareDownload::~QRapidshareDownload()
- {
-    RSDM_LOG_FUNC ;
+QRapidshareDownload::~QRapidshareDownload()
+{
+//     RSDM_LOG_FUNC ;
     m_apHttpObj.get()->disconnect();
- }
+}
 
- void QRapidshareDownload::start()
- {
-    RSDM_LOG_FUNC ;
+void QRapidshareDownload::start()
+{
+//     RSDM_LOG_FUNC ;
     
-     setUrlFileAddress( m_UrlAddress.c_str() );
+    setUrlFileAddress( m_UrlAddress.c_str() );
     //invalid url set
     if( m_apFileUrl->isEmpty())
         return;
@@ -64,7 +64,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     fileName += "/";
     fileName += transformUrlPathToLocalPath(m_ReferrerFileAddress);
     if( fileName.isEmpty())
-       return;
+    return;
     
     m_qFileDestination = fileName;
 
@@ -72,7 +72,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if ( QFile::exists(m_apFile->fileName()) )
     {
-         // resume downloading 
+        // resume downloading 
     }
     m_rssmState = GET_FIRST;
     // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
@@ -89,11 +89,11 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
     m_apHttpObj->setHost(  m_apFileUrl->host() );
     m_apHttpObj->request( *( m_apHttpRequestHeader ) );
- }
+}
 
- void QRapidshareDownload::stop()
- {
-    RSDM_LOG_FUNC ;
+void QRapidshareDownload::stop()
+{
+//     RSDM_LOG_FUNC ;
     if( m_pDownloadInfo->m_State  == DownloadState::STOPPED
         || m_pDownloadInfo->m_State  == DownloadState::DONE
         || m_pDownloadInfo->m_State  == DownloadState::FAILED)
@@ -101,11 +101,11 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     m_pDownloadInfo->m_State  = DownloadState::PAUSED ;
     m_apHttpObj->abort();
     emit statusChanged( m_pDownloadInfo->m_State );
- }
+}
 
- void QRapidshareDownload::restart()
- {
-    RSDM_LOG_FUNC ;
+void QRapidshareDownload::restart()
+{
+//     RSDM_LOG_FUNC ;
     //m_apHttpRequestHeader->removeValue();
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
     m_apHttpRequestHeader->setValue("Host", m_DownloadServerHost );
@@ -120,44 +120,44 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     QString host = m_apFileUrl->host();
     m_apHttpObj->setHost( m_DownloadServerHost );
     m_apHttpObj->request( *( m_apHttpRequestHeader ) );
- }
+}
 
- void QRapidshareDownload::setUrlFileAddress(const QString & _addr )
- {
+void QRapidshareDownload::setUrlFileAddress(const QString & _addr )
+{
     RSDM_LOG_FUNC ;
     DebugUtils::q_Log( QString(" _addr = ") + _addr);
     if( ! _addr.isEmpty() )
     {
         m_apFileUrl.reset( new QUrl( _addr ) );
     }
- }
+}
 
- /********** SLOTS **************/
- void QRapidshareDownload::requestStarted(const int & idReq)
- {
-    qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq ;
- }
- void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
- {  
-    qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
+/********** SLOTS **************/
+void QRapidshareDownload::requestStarted(const int & idReq)
+{
+//     qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq ;
+}
+void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
+{  
+//     qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
     m_apFile->close();
     if( isFalse )
     {
         qDebug() << m_apHttpObj->errorString() ;
         return ; 
     }
- }
- void QRapidshareDownload::stateChanged(const int & iState)
- {  
-    qDebug() << __FUNCTION_NAME__<< "iState =  " << iState ;
- }
- void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
- {  
-    qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
- }
- void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
- {
-    qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
+}
+void QRapidshareDownload::stateChanged(const int & iState)
+{  
+//     qDebug() << __FUNCTION_NAME__<< "iState =  " << iState ;
+}
+void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
+{  
+//     qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
+}
+void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
+{
+//     qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
     // support for Direct downloads
     char *buff = NULL ; 
     qint64 iBytes2 = 0;
@@ -211,7 +211,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
         double dResTotal = dDone / dTotal;
         dResTotal *= 100;
         m_Progress = (int)dResTotal;
-        qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
+//         qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
         emit bytesRead(dDone,dTotal) ;
         m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
         m_pDownloadInfo->bytesReadCurrent = done ; 
@@ -222,10 +222,10 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
         }
         if ( -1 == iBytes2)
             qDebug()<<("ERROR while reading from Http stream ");
- 
+
         else
         {
-            qDebug() << "readed bytes " << iBytes2;
+//             qDebug() << "readed bytes " << iBytes2;
             if( !m_apFile->isOpen())
             {
                 qDebug() << ("isClosed, open it");
@@ -239,40 +239,40 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
                 else
                     qDebug() << "opened";
             }
- 
+
             qint64 btmp = m_apFile->write(buff,iBytes2); 
             if( -1 == btmp )
             {
                 qDebug()<<("write failed");
                 return;
             }
-            else
-                qDebug() << ("written successful") << btmp;
+//             else
+//                 qDebug() << ("written successful") << btmp;
         }
         delete[] buff;
     }
- 
+
     if( done == total &&  m_rssmState ==  DOWNLOADING ) 
     {
         m_pDownloadInfo->m_State = DownloadState::DONE;
         m_rssmState = FINISHED;
     }
- }
- void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
- {
-    qDebug() << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
- }
- void QRapidshareDownload::proxyAuthenticationRequired(const QNetworkProxy & proxy, QAuthenticator * authenticator)
- {
-    qDebug() << __FUNCTION_NAME__;
- }
- void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
- {
-    qDebug() << __FUNCTION_NAME__;
- }
- 
- void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
- {
+}
+void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
+{
+//     qDebug() << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
+}
+void QRapidshareDownload::proxyAuthenticationRequired(const QNetworkProxy & proxy, QAuthenticator * authenticator)
+{
+//     qDebug() << __FUNCTION_NAME__;
+}
+void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
+{
+//     qDebug() << __FUNCTION_NAME__;
+}
+
+void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
+{
     RSDM_LOG_FUNC ;
     qDebug() << resp.reasonPhrase() ;
     int iStatusCode = resp.statusCode(); 
@@ -282,10 +282,10 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     }
     else
         qDebug() << "Error response:"<< iStatusCode;
- }
- void QRapidshareDownload::done(const bool & error)
- {
-    RSDM_LOG_FUNC ;
+}
+void QRapidshareDownload::done(const bool & error)
+{
+//     RSDM_LOG_FUNC ;
     if( error )
     {
         qDebug() << m_apHttpObj->errorString();
@@ -385,24 +385,24 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
         QString newUrlpath = parsePostReponseAndGetAddress( QString( aa ) );
         DebugUtils::DumpReponseToFile(aa,"paused");
     }
- };
+};
 
- /*
- //fixme:
- void QRapidshareDownload::abort()
- {
+/*
+//fixme:
+void QRapidshareDownload::abort()
+{
     RSDM_LOG_FUNC ;
     //FIXME:
     //m_rssmState = DownloadState::STOPPED;
     m_pDownloadInfo->m_State = DownloadState::STOPPED;
     m_apHttpObj->abort();
     // do not emit, cause it will be removed from list. 
- }
- */
+}
+*/
 
- QString QRapidshareDownload::parseResponseAndGetNewUrl(const QString & resp)
- {
-    RSDM_LOG_FUNC ;
+QString QRapidshareDownload::parseResponseAndGetNewUrl(const QString & resp)
+{
+//     RSDM_LOG_FUNC ;
     QString line;
     QString newUrl;
     int z = 0;
@@ -441,9 +441,9 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     }
     newUrl.remove('"');
     return newUrl;
- }
- int QRapidshareDownload::parseResponseAndGetFileSize(const QString & resp)
- {
+}
+int QRapidshareDownload::parseResponseAndGetFileSize(const QString & resp)
+{
     RSDM_LOG_FUNC ;
     QString line;
     QString newUrl;
@@ -481,9 +481,9 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     if( !ok )
         return -1;
     return ret;
- }
- QString QRapidshareDownload::parsePostReponseAndGetAddress( const QString & resp )
- {
+}
+QString QRapidshareDownload::parsePostReponseAndGetAddress( const QString & resp )
+{
     RSDM_LOG_FUNC ;
     QString line;
     QString newUrl;
@@ -511,71 +511,71 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     }
     qDebug() << newUrl;
     return newUrl;
- }
- void QRapidshareDownload::setUser(const QRapidshareUser & rsUser)
- {
-    RSDM_LOG_FUNC ;
+}
+void QRapidshareDownload::setUser(const QRapidshareUser & rsUser)
+{
+//     RSDM_LOG_FUNC ;
     m_apRSUser.reset(new QRapidshareUser(rsUser));  
- }
- void QRapidshareDownload::setUser(const std::string& rsName,  const std::string& rsPass)
- {
-    RSDM_LOG_FUNC ;
+}
+void QRapidshareDownload::setUser(const std::string& rsName,  const std::string& rsPass)
+{
+//     RSDM_LOG_FUNC ;
     setUser(QRapidshareUser(rsName.c_str(),rsPass.c_str()));
- }
+}
 
- void QRapidshareDownload::timerEvent(QTimerEvent *event)
- {
-    RSDM_LOG_FUNC ;
+void QRapidshareDownload::timerEvent(QTimerEvent *event)
+{
+//     RSDM_LOG_FUNC ;
     emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
     m_readedBytes = 0;
- };
- const QString QRapidshareDownload::getFullUrlFileAddress() const
- {
-    RSDM_LOG_FUNC ;
+};
+const QString QRapidshareDownload::getFullUrlFileAddress() const
+{
+//     RSDM_LOG_FUNC ;
     return m_ReferrerFileAddress ; 
- }
- const QString QRapidshareDownload::getFileDestination() const
- {
-    RSDM_LOG_FUNC ;
+}
+const QString QRapidshareDownload::getFileDestination() const
+{
+//     RSDM_LOG_FUNC ;
     return m_qFileDestination ;
- };
- 
- QRapidshareUser * QRapidshareDownload::getUser() const
- {
-    return m_apRSUser.get() ; 
- }
+};
 
- const QString QRapidshareDownload::getDownloadHost() const
- {
+QRapidshareUser * QRapidshareDownload::getUser() const
+{
+    return m_apRSUser.get() ; 
+}
+
+const QString QRapidshareDownload::getDownloadHost() const
+{
     return m_DownloadServerHost; 
- }
- 
- void QRapidshareDownload::setDownloadHost( const QString & _host )
- {
+}
+
+void QRapidshareDownload::setDownloadHost( const QString & _host )
+{
     m_DownloadServerHost = _host ;
- }
- 
- void QRapidshareDownload::renameFile()
- {
+}
+
+void QRapidshareDownload::renameFile()
+{
     if(m_apFile.get()!=NULL && !m_qFileDestination.isEmpty())
         QFile::rename(m_apFile->fileName(), m_qFileDestination);
- }
+}
 
- bool QRapidshareDownload::checkForErrors( const QByteArray& response )
- {
-     QList<const char*>::iterator it = m_errorsList.begin();
-     while( it != m_errorsList.end() )
-     {
-         if( response.contains(*it))
-             return true;
-         ++it;
-     }
-     return false;
- }
- 
- QString QRapidshareDownload::transformUrlPathToLocalPath(const QString & url)
+bool QRapidshareDownload::checkForErrors( const QByteArray& response )
 {
-    RSDM_LOG_FUNC ;
+    QList<const char*>::iterator it = m_errorsList.begin();
+    while( it != m_errorsList.end() )
+    {
+        if( response.contains(*it))
+            return true;
+        ++it;
+    }
+    return false;
+}
+
+QString QRapidshareDownload::transformUrlPathToLocalPath(const QString & url)
+{
+//     RSDM_LOG_FUNC ;
     QString ret = QString(url);
     ret = ret.right(ret.length() - ret.lastIndexOf("/") - 1);
     int ind = ret.indexOf(".htm");
@@ -585,5 +585,3 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     }
     return ret;
 }
-
-
