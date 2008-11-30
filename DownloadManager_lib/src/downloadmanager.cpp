@@ -9,6 +9,8 @@
 #include <QDebug>
 #include <QTimer>
 #include <QMutexLocker>
+#include <proxy.h>
+#include <settings.h>
 
 DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0),m_pEngineManager(new EngineManager()), m_State ( STOPPED )
 {
@@ -29,8 +31,10 @@ DownloadManager::~DownloadManager()
 void DownloadManager::init()
 {
     LOG("void DownloadManager::init()");
-    m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
-    m_DownloadManagerSettings.m_MaxDownloadingFiles = 2 ;
+    
+    m_DownloadManagerSettings.m_MaxDownloadingFiles = Proxy::settings()->value("MaxDownloads",Settings::LIBRARY).value<int>();
+    if ( m_DownloadManagerSettings.m_MaxDownloadingFiles == 0 ) 
+        m_DownloadManagerSettings.m_MaxDownloadingFiles = 2; 
     m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
     setState ( DOWNLOADING ) ; 
     

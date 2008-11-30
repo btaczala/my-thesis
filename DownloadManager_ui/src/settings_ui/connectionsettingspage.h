@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   Copyright (C) 2008 by Tomasz Czyzewski                         *
  *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,14 +21,19 @@
 #define CONNECTIONSETTINGSPAGE_H
 
 #include "isettingspage.h"
+#include <memory>
 
+class QSpinBox;
 namespace connection_settings_page
 {
-    class ConnecionTab : public QWidget
+    class ConnectionTab : public QWidget
     {
         Q_OBJECT
     public:
-        ConnecionTab(QWidget* parent = 0);
+        ConnectionTab(QWidget* parent = 0);
+        ~ConnectionTab();
+    private:
+        std::auto_ptr<QSpinBox> m_pDownloadsSpin;
     };
 
     class ProxyTab : public QWidget
@@ -44,6 +49,7 @@ class ConnectionSettingsPage : public ISettingsPage
     Q_OBJECT
 public:
     ConnectionSettingsPage(QWidget* parent = 0);
+    
 
     virtual QIcon getIcon() const;
     virtual QString getTitle() const;

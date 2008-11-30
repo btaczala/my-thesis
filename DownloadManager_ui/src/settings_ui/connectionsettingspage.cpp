@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   Copyright (C) 2008 by Tomasz Czyzewski                         *
  *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,11 +21,16 @@
 #include <QtGui>
 #include "connectionsettingspage.h"
 
+#include <proxy.h>
+#include <settings.h>
+#include <downloadmanager.h>
+
 ConnectionSettingsPage::ConnectionSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
 {
     Initialize();
 }
+
 
 QIcon ConnectionSettingsPage::getIcon() const
 {
@@ -39,7 +44,7 @@ QString ConnectionSettingsPage::getTitle() const
 
 void ConnectionSettingsPage::Initialize()
 {   
-    m_tabWidget->addTab(new connection_settings_page::ConnecionTab, tr("Connection"));
+    m_tabWidget->addTab(new connection_settings_page::ConnectionTab, tr("Connection"));
     m_tabWidget->addTab(new connection_settings_page::ProxyTab, tr("Proxy"));
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -51,7 +56,7 @@ void ConnectionSettingsPage::Initialize()
 
 namespace connection_settings_page
 {
-    ConnecionTab::ConnecionTab(QWidget *parent)
+    ConnectionTab::ConnectionTab(QWidget *parent)
         : QWidget(parent)
     {
         const short int labelWidth = 120;
@@ -67,13 +72,15 @@ namespace connection_settings_page
 
         QLabel* downloadsLabel = new QLabel(tr("Simultanious downloads:"));
         downloadsLabel->setMinimumWidth(labelWidth);
-        QSpinBox* downloadsSpin = new QSpinBox;
-        downloadsSpin->setRange(1,999);
-        downloadsSpin->setValue(2);
-        downloadsSpin->setMaximumWidth(45);
+        m_pDownloadsSpin.reset( new QSpinBox ) ; 
+        m_pDownloadsSpin->setRange(1,999);
+//         downloadsSpin->setValue(2);
+        int v = Proxy::settings()->value("MaxDownloads",Settings::LIBRARY).value<int>() ;
+        m_pDownloadsSpin->setValue ( v==0 ? 2 : v );
+        m_pDownloadsSpin->setMaximumWidth(45);
         QHBoxLayout* downloadsLayout = new QHBoxLayout;
         downloadsLayout->addWidget(downloadsLabel);
-        downloadsLayout->addWidget(downloadsSpin);
+        downloadsLayout->addWidget( m_pDownloadsSpin.get() );
         downloadsLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
@@ -84,6 +91,11 @@ namespace connection_settings_page
         layout->addStretch(1);
 
         setLayout(layout);
+    }
+    ConnectionTab::~ConnectionTab()
+    {
+        Proxy::settings()->setValue("MaxDownloads",m_pDownloadsSpin->value(),Settings::LIBRARY);
+        Proxy::downloadManager()->update();
     }
 
 
@@ -137,3 +149,4 @@ namespace connection_settings_page
         setLayout(layout);
     }
 }
+

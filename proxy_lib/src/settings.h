@@ -35,7 +35,7 @@ class Settings
          * @return settings for plugin given by name
          */
         OptionsContainer *  optionsForEngine(const std::string & name ) ; 
-        
+
         /**
          * @brief Sets a value in Settings
          * @param valName Name of settings value
@@ -54,7 +54,7 @@ class Settings
          * @see setValue
          */
         QVariant            value( const QString & valName, Context context, const QString & subgroup="") ; 
-        
+
         /**
          * load application settings. Should be invoked as soon as possible after application starts
          */
@@ -63,10 +63,10 @@ class Settings
          * save application settings. 
          */
         void saveSettings() ;
-        
+
         QString defaultDownloadDirectory() const ; 
         void    setDefaultDownloadDirectory() ;
-        
+
 	private:
         /**
          * load plugin options. sets group to "Plugin"

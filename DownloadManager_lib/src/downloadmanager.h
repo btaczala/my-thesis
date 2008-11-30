@@ -166,6 +166,7 @@ class DownloadManager : public QObject
         void                    bytesRead(int read,int total);
         void                    downloadDone();
         void                    downloadRate(const QString & dwnlRate);
+    public slots:
         /**
          * @brief  Updates list of download. 
          * This signal can be invoked by others. 

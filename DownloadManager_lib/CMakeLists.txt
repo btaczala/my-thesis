@@ -46,8 +46,9 @@ SET ( PLUGINS_MOC_HDRS
 
 QT4_WRAP_CPP(QT_MOC_SRC ${DownloadManager_MOC_HDRS} ${PLUGINS_MOC_HDRS} )
 INCLUDE(${QT_USE_FILE})
-include_directories(${Boost_INCLUDE_DIR})
-add_library( downloadmanager_lib STATIC ${QT_MOC_SRC} ${DownloadManager_SRCS} ${DownloadManager_HDRS} )
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+INCLUDE_DIRECTORIES( "../proxy_lib/src" )
+ADD_LIBRARY( downloadmanager_lib STATIC ${QT_MOC_SRC} ${DownloadManager_SRCS} ${DownloadManager_HDRS} )
 target_link_libraries ( downloadmanager_lib ${QT_LIBRARIES}  ) 
 
 if( BUILD_TEST_APP )

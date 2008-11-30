@@ -36,7 +36,6 @@ IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadS
 IDownload::~IDownload()
 {
     RSDM_LOG_FUNC;
-    delete m_pDownloadInfo;
 };
 
 void IDownload::setUrlAddress(const std::string & urlAddrr)
