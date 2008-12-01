@@ -106,7 +106,7 @@ void QRapidshareDownload::stop()
 void QRapidshareDownload::restart()
 {
 //     RSDM_LOG_FUNC ;
-    //m_apHttpRequestHeader->removeValue();
+    //m_apHttpRequestHeader->removeValue(); // LENGTH REQUIRED ?? ;(
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
     m_apHttpRequestHeader->setValue("Host", m_DownloadServerHost );
     m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
@@ -114,6 +114,7 @@ void QRapidshareDownload::restart()
     m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
     m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)");
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
+    m_apHttpRequestHeader->setValue("Content-Length", QString::number( 1024 ) );
     qDebug() << QString("Resumed !!!!!!");
     QString httpHeader = DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
     qDebug() << httpHeader;
@@ -270,7 +271,6 @@ void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
 {
 //     qDebug() << __FUNCTION_NAME__;
 }
-
 void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
 {
     RSDM_LOG_FUNC ;

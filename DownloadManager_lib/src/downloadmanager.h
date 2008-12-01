@@ -88,6 +88,12 @@ class DownloadManager : public QObject
          */
         void                    removeDownload( const std::string & urlAddress ) ;
         /**
+         * @brief will remove download 
+         * @param position position within list  
+         */
+        void                    removeDownload( int position ) ;
+
+        /**
          * @brief Will return engine manager 
          * @return 
          */

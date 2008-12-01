@@ -107,7 +107,7 @@ void DownloadManager::stopDownload(const std::string & urlAddress)
 }
 void DownloadManager::stopDownload(int position)
 {
-    if ( position >= m_DownloadList.size() || position < 0 ) 
+    if ( (unsigned int ) position >= m_DownloadList.size() || position < 0 ) 
     {
         return ; 
     }
@@ -128,27 +128,56 @@ void DownloadManager::startPause(const std::string & urlAddress)
     {
         state = DownloadState::PAUSED ; 
         pDownload->SetState(DownloadState::PAUSED);
-        decreaseNumberOfCurrentDownloads();
+        //decreaseNumberOfCurrentDownloads();
         pDownload->stop();
         //m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
         //update();
     }
-    else if ( state == DownloadState::PAUSED || state == DownloadState::STOPPED ) 
+    else if ( state == DownloadState::PAUSED ) 
     {
         increaseNumberOfCurrentDownloads();
         pDownload->restart() ; 
-    };
+    }
+    else if ( state == DownloadState::STOPPED ) 
+    {
+        pDownload->start() ; 
+    }
 }
 void DownloadManager::startPause(int position)
 {
-    if ( position >= m_DownloadList.size() || position < 0 ) 
+    if ( (unsigned int ) position >= m_DownloadList.size() || position < 0 ) 
     {
         return ; 
     }
     IDownload *pDownload = m_DownloadList[position].get();
     startPause(pDownload->urlAddress());
 }
-
+std::string raaa ( const DownloadManager::IDownloadSmartPtr & smtPtr ) 
+{
+    return (*smtPtr).urlAddress() ; 
+}
+void DownloadManager::removeDownload(const std::string &urlAddress)
+{
+    IDownload *pDownload = find(urlAddress ) ;
+    if ( !pDownload ) 
+    {
+        LOG(QString("Unable to remove download = %1").arg(urlAddress.c_str()));
+        return ; 
+    }
+    DownloadListType::iterator it = std::find_if( m_DownloadList.begin(), m_DownloadList.end(), boost::bind(raaa, _1 ) == urlAddress) ; 
+    if ( it == m_DownloadList.end() ) 
+        return ; 
+    m_DownloadList.erase(it);
+}
+void DownloadManager::removeDownload( int position )
+{
+    if ( (unsigned int ) position >= m_DownloadList.size() || position < 0 ) 
+    {
+        return ; 
+    }
+    IDownload *pDownload = m_DownloadList[position].get();
+    removeDownload(pDownload->urlAddress());
+}
 void DownloadManager::slot_listChanged()
 {
 }
@@ -211,7 +240,7 @@ void DownloadManager::connectWith(IDownload * pDownload)
     //QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
-};
+}
 int DownloadManager::findPosition(const std::string & url)
 {
     int pos = 0 ; 
@@ -250,14 +279,14 @@ void DownloadManager::update()
                 break ; 
             pDownload = it->get() ; 
             state = pDownload->state();
-            if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED || state == DownloadState::INIT ) 
+            if ( state == DownloadState::DOWNLOADING || state == DownloadState::DONE || state == DownloadState::FAILED || state == DownloadState::INIT || state == DownloadState::PAUSED ) 
                 continue ; 
             if ( canIDownload() ) 
             {
                 pDownload->start() ; 
                 //m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
                 increaseNumberOfCurrentDownloads();
-            };
+            }
             counter++;
         }
     }
@@ -271,7 +300,7 @@ void DownloadManager::update()
         {
             pDownload = it->get() ; 
             pDownload->stop() ; 
-        };
+        }
         m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ; 
     }
     
@@ -281,7 +310,7 @@ void DownloadManager::setState(DownloadManagerState state)
 {
     m_State = state ; 
     update() ; 
-};
+}
 
 bool DownloadManager::canIDownload() const
 {
@@ -291,7 +320,7 @@ bool DownloadManager::canIDownload() const
             return true ; 
     }
     return false ; 
-};
+}
 DownloadManager::DownloadManagerState DownloadManager::state() const
 {
     return m_State ; 
@@ -302,9 +331,9 @@ IDownload * DownloadManager::downloadAt(unsigned int position)
     {
         LOG(QString("Unable to get Download. List size=%1, position requested=%2").arg(m_DownloadList.size()).arg(position) );
         return NULL ; 
-    };
+    }
     return m_DownloadList[position].get() ;
-};
+}
 
 void DownloadManager::decreaseNumberOfCurrentDownloads()
 {

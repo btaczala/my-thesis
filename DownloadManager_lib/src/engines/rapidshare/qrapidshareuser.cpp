@@ -18,6 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "qrapidshareuser.h"
+#include <proxy.h>
+#include <settings.h>
 //
 QRapidshareUser::QRapidshareUser( const QString &userName, const QString &pass ) 
  : /*ILogable("qrapidshareuser"), */m_apUserName( QString(userName) ), m_apUserPass(QString ( pass ) )
@@ -34,10 +36,11 @@ QString QRapidshareUser::ComposeCookie()
 {
 	RSDM_LOG_FUNC ;
 	QString cookie="user=";
-	cookie += getUserName();
+    QString userName = Proxy::settings()->value("username",Settings::PLUGINS,"rapidshare").value<QString>() ;
+	cookie += userName;
 	cookie +="-";
-	QString aa;
-	aa = m_apUserPass.toAscii();
+    QString password = Proxy::settings()->value("password",Settings::PLUGINS,"rapidshare").value<QString>() ;
+	QString aa = password.toAscii();
 	foreach(QChar a,m_apUserPass)
 	{
 		cookie += QString("%" + aa.sprintf("%x", a.toLatin1()) ).toUpper() ;	

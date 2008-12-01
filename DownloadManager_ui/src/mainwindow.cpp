@@ -97,6 +97,7 @@ void MainWindow::InitializeActions()
     
     connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget.get() ,SLOT( StopSelectedDownload() ));
     connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
+    connect ( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
 }
 
 void MainWindow::showSettingsDialog()

@@ -195,7 +195,17 @@ void QDownloadWidget::StopSelectedDownload()
 
 void QDownloadWidget::RemoveSelectedDownload()
 {
-    ;
+    QList<QTreeWidgetItem*> list = selectedItems() ;
+    int index = -1; 
+    Q_FOREACH( QTreeWidgetItem * pItem, list ) 
+    {
+        index = indexOfTopLevelItem(pItem) ;
+        if ( index == -1 ) 
+            continue ; 
+        m_pDownloadManager->removeDownload( index ) ; 
+        delete pItem ; 
+        pItem = NULL ; 
+    }
 }
 
 void QDownloadWidget::onConfigureColumns()
