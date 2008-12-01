@@ -6,7 +6,8 @@
 #include "rscommon.h"
 
 // FIXME:
-// #include <proxy.h>
+#include <proxy.h>
+#include <settings.h>
 
 QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(options)
 , m_apHttpObj( new QHttp() )
@@ -16,6 +17,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 , m_apFile(new QFile() )
 , m_timerId(0)
 , m_readedBytes(0)
+, m_emitCounter ( 0 )
 //  , m_Logger(QString("qrapidsharedownload") + QString::number(qrand() ) )
 
 {
@@ -41,6 +43,11 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     }
     else
         Q_ASSERT(false);
+    int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>() ; 
+    if ( content_length == 0 ) 
+    {
+        Proxy::settings()->setValue("ContentLength",1024,Settings::LIBRARY);
+    }
 }
 
 QRapidshareDownload::~QRapidshareDownload()
@@ -114,7 +121,10 @@ void QRapidshareDownload::restart()
     m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
     m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)");
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
-    m_apHttpRequestHeader->setValue("Content-Length", QString::number( 1024 ) );
+    int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>();
+    if ( content_length == 0 ) 
+        content_length = 1024 ; 
+    m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
     qDebug() << QString("Resumed !!!!!!");
     QString httpHeader = DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
     qDebug() << httpHeader;
@@ -213,7 +223,13 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
         dResTotal *= 100;
         m_Progress = (int)dResTotal;
 //         qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
-        emit bytesRead(dDone,dTotal) ;
+        if ( m_emitCounter == scSkipEmit ) 
+        {
+            emit bytesRead(dDone,dTotal) ;
+            m_emitCounter = 0 ; 
+        }
+        else 
+            m_emitCounter++;
         m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
         m_pDownloadInfo->bytesReadCurrent = done ; 
         if ( buff == NULL ) 
@@ -340,7 +356,10 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
         m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
         m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
-        m_apHttpRequestHeader->setValue("Content-Length", "16");
+        int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>();
+        if ( content_length == 0 ) 
+            content_length = 1024 ; 
+        m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
         m_apHttpRequestHeader->setValue("Referrer", m_ReferrerFileAddress);
         qDebug() << "First post";       
         qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;

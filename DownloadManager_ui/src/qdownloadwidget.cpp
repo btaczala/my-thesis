@@ -81,6 +81,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     connect( m_pDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
     connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
     connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
+    connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -101,6 +102,9 @@ void QDownloadWidget::InitializeColumns()
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size"),true) );
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnElapsedTime,tr("Elapsed Time"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnEstimatedTime,tr("Estimated Time"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownloadRate,tr("Download Rate"),true) );
 
     // Proxy::settings()->value(QString, context).value<QString>() 
     QStringList headers;
@@ -296,6 +300,13 @@ void QDownloadWidget::bytesReadAt(int position,int read,int total)
     if ( pItem ) 
         pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
 };
+void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
+{
+    QTreeWidgetItem *pItem = topLevelItem(position);
+    if ( pItem ) 
+        pItem->setText(7,downloadRate);
+    
+}
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
 {
@@ -454,4 +465,5 @@ namespace DownloadWidgetDelegates
         widget->show();
     }
 }
+
 

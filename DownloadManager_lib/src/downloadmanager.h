@@ -212,5 +212,6 @@ class DownloadManager : public QObject
          * @param total - how big is file. 
          */
         void                    bytesReadAt ( int at, int read, int total ) ; 
+        void                    downloadRateAt( int at, const QString & downloadRate ) ;
 };
 #endif // DOWNLOADMANAGER_H

@@ -217,10 +217,6 @@ void DownloadManager::downloadDone()
     if ( pos !=-1 )
         emit downloadDoneAt(pos); 
 }
-void DownloadManager::downloadRate(const QString & dwnlRate)
-{
-    qDebug() << dwnlRate;
-}
 int DownloadManager::percentage() 
 {
     DownloadListType::iterator it = m_DownloadList.begin(); 
@@ -240,6 +236,7 @@ void DownloadManager::connectWith(IDownload * pDownload)
     //QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {
@@ -262,6 +259,12 @@ void DownloadManager::bytesRead(int read, int total)
     int pos = getPositionWithinSlot( sender() ) ;  
     if ( pos !=-1 )
         emit bytesReadAt(pos,read,total);    
+}
+void DownloadManager::downloadRate( const  QString &downloadRate )
+{
+    int pos = getPositionWithinSlot( sender() ) ;  
+    if ( pos !=-1 )
+        emit downloadRateAt( pos, downloadRate );
 }
 void DownloadManager::update()
 {
@@ -350,5 +353,7 @@ void DownloadManager::increaseNumberOfCurrentDownloads()
         LOG("Something is wrong");
     
 }
+
+
 
 

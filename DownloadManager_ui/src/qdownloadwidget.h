@@ -105,7 +105,10 @@ public:
             ColumnPath,
             ColumnFileSize,
             ColumnProgress,
-            ColumnDownload
+            ColumnDownload,
+            ColumnElapsedTime,
+            ColumnEstimatedTime,
+            ColumnDownloadRate,
         };
         int getId() const { return _id; }
         const QString& getName() const { return _colName; }
@@ -142,6 +145,7 @@ public slots:
     void downloadDoneAt( int position );
     void downloadOnHold( int position ) ; 
     void bytesReadAt( int position , int read , int total );
+    void downloadRateAt( int position , const QString & downloadRate );
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void InitializeColumns();

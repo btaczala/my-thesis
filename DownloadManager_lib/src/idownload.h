@@ -90,6 +90,6 @@ class IDownload : public QObject
         //virtual void                        downloadStatus(const int & istate ) = 0;
         virtual void                        bytesRead( int read, int howMany ) = 0 ; 
         virtual void                        statusChanged( DownloadState::States status ) = 0 ;
-        virtual void                        downloadRate(const QString & dwnlRate) = 0 ; 
+        virtual void                        downloadRate( const QString & dwnlRate) = 0 ; 
 };
 #endif //  IDOWNLOAD_H

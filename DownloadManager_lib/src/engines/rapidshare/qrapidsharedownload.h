@@ -108,6 +108,8 @@ Q_OBJECT
 //     RSLogger                            m_Logger;
     QList<const char*>                  m_errorsList;
     RS_State                            m_rssmState;
+    static const int                    scSkipEmit = 100 ; 
+    int                                 m_emitCounter ; 
 
  private slots:
     void                                requestStarted(const int & idReq) ;
