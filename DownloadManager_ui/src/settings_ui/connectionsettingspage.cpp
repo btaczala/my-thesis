@@ -75,7 +75,7 @@ namespace connection_settings_page
         m_pDownloadsSpin.reset( new QSpinBox ) ; 
         m_pDownloadsSpin->setRange(1,999);
 //         downloadsSpin->setValue(2);
-        int v = Proxy::settings()->value("MaxDownloads",Settings::LIBRARY).value<int>() ;
+        int v = Proxy::settings()->value( SettingsValNames::scMaxDownloads/*"MaxDownloads"*/,Settings::LIBRARY).value<int>() ;
         m_pDownloadsSpin->setValue ( v==0 ? 2 : v );
         m_pDownloadsSpin->setMaximumWidth(45);
         QHBoxLayout* downloadsLayout = new QHBoxLayout;
@@ -94,7 +94,7 @@ namespace connection_settings_page
     }
     ConnectionTab::~ConnectionTab()
     {
-        Proxy::settings()->setValue("MaxDownloads",m_pDownloadsSpin->value(),Settings::LIBRARY);
+        Proxy::settings()->setValue( SettingsValNames::scMaxDownloads,m_pDownloadsSpin->value(),Settings::LIBRARY);
         Proxy::downloadManager()->update();
     }
 

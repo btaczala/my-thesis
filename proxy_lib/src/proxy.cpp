@@ -6,6 +6,8 @@
 #include <optionscontainer.h>
 #include <downloadengine.h>
 #include <rslogger.h>
+#include <QTime>
+#include <cmath>
 
 #include "settings.h"
 

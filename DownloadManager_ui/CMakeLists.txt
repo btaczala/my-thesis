@@ -21,6 +21,8 @@ SET( APP_SRCS
     src/main.cpp
     src/mainwindow.cpp
     src/qdownloadwidget.cpp
+	src/systemtraytooltip.cpp
+	src/systemdock.cpp
     src/menubar.cpp
     src/toolbar.cpp
     src/actions.cpp
@@ -33,6 +35,8 @@ SET( APP_SRCS
 SET( APP_HDRS
     src/mainwindow.h
     src/qdownloadwidget.h
+	src/systemtraytooltip.h
+	src/systemdock.h
     src/menubar.h
     src/toolbar.h
     src/actions.h
@@ -47,6 +51,8 @@ SET( APP_MOC_HDRS
     src/mainwindow.h
     src/qdownloadwidget.h
 	src/columnsconfigdialog.h
+	src/systemtraytooltip.h
+	src/systemdock.h
     src/menubar.h
     src/toolbar.h
 	src/settings_ui/settingsdialog.h

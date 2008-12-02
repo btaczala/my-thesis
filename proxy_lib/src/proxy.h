@@ -26,6 +26,7 @@ class Proxy
         static void init();
         
         static void setDownloadManager( DownloadManager *ptr ) ; 
+
 	private:
 		static Proxy* proxy() ;
 		Proxy() ; 

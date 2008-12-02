@@ -22,6 +22,7 @@
 #include <QPainter>
 #include <QApplication>
 #include <QtGui>
+#include <QTime>
 #include "columnsconfigdialog.h"
 #include <sstream>
 #include "actions.h"
@@ -82,6 +83,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pCon
     connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
     connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
     connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
+    connect( m_pDownloadManager,SIGNAL( elapsedTimeAt( int, unsigned int  ) ),this,SLOT( elapsedTimeAt( int,unsigned int ) ) );
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -297,23 +299,41 @@ void QDownloadWidget::bytesReadAt(int position,int read,int total)
     int total_kBytes = total / 1024 ; 
     emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
     QTreeWidgetItem *pItem = topLevelItem(position);
-    if ( pItem ) 
-        pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
+    if ( pItem == NULL ) 
+        return ; 
+    pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
+
+    // estimated time ;) 
+    bool ok ; 
+    double rate = pItem->text(7).toDouble(&ok);
+    if ( rate == 0 ) 
+        return ; 
+    int howMuch = (int)((double)(total_kBytes - read_kBytes) / rate);
+    int seconds = howMuch % 60 ; 
+    int minutes = (howMuch  - seconds)/60 ; 
+    QString sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
+    QString text = QString::number( minutes ) + ":" + sec ; 
+    pItem->setText(6,text);
+
 };
 void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
 {
     QTreeWidgetItem *pItem = topLevelItem(position);
     if ( pItem ) 
         pItem->setText(7,downloadRate);
+
 }
 void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
 {
+    int seconds = timeElapsed % 60 ; 
+    int minutes = (timeElapsed - seconds)/60 ; 
+    
+    QString sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
+    QString text = QString::number( minutes ) + ":" + sec ;  
     QTreeWidgetItem *pItem = topLevelItem(position);
-    int minutes = (timeElapsed % 60) ;
-    int seconds = timeElapsed - ( minutes * 60 ) ;
-    QString text = QString::number(minutes) + " : " + QString::number( seconds ) ;  
     if ( pItem ) 
-        pItem->setText(6,text);
+        pItem->setText(5,text);
+
 }
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
