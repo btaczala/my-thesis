@@ -146,6 +146,7 @@ public slots:
     void downloadOnHold( int position ) ; 
     void bytesReadAt( int position , int read , int total );
     void downloadRateAt( int position , const QString & downloadRate );
+    void elapsedTimeAt( int position , unsigned int timeElapsed );
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void InitializeColumns();

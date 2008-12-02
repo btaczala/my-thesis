@@ -38,15 +38,15 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if( m_Options )
     {
-        setUser(  boost::any_cast<std::string>( m_Options->option( "username" )),
-                boost::any_cast<std::string>( m_Options->option( "password" )));
+        setUser(  boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginUsername )),
+                boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginPassword )));
     }
     else
         Q_ASSERT(false);
-    int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>() ; 
+    int content_length = Proxy::settings()->value(SettingsValNames::scContentLength,Settings::LIBRARY).value<int>() ; 
     if ( content_length == 0 ) 
     {
-        Proxy::settings()->setValue("ContentLength",1024,Settings::LIBRARY);
+        Proxy::settings()->setValue( SettingsValNames::scContentLength ,1024,Settings::LIBRARY);
     }
 }
 
@@ -121,7 +121,7 @@ void QRapidshareDownload::restart()
     m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
     m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)");
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
-    int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>();
+    int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY).value<int>();
     if ( content_length == 0 ) 
         content_length = 1024 ; 
     m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
@@ -356,7 +356,7 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
         m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
         m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
-        int content_length = Proxy::settings()->value("ContentLength",Settings::LIBRARY).value<int>();
+        int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY ).value<int>();
         if ( content_length == 0 ) 
             content_length = 1024 ; 
         m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
@@ -547,6 +547,8 @@ void QRapidshareDownload::timerEvent(QTimerEvent *event)
 //     RSDM_LOG_FUNC ;
     emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
     m_readedBytes = 0;
+    m_SecondsDownloading++;
+    emit elapsedTime( m_SecondsDownloading );
 };
 const QString QRapidshareDownload::getFullUrlFileAddress() const
 {

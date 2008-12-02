@@ -32,7 +32,7 @@ void DownloadManager::init()
 {
     LOG("void DownloadManager::init()");
     
-    m_DownloadManagerSettings.m_MaxDownloadingFiles = Proxy::settings()->value("MaxDownloads",Settings::LIBRARY).value<int>();
+    m_DownloadManagerSettings.m_MaxDownloadingFiles = Proxy::settings()->value( SettingsValNames::scMaxDownloads,Settings::LIBRARY).value<int>();
     if ( m_DownloadManagerSettings.m_MaxDownloadingFiles == 0 ) 
         m_DownloadManagerSettings.m_MaxDownloadingFiles = 2; 
     m_DownloadManagerSettings.m_CurrentDownloadingFiles = 0 ;
@@ -237,6 +237,7 @@ void DownloadManager::connectWith(IDownload * pDownload)
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
     QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {
@@ -266,6 +267,16 @@ void DownloadManager::downloadRate( const  QString &downloadRate )
     if ( pos !=-1 )
         emit downloadRateAt( pos, downloadRate );
 }
+void DownloadManager::elapsedTime(unsigned int elapsedTime)
+{
+    int pos = getPositionWithinSlot( sender() ) ;  
+    if ( pos !=-1 )
+        emit elapsedTimeAt( pos, elapsedTime );
+    
+}
+
+
+
 void DownloadManager::update()
 {
     QMutexLocker localMutex(&m_Mutex);

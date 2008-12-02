@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   Copyright (C) 2008 by Tomasz Czyzewski                         *
  *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -113,8 +113,8 @@ namespace server_settings_page
         layout->addStretch(1);
         setLayout(layout);
 
-        std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("username") );
-        std::string userPass = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option("password") ) ; 
+        std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginUsername) );
+        std::string userPass = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginPassword) ) ; 
         LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName.c_str() ).arg( userPass.c_str() ));
         if ( userName.empty() || userPass.empty() ) 
             credentialsCheck->setCheckState( Qt::Unchecked );
@@ -128,8 +128,8 @@ namespace server_settings_page
     }
     ServerTab::~ ServerTab()
     {
-        Proxy::settings()->setValue( "username",m_UserEdit->text(),Settings::PLUGINS,"rapidshare");
-        Proxy::settings()->setValue( "password",m_PasswordEdit->text(),Settings::PLUGINS,"rapidshare");
+        Proxy::settings()->setValue( SettingsValNames::scPluginUsername,m_UserEdit->text(),Settings::PLUGINS,"rapidshare");
+        Proxy::settings()->setValue( SettingsValNames::scPluginPassword,m_PasswordEdit->text(),Settings::PLUGINS,"rapidshare");
     }
     void ServerTab::useCredentialChecked(int state ) 
     {

@@ -14,26 +14,26 @@
 
 int main(int argc, char** argv)
 {
-	/*
-	QApplication app(argc, argv); 
-	QDialog tmp ; 
-	RapidShareDownloadManager foo;
-	foo.SetUser(QRapidshareUser ("4625386","WM2FTZgx5Y") );
-	foo.AddDownload(
-		QString("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar"),
-		QString(QDir::homePath() + "/ziom")
-		);
-	foo.Start() ;
-	tmp.show() ;
-	app.exec() ;
+    /*
+    QApplication app(argc, argv); 
+    QDialog tmp ; 
+    RapidShareDownloadManager foo;
+    foo.SetUser(QRapidshareUser ("4625386","WM2FTZgx5Y") );
+    foo.AddDownload(
+        QString("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar"),
+        QString(QDir::homePath() + "/ziom")
+        );
+    foo.Start() ;
+    tmp.show() ;
+    app.exec() ;
     */
     QApplication app(argc, argv); 
     DownloadManager *dwnlMgr = new DownloadManager();///*Proxy::downloadManager() ; 
     DownloadEngine * pEngine = dwnlMgr->engineManager()->findEngine("http") ;
 
     OptionsContainer options ;//= new OptionsContainer();
-    options.addOption("username", std::string("4625386"));
-    options.addOption("password", std::string("maggot666_rs"));
+    options.addOption(SettingsValNames::scPluginUsername, std::string("4625386"));
+    options.addOption(SettingsValNames::scPluginPassword, std::string("maggot666_rs"));
     pEngine->setOptionsForEngine( options ); 
     //delete options;
     /*
@@ -51,5 +51,5 @@ int main(int argc, char** argv)
     t.setConnector( dwnlMgr ) ;
     t.show();
     //delete dwnlMgr;
-	return app.exec();
+    return app.exec();
 }

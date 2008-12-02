@@ -172,6 +172,7 @@ class DownloadManager : public QObject
         void                    bytesRead(int read,int total);
         void                    downloadDone();
         void                    downloadRate(const QString & dwnlRate);
+        void                    elapsedTime( unsigned int elapsedTime );
     public slots:
         /**
          * @brief  Updates list of download. 
@@ -213,5 +214,6 @@ class DownloadManager : public QObject
          */
         void                    bytesReadAt ( int at, int read, int total ) ; 
         void                    downloadRateAt( int at, const QString & downloadRate ) ;
+        void                    elapsedTimeAt( int at, unsigned int elapsedTime );
 };
 #endif // DOWNLOADMANAGER_H

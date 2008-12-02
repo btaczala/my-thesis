@@ -128,5 +128,6 @@ signals:
     //void                                downloadStatus(const int & istate );
     void                                downloadRate(const QString & dwnlRate);
     void                                bytesRead( int read, int howMany ) ; 
+    void                                elapsedTime( unsigned int elapsedTime ) ; 
  };
 #endif

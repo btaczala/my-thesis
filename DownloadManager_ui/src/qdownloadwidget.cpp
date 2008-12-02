@@ -33,7 +33,7 @@
 #include <rslogger.h>
 #include <downloadmanager.h>
 
-const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
+// const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
 QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
 {
@@ -113,7 +113,7 @@ void QDownloadWidget::InitializeColumns()
 
     //QString columns = setts.value(QDownloadWidgetColumnInfo::settingsName).value<QString>();
     
-    QString columns = Proxy::settings()->value( QDownloadWidgetColumnInfo::settingsName, Settings::UI).value<QString>();
+    QString columns = Proxy::settings()->value( SettingsValNames::scColumnsInfo, Settings::UI).value<QString>();
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
         headers << i->getName();
@@ -152,7 +152,7 @@ void QDownloadWidget::SaveColumns()
         if (i->isVisible())
             ss << i->getName().toStdString();
     }
-    Proxy::settings()->setValue(QDownloadWidgetColumnInfo::settingsName, QString( ss.str().c_str() ), Settings::UI ) ; 
+    Proxy::settings()->setValue( SettingsValNames::scColumnsInfo, QString( ss.str().c_str() ), Settings::UI ) ; 
     //setts.setValue(QDownloadWidgetColumnInfo::settingsName, QString(ss.str().c_str()));
 }
 
@@ -305,7 +305,15 @@ void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
     QTreeWidgetItem *pItem = topLevelItem(position);
     if ( pItem ) 
         pItem->setText(7,downloadRate);
-    
+}
+void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
+{
+    QTreeWidgetItem *pItem = topLevelItem(position);
+    int minutes = (timeElapsed % 60) ;
+    int seconds = timeElapsed - ( minutes * 60 ) ;
+    QString text = QString::number(minutes) + " : " + QString::number( seconds ) ;  
+    if ( pItem ) 
+        pItem->setText(6,text);
 }
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
@@ -465,5 +473,6 @@ namespace DownloadWidgetDelegates
         widget->show();
     }
 }
+
 
 

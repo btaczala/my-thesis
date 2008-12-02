@@ -6,7 +6,21 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 
+namespace SettingsValNames
+{
+    // LIBRARY NAMES
+    static const char scContentLength [] = "ContentLength" ;
+    static const char scMaxDownloads [] = "MaxDownloads" ;
+    
+    // UI NAMES
+    static const char scColumnsInfo [] = "QDownloadWidgetColumnInfo" ;
+    // PLUGINS NAMES
+    static const char scPluginUsername[] = "username";
+    static const char scPluginPassword[] = "password";
+};
+    
 class OptionsContainer;
+
 class Settings
 {
     public:

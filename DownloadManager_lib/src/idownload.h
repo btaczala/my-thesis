@@ -86,10 +86,12 @@ class IDownload : public QObject
         std::string                         m_FileName;
         mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
+        unsigned int                        m_SecondsDownloading ; 
     signals :
         //virtual void                        downloadStatus(const int & istate ) = 0;
         virtual void                        bytesRead( int read, int howMany ) = 0 ; 
         virtual void                        statusChanged( DownloadState::States status ) = 0 ;
         virtual void                        downloadRate( const QString & dwnlRate) = 0 ; 
+        
 };
 #endif //  IDOWNLOAD_H

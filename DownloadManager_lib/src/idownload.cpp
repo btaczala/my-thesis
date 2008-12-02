@@ -28,7 +28,7 @@ QString DownloadStateToString( DownloadState::States state )
     };
 }
 
-IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadState ), m_Options( options )
+IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadState ), m_Options( options ), m_SecondsDownloading(0)
 {
     m_pDownloadInfo->m_Percentage = 0;
 }

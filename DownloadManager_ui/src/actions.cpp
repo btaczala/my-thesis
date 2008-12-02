@@ -56,7 +56,6 @@ Actions::Actions()
 
     m_ActionContainer[scHideCurrentColumnText] = QActionShPtr( new QAction( scHideCurrentColumnText,NULL) );
 
-
 }
 QAction* Actions::getAction(const QString &actionName) 
 {
