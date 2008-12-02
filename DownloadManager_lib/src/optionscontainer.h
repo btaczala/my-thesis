@@ -19,9 +19,9 @@
  ***************************************************************************/
 #ifndef OPTIONSCONTAINER_H
 #define OPTIONSCONTAINER_H
-#include <string>
+
 #include <boost/any.hpp>
-#include <vector>
+#include <string>
 #include <map>
 
 //static const std::string scRS_USER_NAME = std::string("RS_username");

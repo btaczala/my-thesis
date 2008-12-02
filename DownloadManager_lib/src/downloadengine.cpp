@@ -9,8 +9,8 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include "downloadengine.h"
 #include <algorithm>
+#include "downloadengine.h"
 
 DownloadEngine::DownloadEngine(const std::string & engineName ) : m_EngineName(engineName)
 {
