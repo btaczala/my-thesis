@@ -245,10 +245,10 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 //             qDebug() << "readed bytes " << iBytes2;
             if( !m_apFile->isOpen())
             {
-                qDebug() << ("isClosed, open it");
+//                qDebug() << ("isClosed, open it");
                 if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
                 {
-                    qDebug()<<("ERROR '-_- "); //. 
+//                    qDebug()<<("ERROR '-_- "); //. 
                     // message = bad
                     // 
                     return ;
