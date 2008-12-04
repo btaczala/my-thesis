@@ -72,7 +72,6 @@ void FtpDownload::start()
     
     if (!m_apHost.get()->path().isEmpty())
         m_apFtpObj->cd(m_apHost.get()->path());
-    
 }
 
 void FtpDownload::stop()
