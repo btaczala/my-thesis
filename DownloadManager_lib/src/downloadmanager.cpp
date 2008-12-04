@@ -221,13 +221,12 @@ int DownloadManager::percentage()
 {
     DownloadListType::iterator it = m_DownloadList.begin(); 
     DownloadListType::iterator itEnd = m_DownloadList.end(); 
-    int count  = m_DownloadList.size(); 
-    unsigned int sum = 0 ; 
-    unsigned int total = 0;
+    qint64 sum = 0 ; 
+    qint64 total = 0;
     for ( it ; it != itEnd ;++it ) 
     {
-        sum += (*it)->getBytesDownloaded();
-        total += (*it)->fileSize();
+        sum += (*it)->downloadedBytes();
+        total += (*it)->totalBytes();
     }
     return sum = ((double)sum/(double)total) * 100 ; 
 }
@@ -235,13 +234,12 @@ void DownloadManager::connectWith(IDownload * pDownload)
 {
     //QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {
-    int pos = 0 ; 
     for ( unsigned int z = 0 ; z < m_DownloadList.size() ; ++z ) 
     {
         if ( m_DownloadList[z]->urlAddress() == url ) 
@@ -306,11 +304,11 @@ void DownloadManager::update()
     }
     else
     {
-        DownloadListType::iterator it = m_DownloadList.begin() ; 
+        DownloadListType::iterator it;
         DownloadListType::iterator itEnd = m_DownloadList.end() ;
-        IDownload *pDownload = NULL ;//it->get() ; 
-        int counter = 0 ; 
-        for ( it ; it!=itEnd ; ++it ) 
+        IDownload *pDownload = NULL;
+        
+        for ( it = m_DownloadList.begin() ; it!=itEnd ; ++it ) 
         {
             pDownload = it->get() ; 
             pDownload->stop() ; 

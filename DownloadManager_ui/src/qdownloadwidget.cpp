@@ -440,8 +440,10 @@ namespace DownloadWidgetDelegates
          
         IDownload *pDownload = a->m_pDownloadManager->downloadAt( iRow ) ;
         if ( pDownload ) 
-            progress = pDownload->GetProgress() ; 
-        
+        {
+            progress = pDownload->progress() ; 
+        //fixme! calculate progress here
+        }
         // getProgress will return current progress. 
         // m_Progress will be set like:QDownloadWidget
         /* MainWindows          DownloadManager             IDownload

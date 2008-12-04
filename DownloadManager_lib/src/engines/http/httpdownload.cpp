@@ -122,12 +122,12 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     qint64 bytes = m_HttpObj.bytesAvailable();
     m_readedBytes+=bytes;
     
-    unsigned int curFileSize = fileSize();
+    unsigned int curFileSize = totalBytes();
     
     int bytesDownloadedOverall = (curFileSize - total) > 0 ?  curFileSize - total : 0 ; 
-    setBytesDownloaded( done + bytesDownloadedOverall );
+    setDownloadedBytes( done + bytesDownloadedOverall );
     double dDone = done + bytesDownloadedOverall;
-    double dTotal = fileSize();
+    double dTotal = totalBytes();
     double dResTotal = dDone / dTotal;
     dResTotal *= 100;
     m_Progress = (int)dResTotal;

@@ -31,15 +31,19 @@
 struct DownloadState
 {
 public:
-    DownloadState() : m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0), m_State(STOPPED){};
-    typedef unsigned int UInt ; 
-    typedef unsigned long ULong ; 
-    UInt                    m_DownloadFileSize ; 
+    DownloadState() /*m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0), */
+    : m_State(STOPPED)
+    , m_DownloadedBytes(0)
+    , m_TotalBytes(0){};
+    qint64                  m_DownloadedBytes;
+    qint64                  m_TotalBytes;
+    /*UInt                    m_DownloadFileSize ; 
     UInt                    m_BytesDownloaded ; 
     int                     bytesReadCurrent;
     int                     bytesReadPreviously;
     unsigned long           m_bytesToRead ;
     unsigned long           m_Percentage ;  
+    */
     enum States
     {
         // ?: is it a proper state ? 
@@ -67,12 +71,8 @@ class IDownload : public QObject
         virtual void                        stop() = 0 ; // abort () // it's pause
         virtual void                        restart() = 0 ;
         DownloadState::States               state() const {return m_pDownloadInfo->m_State; };
-        //void                                SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
-        void                                setBytesDownloaded(unsigned int _bytes ){ m_pDownloadInfo->m_BytesDownloaded = _bytes; };
-        unsigned int                        getBytesDownloaded() const {    return m_pDownloadInfo->m_BytesDownloaded ;  };
-        unsigned int                        fileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
-        void                                setFileSize( const unsigned int & fileSize ) {  m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
-        unsigned int                        GetProgress() const;
+        qint64                              totalBytes() const { return m_pDownloadInfo->m_TotalBytes; };
+        qint64                              downloadedBytes() const { return m_pDownloadInfo->m_DownloadedBytes; };
         
         void                                setUrlAddress ( const std::string & urlAddrr ) ; 
         const std::string&                  urlAddress() const ; 
@@ -80,11 +80,17 @@ class IDownload : public QObject
         void                                setDestinationAddress ( const std::string & localAddress  ) ;
         const std::string                   error() ; 
         void                                setState(const DownloadState::States& _state, bool triggerEmit = false);
+        void                                emitStatusChanged(){ emit( statusChanged(m_pDownloadInfo->m_State));};
+        unsigned int                        progress() const;
     
     protected:
         void                                setFileName();
-        void                                calculateProgress( qint64 done, qint64 total );
-        
+        void                                calculateProgress( qint64 _done, qint64 _total ){ 
+                                                                m_pDownloadInfo->m_TotalBytes = _total;
+                                                                m_pDownloadInfo->m_DownloadedBytes = _done; };
+        void                                setTotalBytes( qint64 _total ){ m_pDownloadInfo->m_TotalBytes = _total; };
+        void                                setDownloadedBytes( qint64 _done ){ m_pDownloadInfo->m_DownloadedBytes = _done; };
+        void                                setError( const std::string& _err );        
     protected:
         
         std::string                         m_UrlAddress ; 
@@ -99,10 +105,10 @@ class IDownload : public QObject
         
     signals :
         //virtual void                        downloadStatus(const int & istate ) = 0;
-        virtual void                        bytesRead( int read, int howMany ) = 0 ; 
-        virtual void                        statusChanged( DownloadState::States status ) = 0 ;
-        virtual void                        downloadRate( const QString & dwnlRate) = 0 ; 
-        virtual void                        elapsedTime( unsigned int elapsedTime ) = 0 ; 
+        //virtual void                        bytesRead( int read, int howMany ) = 0 ; 
+        void                                statusChanged( DownloadState::States status );
+        //virtual void                        downloadRate( const QString & dwnlRate) = 0 ; 
+        //virtual void                        elapsedTime( unsigned int elapsedTime ) = 0 ; 
         
 };
 #endif //  IDOWNLOAD_H

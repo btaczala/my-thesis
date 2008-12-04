@@ -39,11 +39,19 @@
   * 
   */
  
+ namespace RsErrors
+{
+//<!-- E#5 -->
+static const char* err5= "Due to a violation of our terms of use, the file has been removed from the server";
+//<!-- E#2 -->    
+static const char* err2 = "The Account has been found, but the password is incorrect";
+}
 
 class QRapidshareDownload :  public IDownload
 {
 Q_OBJECT
  public:
+ 
 
      enum RS_State
      {
@@ -74,9 +82,9 @@ Q_OBJECT
  private:
     QRapidshareDownload( const QRapidshareDownload & _cpy ) ; // hide 
 
-    virtual void                        timerEvent(QTimerEvent *event); 
+    //virtual void                        timerEvent(QTimerEvent *event); 
     QString                             parseResponseAndGetNewUrl(const QString & resp);
-    int                                 parseResponseAndGetFileSize(const QString & resp);
+    qint64                              parseResponseAndGetFileSize(const QString & resp);
     QString                             parsePostReponseAndGetAddress(const QString & resp);
     void                                setUrlFileAddress(const QString & _addr ) ;
     void                                renameFile();
@@ -98,13 +106,8 @@ Q_OBJECT
     QString                             m_PathOnServer;
     QString                             m_RequestType;  
     QFile                               m_FileLog;
-    int                                 m_timerId;
-    qint64                              m_readedBytes;
-//     RSLogger                            m_Logger;
     QList<const char*>                  m_errorsList;
     RS_State                            m_rssmState;
-    static const int                    scSkipEmit = 100 ; 
-    int                                 m_emitCounter ; 
 
  private slots:
     void                                requestStarted(const int & idReq) ;
@@ -119,10 +122,10 @@ Q_OBJECT
     void                                readyRead ( const QHttpResponseHeader & resp );
  
 signals:
-    void                                statusChanged( DownloadState::States status );
+    //void                                statusChanged( DownloadState::States status );
     //void                                downloadStatus(const int & istate );
-    void                                downloadRate(const QString & dwnlRate);
-    void                                bytesRead( int read, int howMany ) ; 
-    void                                elapsedTime( unsigned int elapsedTime ) ; 
+    //void                                downloadRate(const QString & dwnlRate);
+    //void                                bytesRead( int read, int howMany ) ; 
+    //void                                elapsedTime( unsigned int elapsedTime ) ; 
  };
 #endif
