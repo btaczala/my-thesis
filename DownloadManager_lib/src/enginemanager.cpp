@@ -5,6 +5,7 @@
 #ifdef ENGINES_BUILT_IN
 #include "engines/rapidshare/qrapidsharedownload.h"
 #include "engines/http/httpdownload.h"
+#include "engines/ftp/ftpdownload.h"
 #endif
 #include <boost/bind.hpp>
 /////////////////////////////////////////////////
@@ -46,9 +47,17 @@ void EngineManager::loadEngines(const std::string &path)
     DownloadEngine::StringList slHttp;
     slHttp.push_back("http");
     
-    boost::shared_ptr<DownloadEngine> pRSEngineHttp ( new Engine<HttpDownload>("http"));
-    pRSEngineHttp->setPatterns(slHttp);
-    m_Engines[pRSEngineHttp->name()] = pRSEngineHttp;
+    boost::shared_ptr<DownloadEngine> pEngineHttp ( new Engine<HttpDownload>("http"));
+    pEngineHttp->setPatterns(slHttp);
+    m_Engines[pEngineHttp->name()] = pEngineHttp;
+    
+    DownloadEngine::StringList slFtp;
+    slFtp.push_back("ftp");
+    
+    boost::shared_ptr<DownloadEngine> pEngineFtp ( new Engine<FtpDownload>("ftp"));
+    pEngineFtp->setPatterns(slFtp);
+    m_Engines[pEngineFtp->name()] = pEngineFtp;
+    
     
     DownloadEngine::StringList sl;
     sl.push_back("rapidshare");

@@ -170,6 +170,8 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
         m_pDownloadInfo->m_State = DownloadState::DONE;
     }
     
+    m_timerId = startTimer(1000);
+    m_readedBytes = 0;
 }
 
 void HttpDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
@@ -192,7 +194,6 @@ void HttpDownload::done(const bool & error)
         emit statusChanged( m_pDownloadInfo->m_State );
        //killTimer(m_timerId);
     }
-    
 }
 
 void HttpDownload::authenticationRequired ( const QString & hostname, quint16 port, QAuthenticator *authenticator )
@@ -219,4 +220,10 @@ void HttpDownload::renameFile()
         QFile::rename(m_apFile->fileName(), tmp );
         qDebug() << tmp ;
     }
+}
+
+void HttpDownload::timerEvent(QTimerEvent *event)
+{
+    emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
+    m_readedBytes = 0;
 }

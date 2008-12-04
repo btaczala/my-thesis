@@ -20,6 +20,7 @@ SET( DownloadManager_SRCS
     src/engines/rapidshare/qrapidsharedownload.cpp
     src/engines/rapidshare/qrapidshareuser.cpp
     src/engines/http/httpdownload.cpp
+    src/engines/ftp/ftpdownload.cpp
 ) 
 SET( DownloadManager_HDRS
     src/downloadmanager.h
@@ -34,6 +35,7 @@ SET( DownloadManager_HDRS
     src/engines/rapidshare/qrapidsharedownload.h
     src/engines/rapidshare/qrapidshareuser.h
     src/engines/http/httpdownload.h
+    src/engines/ftp/ftpdownload.h
 )
 SET ( DownloadManager_MOC_HDRS 
     src/idownload.h
@@ -42,6 +44,7 @@ SET ( DownloadManager_MOC_HDRS
 SET ( PLUGINS_MOC_HDRS 
     src/engines/rapidshare/qrapidsharedownload.h
     src/engines/http/httpdownload.h
+    src/engines/ftp/ftpdownload.h
 )
 
 QT4_WRAP_CPP(QT_MOC_SRC ${DownloadManager_MOC_HDRS} ${PLUGINS_MOC_HDRS} )

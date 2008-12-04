@@ -33,7 +33,6 @@ int main(int argc, char *argv[])
 	QApplication::setStyle(new QCleanlooksStyle);
 	#endif
 	QApplication app(argc, argv);
-    
     QCoreApplication::setOrganizationName("Yattaman");
     QCoreApplication::setApplicationName("QRapidshare");
     //Proxy::init() ; 
