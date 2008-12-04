@@ -33,8 +33,11 @@ int main(int argc, char *argv[])
 	QApplication::setStyle(new QCleanlooksStyle);
 	#endif
 	QApplication app(argc, argv);
-    QCoreApplication::setOrganizationName("Yattaman");
+    QCoreApplication::setOrganizationName("settings"); // this is no organization name, but name of settings folder. 
     QCoreApplication::setApplicationName("QRapidshare");
+    QSettings::setDefaultFormat( QSettings::IniFormat ) ; 
+    QString cp = QDir::currentPath() ;
+    QSettings::setPath( QSettings::IniFormat, QSettings::UserScope, cp);
     //Proxy::init() ; 
 	Q_INIT_RESOURCE(main_resources);
 	MainWindow window;

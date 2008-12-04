@@ -23,26 +23,9 @@
 
 #include <QString>
 #include <QDebug>
-#include "rslogger.h"
-#include "rscommon.h"
-class QRapidshareUser //: public ILogable
+class QRapidshareUser
 {
 public:
-	QRapidshareUser(const QString &userName, const QString &pass);
-	QRapidshareUser(const QRapidshareUser & _cpy);
-	QString	getUserName() const 
-	{
-		RSDM_LOG_FUNC ;
-		return ( m_apUserName );
-	};
-	QString	getUserPass() const 
-	{
-		RSDM_LOG_FUNC ;
-		return m_apUserPass;
-	};
-	QString					ComposeCookie();
-private:
-	QString					m_apUserName;
-	QString					m_apUserPass;
+	static const QString	ComposeCookie();
 };
 #endif

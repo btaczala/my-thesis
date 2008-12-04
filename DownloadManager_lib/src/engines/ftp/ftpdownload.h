@@ -74,7 +74,11 @@ signals:
     void                                statusChanged( DownloadState::States status );
     void                                downloadRate(const QString & dwnlRate);
     void                                bytesRead( int read, int howMany ) ; 
+<<<<<<< .mine
+    void                                elapsedTime( unsigned int elapsedTime ) ; 
+=======
     void                                elapsedTime( unsigned int elapsedTime ); 
+>>>>>>> .r183
 };
 
 #endif 

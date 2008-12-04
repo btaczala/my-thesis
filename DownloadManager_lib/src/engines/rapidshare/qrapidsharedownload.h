@@ -63,11 +63,6 @@ Q_OBJECT
     void                                start(); 
     void                                stop(); // abort () 
     void                                restart(); 
-    
-    void                                setUser(const QRapidshareUser & rsUser );
-    void                                setUser(const std::string& rsName,  const std::string& pass);   
-    void                                setRapidshareUser(const QRapidshareUser & _usr );
-    QRapidshareUser*                    getUser() const ;
  
     bool                                operator==( const QRapidshareDownload & _cmp );
 
@@ -95,7 +90,7 @@ Q_OBJECT
     QString                             m_DownloadServerHost ; 
     std::auto_ptr<QHttp>                m_apHttpObj;
     std::auto_ptr<QHttpRequestHeader>   m_apHttpRequestHeader;
-    std::auto_ptr<QRapidshareUser>      m_apRSUser;
+
     bool                                m_bIsPrepared;
     std::auto_ptr<QUrl>                 m_apFileUrl;
     std::auto_ptr<QFile>                m_apFile;

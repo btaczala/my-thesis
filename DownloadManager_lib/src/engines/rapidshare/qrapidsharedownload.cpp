@@ -12,7 +12,6 @@
 QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(options)
 , m_apHttpObj( new QHttp() )
 , m_apHttpRequestHeader(new QHttpRequestHeader() )
-, m_apRSUser(NULL)
 , m_apFileUrl( new QUrl() )
 , m_apFile(new QFile() )
 , m_timerId(0)
@@ -38,8 +37,8 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 
     if( m_Options )
     {
-        setUser(  boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginUsername )),
-                boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginPassword )));
+        //setUser(  boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginUsername )),
+                //boost::any_cast<std::string>( m_Options->option( SettingsValNames::scPluginPassword )));
     }
     else
         Q_ASSERT(false);
@@ -89,9 +88,10 @@ void QRapidshareDownload::start()
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
     m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
     m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
-    m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
-    m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; ru) Opera 8.50");
-    m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
+    m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie() );
+    m_apHttpRequestHeader->setValue("User-Agent", "User-Agent: Opera/9.62 (Windows NT 5.1; U; pl) Presto/2.1.1");
+    //m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
+    m_apHttpRequestHeader->setValue("User-Accept", "application/xhtml+voice+xml;version=1.2, application/x-xhtml+voice+xml;version=1.2, text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1");
     qDebug() << QString("First GET");
     qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
     m_apHttpObj->setHost(  m_apFileUrl->host() );
@@ -115,11 +115,13 @@ void QRapidshareDownload::restart()
 //     RSDM_LOG_FUNC ;
     //m_apHttpRequestHeader->removeValue(); // LENGTH REQUIRED ?? ;(
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
+    m_apHttpRequestHeader->setValue("User-Agent", "User-Agent: Opera/9.62 (Windows NT 5.1; U; pl) Presto/2.1.1");
     m_apHttpRequestHeader->setValue("Host", m_DownloadServerHost );
-    m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
-    m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
+    m_apHttpRequestHeader->setValue("User-Accept", "application/xhtml+voice+xml;version=1.2, application/x-xhtml+voice+xml;version=1.2, text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1");
+    
+    m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie() );
     m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
-    m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.5; Windows 98)");
+    m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
     int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY).value<int>();
     if ( content_length == 0 ) 
@@ -181,9 +183,17 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
         if( -1 == iBytes2 )
             qDebug()<<("ERROR while reading from Http stream ");
         QString decive ( buff ) ;
-        if( decive.contains("<!DOCTYPE"))
+        if( decive.contains("<!DOCTYPE") )
         {
             // this is still html. just do nothing 
+            return ; 
+        }
+        if ( decive.contains("<h1>Error</h1>" ) )
+        {
+            m_pDownloadInfo->m_State = DownloadState::FAILED;
+            m_Error = " Probably Password or Username are not correct ";
+            emit statusChanged( m_pDownloadInfo->m_State );
+            m_apHttpObj->abort();
             return ; 
         }
         m_rssmState = DOWNLOADING;
@@ -213,8 +223,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
     }
     if ( m_pDownloadInfo->m_State  == DownloadState::DOWNLOADING ) 
     {
-        //m_pDownloadInfo->m_FileInfo.m_FileSize = total ; 
-        // just past it to the file ! 
+        m_pDownloadInfo->m_DownloadFileSize = total ; 
         int bytesDownloadedOverall = (m_pDownloadInfo->m_DownloadFileSize - total) > 0 ?  m_pDownloadInfo->m_DownloadFileSize - total : 0 ; 
         m_pDownloadInfo->m_BytesDownloaded = done + bytesDownloadedOverall; 
         double dDone = m_pDownloadInfo->m_BytesDownloaded;
@@ -294,7 +303,30 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
     int iStatusCode = resp.statusCode(); 
     if( iStatusCode == 200 || iStatusCode == 301 || iStatusCode == 302 || iStatusCode == 303 || iStatusCode == 307 )
     {
-        ;
+        QString newUrl = resp.value("Location");
+        if ( !newUrl.isEmpty() )
+        {
+
+            m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
+            m_DownloadServerHost = QUrl(newUrl).host();
+
+            m_pDownloadInfo->m_State = DownloadState::DOWNLOADING ; 
+            m_apHttpRequestHeader->setRequest("GET",QUrl(newUrl).path() );
+            m_apHttpRequestHeader->setValue("User-Agent","Opera/9.62 (Windows NT 5.1; U; pl) Presto/2.1.1");
+            m_apHttpRequestHeader->setValue("Host",m_DownloadServerHost);
+            m_apHttpRequestHeader->setValue("Accept","Accept: application/xhtml+voice+xml;version=1.2, application/x-xhtml+voice+xml;version=1.2, text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1");
+            m_apHttpRequestHeader->setValue("Cookie",QRapidshareUser::ComposeCookie());
+            m_apHttpRequestHeader->setValue("Connection","Keep-Alive");
+            m_apHttpObj->setHost( m_DownloadServerHost );
+            m_apHttpObj->request( *( m_apHttpRequestHeader ));
+            m_pDownloadInfo->m_State = DownloadState::DOWNLOADING ; 
+            emit statusChanged( m_pDownloadInfo->m_State );
+            m_timerId = startTimer(1000);
+            m_readedBytes = 0; 
+
+            qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
+            LOG(QString("Starting download now!"));
+        }
     }
     else
         qDebug() << "Error response:"<< iStatusCode;
@@ -323,6 +355,7 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->removeValue("Cookie");
         m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
         m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
+        m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie() );
         m_apHttpRequestHeader->setValue("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-excel, ap//plication/vnd.ms-powerpoint, application/msword, application/x-shockwave-flash, */*" );
         m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress );
         qDebug() << "Second GET";       
@@ -353,7 +386,7 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->setRequest("POST", m_apFileUrl->path() );
         m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
         m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
-        m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
+        m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie() );
         m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
         m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
         int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY ).value<int>();
@@ -380,7 +413,7 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
         m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
         m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
-        m_apHttpRequestHeader->setValue("Cookie", m_apRSUser->ComposeCookie() );
+        m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie());
         m_apHttpRequestHeader->setValue("User-Agent", "Mozilla/4.0 (compatible; Synapse)");
         m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
         qDebug() << "First post"; 
@@ -531,16 +564,6 @@ QString QRapidshareDownload::parsePostReponseAndGetAddress( const QString & resp
     qDebug() << newUrl;
     return newUrl;
 }
-void QRapidshareDownload::setUser(const QRapidshareUser & rsUser)
-{
-//     RSDM_LOG_FUNC ;
-    m_apRSUser.reset(new QRapidshareUser(rsUser));  
-}
-void QRapidshareDownload::setUser(const std::string& rsName,  const std::string& rsPass)
-{
-//     RSDM_LOG_FUNC ;
-    setUser(QRapidshareUser(rsName.c_str(),rsPass.c_str()));
-}
 
 void QRapidshareDownload::timerEvent(QTimerEvent *event)
 {
@@ -561,10 +584,6 @@ const QString QRapidshareDownload::getFileDestination() const
     return m_qFileDestination ;
 };
 
-QRapidshareUser * QRapidshareDownload::getUser() const
-{
-    return m_apRSUser.get() ; 
-}
 
 const QString QRapidshareDownload::getDownloadHost() const
 {

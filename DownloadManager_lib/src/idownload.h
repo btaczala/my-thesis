@@ -77,6 +77,7 @@ class IDownload : public QObject
         const std::string&                  urlAddress() const ; 
         const std::string&                  destinationAddress() const ; 
         void                                setDestinationAddress ( const std::string & localAddress  ) ;
+        const std::string                   error() ; 
     protected:
         void                                setFileName();
     protected :
@@ -84,6 +85,7 @@ class IDownload : public QObject
         std::string                         m_UrlAddress ; 
         std::string                         m_FileDestination ;
         std::string                         m_FileName;
+        std::string                         m_Error ; 
         mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
         unsigned int                        m_SecondsDownloading ; 
