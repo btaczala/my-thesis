@@ -67,10 +67,11 @@ class IDownload : public QObject
         virtual void                        stop() = 0 ; // abort () // it's pause
         virtual void                        restart() = 0 ;
         DownloadState::States               state() const {return m_pDownloadInfo->m_State; };
-        void                                SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
-        unsigned int                        GetBytesDownloaded() const {    return m_pDownloadInfo->m_BytesDownloaded ;  };
-        unsigned int                        GetFileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
-        void                                SetFileSize( const unsigned int & fileSize ) {  m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
+        //void                                SetState(const DownloadState::States& _state ) { m_pDownloadInfo->m_State = _state; };
+        void                                setBytesDownloaded(unsigned int _bytes ){ m_pDownloadInfo->m_BytesDownloaded = _bytes; };
+        unsigned int                        getBytesDownloaded() const {    return m_pDownloadInfo->m_BytesDownloaded ;  };
+        unsigned int                        fileSize() const { return m_pDownloadInfo->m_DownloadFileSize; };
+        void                                setFileSize( const unsigned int & fileSize ) {  m_pDownloadInfo->m_DownloadFileSize = fileSize ; };
         unsigned int                        GetProgress() const;
         
         void                                setUrlAddress ( const std::string & urlAddrr ) ; 
@@ -78,17 +79,24 @@ class IDownload : public QObject
         const std::string&                  destinationAddress() const ; 
         void                                setDestinationAddress ( const std::string & localAddress  ) ;
         const std::string                   error() ; 
+        void                                setState(const DownloadState::States& _state, bool triggerEmit = false);
+    
     protected:
         void                                setFileName();
-    protected :
-        std::auto_ptr< DownloadState >      m_pDownloadInfo ; 
+        void                                calculateProgress( qint64 done, qint64 total );
+        
+    protected:
+        
         std::string                         m_UrlAddress ; 
         std::string                         m_FileDestination ;
         std::string                         m_FileName;
         std::string                         m_Error ; 
         mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
-        unsigned int                        m_SecondsDownloading ; 
+        unsigned int                        m_SecondsDownloading ;
+    private:
+        std::auto_ptr< DownloadState >      m_pDownloadInfo ;
+        
     signals :
         //virtual void                        downloadStatus(const int & istate ) = 0;
         virtual void                        bytesRead( int read, int howMany ) = 0 ; 

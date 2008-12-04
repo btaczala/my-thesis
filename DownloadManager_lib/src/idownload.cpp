@@ -75,3 +75,10 @@ void IDownload::setFileName()
     tmp = tmp.right(tmp.length() -tmp.lastIndexOf("/") - 1);
     m_FileName = tmp.toStdString();
 }
+
+void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
+{
+     m_pDownloadInfo->m_State = _state;
+     emit( statusChanged(_state) );
+}
+

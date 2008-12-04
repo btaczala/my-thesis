@@ -98,7 +98,7 @@ void DownloadManager::stopDownload(const std::string & urlAddress)
     if ( state == DownloadState::INIT || state == DownloadState::DOWNLOADING ) 
     {
         state = DownloadState::PAUSED ; 
-        pDownload->SetState(DownloadState::PAUSED);
+        pDownload->setState(DownloadState::PAUSED);
         pDownload->stop();
         //m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
         decreaseNumberOfCurrentDownloads();
@@ -127,7 +127,7 @@ void DownloadManager::startPause(const std::string & urlAddress)
     if ( state == DownloadState::INIT || state == DownloadState::DOWNLOADING ) 
     {
         state = DownloadState::PAUSED ; 
-        pDownload->SetState(DownloadState::PAUSED);
+        pDownload->setState(DownloadState::PAUSED);
         //decreaseNumberOfCurrentDownloads();
         pDownload->stop();
         //m_DownloadManagerSettings.m_CurrentDownloadingFiles--;
@@ -226,8 +226,8 @@ int DownloadManager::percentage()
     unsigned int total = 0;
     for ( it ; it != itEnd ;++it ) 
     {
-        sum += (*it)->GetBytesDownloaded();
-        total += (*it)->GetFileSize();
+        sum += (*it)->getBytesDownloaded();
+        total += (*it)->fileSize();
     }
     return sum = ((double)sum/(double)total) * 100 ; 
 }

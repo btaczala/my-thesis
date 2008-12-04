@@ -59,8 +59,7 @@ void HttpDownload::start()
     
     m_apFile->setFileName( tmpName );
     qDebug() << tmpName;
-    m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
-    emit statusChanged( m_pDownloadInfo->m_State );
+    setState( DownloadState::DOWNLOADING, true );
     QUrl url(m_UrlAddress.c_str());
 	
     m_apHttpRequestHeader->setRequest("GET", url.path() );
@@ -74,13 +73,14 @@ void HttpDownload::start()
 
 void HttpDownload::stop()
 {
-	if( m_pDownloadInfo->m_State  == DownloadState::STOPPED
-       || m_pDownloadInfo->m_State  == DownloadState::DONE
-       || m_pDownloadInfo->m_State  == DownloadState::FAILED)
+    DownloadState::States curState = state();
+	if( curState  == DownloadState::STOPPED
+       || curState  == DownloadState::DONE
+       || curState  == DownloadState::FAILED)
         return ; 
-    m_pDownloadInfo->m_State  = DownloadState::PAUSED ;
+    
+    setState( DownloadState::PAUSED, true );
     m_HttpObj.abort();
-    emit statusChanged( m_pDownloadInfo->m_State );
 }
 void HttpDownload::restart()
 {
@@ -122,17 +122,21 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     qint64 bytes = m_HttpObj.bytesAvailable();
     m_readedBytes+=bytes;
     
-    int bytesDownloadedOverall = (m_pDownloadInfo->m_DownloadFileSize - total) > 0 ?  m_pDownloadInfo->m_DownloadFileSize - total : 0 ; 
-    m_pDownloadInfo->m_BytesDownloaded = done + bytesDownloadedOverall; 
-    double dDone = m_pDownloadInfo->m_BytesDownloaded;
-    double dTotal = m_pDownloadInfo->m_DownloadFileSize;
+    unsigned int curFileSize = fileSize();
+    
+    int bytesDownloadedOverall = (curFileSize - total) > 0 ?  curFileSize - total : 0 ; 
+    setBytesDownloaded( done + bytesDownloadedOverall );
+    double dDone = done + bytesDownloadedOverall;
+    double dTotal = fileSize();
     double dResTotal = dDone / dTotal;
     dResTotal *= 100;
     m_Progress = (int)dResTotal;
     qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
     emit bytesRead(dDone,dTotal) ;
-    m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
-    m_pDownloadInfo->bytesReadCurrent = done ; 
+    
+    //FIXME: calculateProgress();
+    //m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
+    //m_pDownloadInfo->bytesReadCurrent = done ; 
     buff = new char[bytes];
     iBytes2 = m_HttpObj.read(buff, bytes);
     if ( -1 == iBytes2)
@@ -167,7 +171,7 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     
     if( done == total ) 
     {
-        m_pDownloadInfo->m_State = DownloadState::DONE;
+        setState(DownloadState::DONE );
     }
     
     m_timerId = startTimer(1000);
@@ -187,11 +191,11 @@ void HttpDownload::done(const bool & error)
         return ;
     }
     
-    if( m_pDownloadInfo->m_State == DownloadState::DONE )
+    if( state() == DownloadState::DONE )
     {   
         m_apFile->close();
         renameFile();
-        emit statusChanged( m_pDownloadInfo->m_State );
+        emit statusChanged( state() );
        //killTimer(m_timerId);
     }
 }

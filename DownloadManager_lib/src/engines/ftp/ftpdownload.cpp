@@ -50,9 +50,9 @@ void FtpDownload::start()
      if (!m_apHost.get()->isValid() || m_apHost.get()->scheme().toLower() != QLatin1String("ftp"))
         return;
     
-    //get from options and set passive connection
-    m_pDownloadInfo->m_State = DownloadState::INIT;
-    emit( statusChanged( DownloadState::INIT ));
+    //get from options and set passive connection    m_pDownloadInfo->m_State = DownloadState::INIT;
+
+    setState( DownloadState::INIT, true );
     
     m_apFtpObj->connectToHost(m_apHost.get()->host());
     
@@ -82,8 +82,7 @@ void FtpDownload::ftpCommandFinished ( int id, bool error )
         }
         else
         {
-            m_pDownloadInfo->m_State = DownloadState::FAILED;
-            emit( m_pDownloadInfo->m_State );
+            setState( DownloadState::FAILED, true );
             ftpDisconect();
         }
         return;
@@ -143,13 +142,12 @@ void FtpDownload::ftpReadyRead ()
     qDebug() << "readyRead";
 }
 
-void FtpDownload::ftpStateChanged ( int state )
+void FtpDownload::ftpStateChanged ( int _ftpstate )
 {
     qDebug() << "stateChanged";
-    if(( m_pDownloadInfo->m_State != DownloadState::DONE ) && ( state == QFtp::Unconnected ))
+    if(( state() != DownloadState::DONE ) && ( _ftpstate == QFtp::Unconnected ))
     {
-        m_pDownloadInfo->m_State = DownloadState::FAILED;
-        emit( m_pDownloadInfo->m_State );
+        setState( DownloadState::FAILED, true );
     }
 }
 
@@ -177,14 +175,12 @@ void FtpDownload::beginDownload()
 {
     if( m_apFile->open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
-        emit( m_pDownloadInfo->m_State );
+        setState( DownloadState::DOWNLOADING, true );
         m_apFtpObj.get()->get(m_FileName.c_str(), m_apFile.get());
     }
     else
     {
-        m_pDownloadInfo->m_State = DownloadState::FAILED;
-        emit( m_pDownloadInfo->m_State );
+       setState(DownloadState::FAILED, true );
         ftpDisconect();
     }
 }
@@ -212,7 +208,7 @@ void FtpDownload::ftpLogin()
 void FtpDownload::makeCdOrDownload()
 {
     //download launch 2 because user should be logged in first
-    if(  m_pDownloadInfo->m_State == DownloadState::DOWNLOADING )
+    if( state() == DownloadState::DOWNLOADING )
     {
         beginDownload();
         return;

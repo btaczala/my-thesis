@@ -82,9 +82,7 @@ void QRapidshareDownload::start()
     }
     m_rssmState = GET_FIRST;
     // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
-    m_pDownloadInfo->m_State = DownloadState::INIT;
-    emit statusChanged( m_pDownloadInfo->m_State );
-
+    setState( DownloadState::INIT, true );
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
     m_apHttpRequestHeader->setValue("Host",  m_apFileUrl->host() );
     m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
@@ -101,13 +99,14 @@ void QRapidshareDownload::start()
 void QRapidshareDownload::stop()
 {
 //     RSDM_LOG_FUNC ;
-    if( m_pDownloadInfo->m_State  == DownloadState::STOPPED
-        || m_pDownloadInfo->m_State  == DownloadState::DONE
-        || m_pDownloadInfo->m_State  == DownloadState::FAILED)
-        return ; 
-    m_pDownloadInfo->m_State  = DownloadState::PAUSED ;
+    DownloadState::States curState = state();
+    if( curState == DownloadState::STOPPED
+        || curState  == DownloadState::DONE
+        ||curState  == DownloadState::FAILED)
+            return ; 
+    
+    setState( DownloadState::PAUSED, true );
     m_apHttpObj->abort();
-    emit statusChanged( m_pDownloadInfo->m_State );
 }
 
 void QRapidshareDownload::restart()
@@ -120,7 +119,7 @@ void QRapidshareDownload::restart()
     m_apHttpRequestHeader->setValue("User-Accept", "application/xhtml+voice+xml;version=1.2, application/x-xhtml+voice+xml;version=1.2, text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1");
     
     m_apHttpRequestHeader->setValue("Cookie", QRapidshareUser::ComposeCookie() );
-    m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(m_pDownloadInfo->m_BytesDownloaded)+ "-" );
+    m_apHttpRequestHeader->setValue("Range", "bytes=" + QString::number(getBytesDownloaded())+ "-" );
     m_apHttpRequestHeader->setValue("Connection", "Keep-Alive");
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
     int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY).value<int>();
@@ -190,19 +189,17 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
         }
         if ( decive.contains("<h1>Error</h1>" ) )
         {
-            m_pDownloadInfo->m_State = DownloadState::FAILED;
+            setState( DownloadState::FAILED, true );
             m_Error = " Probably Password or Username are not correct ";
-            emit statusChanged( m_pDownloadInfo->m_State );
             m_apHttpObj->abort();
             return ; 
         }
         m_rssmState = DOWNLOADING;
-        m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
-        emit statusChanged( m_pDownloadInfo->m_State ) ; 
+        setState( DownloadState::DOWNLOADING, true );  
         m_timerId = startTimer(1000);
         m_readedBytes = 0;
     }
-    if( m_pDownloadInfo->m_State == DownloadState::PAUSED )
+    if( state() == DownloadState::PAUSED )
     {
         if(m_apFile.get() !=NULL)
         {
@@ -214,15 +211,16 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
                     qDebug() << "UnSuccessfull opening file " ; 
                     return ; 
                 }
-                m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
-                emit statusChanged( m_pDownloadInfo->m_State );
+                setState( DownloadState::DOWNLOADING, true );
                 m_timerId = startTimer(1000);
                 m_readedBytes = 0; 
             }
         }
     }
-    if ( m_pDownloadInfo->m_State  == DownloadState::DOWNLOADING ) 
+    if ( state()  == DownloadState::DOWNLOADING ) 
     {
+        /*
+        //fixme: calculateProgress()
         m_pDownloadInfo->m_DownloadFileSize = total ; 
         int bytesDownloadedOverall = (m_pDownloadInfo->m_DownloadFileSize - total) > 0 ?  m_pDownloadInfo->m_DownloadFileSize - total : 0 ; 
         m_pDownloadInfo->m_BytesDownloaded = done + bytesDownloadedOverall; 
@@ -241,6 +239,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
             m_emitCounter++;
         m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
         m_pDownloadInfo->bytesReadCurrent = done ; 
+        */
         if ( buff == NULL ) 
         {
             buff = new char[bytes];
@@ -280,7 +279,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 
     if( done == total &&  m_rssmState ==  DOWNLOADING ) 
     {
-        m_pDownloadInfo->m_State = DownloadState::DONE;
+        setState( DownloadState::DONE );
         m_rssmState = FINISHED;
     }
 }
@@ -310,7 +309,6 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
             m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
             m_DownloadServerHost = QUrl(newUrl).host();
 
-            m_pDownloadInfo->m_State = DownloadState::DOWNLOADING ; 
             m_apHttpRequestHeader->setRequest("GET",QUrl(newUrl).path() );
             m_apHttpRequestHeader->setValue("User-Agent","Opera/9.62 (Windows NT 5.1; U; pl) Presto/2.1.1");
             m_apHttpRequestHeader->setValue("Host",m_DownloadServerHost);
@@ -319,8 +317,7 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
             m_apHttpRequestHeader->setValue("Connection","Keep-Alive");
             m_apHttpObj->setHost( m_DownloadServerHost );
             m_apHttpObj->request( *( m_apHttpRequestHeader ));
-            m_pDownloadInfo->m_State = DownloadState::DOWNLOADING ; 
-            emit statusChanged( m_pDownloadInfo->m_State );
+            setState( DownloadState::DOWNLOADING , true );
             m_timerId = startTimer(1000);
             m_readedBytes = 0; 
 
@@ -346,8 +343,7 @@ void QRapidshareDownload::done(const bool & error)
         
         if( checkForErrors( aa ))
         {
-            m_pDownloadInfo->m_State = DownloadState::FAILED;
-            emit statusChanged( m_pDownloadInfo->m_State );
+            setState( DownloadState::FAILED, true );
             return;
         }
 
@@ -371,16 +367,18 @@ void QRapidshareDownload::done(const bool & error)
         QString newUrl = aa;
         newUrl = parseResponseAndGetNewUrl( newUrl );
         int iFileSize = parseResponseAndGetFileSize( aa ) ;
-        m_pDownloadInfo->m_DownloadFileSize = iFileSize ; 
+        setFileSize( iFileSize );
         if(newUrl.isEmpty() )
         {
             qDebug()<<("Could not find file on server");
-            m_pDownloadInfo->m_State = DownloadState::FAILED;
-            emit statusChanged( m_pDownloadInfo->m_State );
+            setState( DownloadState::FAILED, true );
             return ;
         }
         setUrlFileAddress( newUrl );
-        emit statusChanged( m_pDownloadInfo->m_State );
+       
+         //fixme: status changed here ?
+        emit statusChanged( state() );
+        
         m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
         m_DownloadServerHost = QUrl(newUrl).host();
         m_apHttpRequestHeader->setRequest("POST", m_apFileUrl->path() );
@@ -408,7 +406,7 @@ void QRapidshareDownload::done(const bool & error)
         
         setUrlFileAddress(newUrlpath);
         //FIXME:
-        emit statusChanged( m_pDownloadInfo->m_State );
+        emit statusChanged( state() );
         m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
         m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
         m_apHttpRequestHeader->setValue("Host", m_apFileUrl->host() );
@@ -424,14 +422,14 @@ void QRapidshareDownload::done(const bool & error)
         m_timerId = startTimer(1000);
         m_readedBytes = 0;
     }
-    else if( m_pDownloadInfo->m_State == DownloadState::DONE )
+    else if( state() == DownloadState::DONE )
     {   
         m_apFile->close();
         renameFile();
-        emit statusChanged( m_pDownloadInfo->m_State );
+        emit statusChanged( state() );
         killTimer(m_timerId);
     }
-    else if( m_pDownloadInfo->m_State == DownloadState::PAUSED ) 
+    else if( state() == DownloadState::PAUSED ) 
     {
         QByteArray aa = m_apHttpObj->readAll() ;
         QString newUrlpath = parsePostReponseAndGetAddress( QString( aa ) );
