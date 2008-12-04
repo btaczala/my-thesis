@@ -79,7 +79,6 @@ static const QString scRsdm_SettingsDownloadListHost = QString( "Download_list/%
 #ifndef LOG_FUNC_TO_OUT
 #define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
 
-
 namespace RsErrors
 {
 //<!-- E#5 -->

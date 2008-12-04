@@ -34,6 +34,11 @@ class FtpDownload : public IDownload
 {
 Q_OBJECT
 public:
+
+    enum FtpState
+    {
+        
+    };
     
     // Ctors:
     FtpDownload( OptionsContainer* options );
@@ -52,6 +57,10 @@ private:
     virtual void                        timerEvent(QTimerEvent *event);
     void                                ftpDisconect();
     void                                setConnection();
+    void                                beginDownload();
+    void                                ftpLogin();
+    void                                makeCdOrDownload();
+    
 private:
     QString                             m_DownloadServerHost ;
     std::auto_ptr<QFtp>                 m_apFtpObj;
@@ -59,6 +68,8 @@ private:
     std::auto_ptr<QUrl>                 m_apHost;
     qint64                              m_readedBytes;
     int                                 m_timerId;
+    QString                             m_user;
+    QString                             m_pass;
     
     private slots:
     void ftpCommandFinished ( int id, bool error );
@@ -73,12 +84,8 @@ private:
 signals:
     void                                statusChanged( DownloadState::States status );
     void                                downloadRate(const QString & dwnlRate);
-    void                                bytesRead( int read, int howMany ) ; 
-<<<<<<< .mine
-    void                                elapsedTime( unsigned int elapsedTime ) ; 
-=======
+    void                                bytesRead( int read, int howMany ) ;           
     void                                elapsedTime( unsigned int elapsedTime ); 
->>>>>>> .r183
 };
 
 #endif 

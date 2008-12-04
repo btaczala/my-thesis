@@ -12,6 +12,8 @@
 #include "ftpdownload.h"
 #include "optionscontainer.h"
 
+#include <rslogger.h>
+
 FtpDownload::FtpDownload( OptionsContainer* options ):IDownload( options )
 , m_apFtpObj( new QFtp() )
 , m_apFile( new QFile() )
@@ -29,14 +31,13 @@ void FtpDownload::setConnection()
     connect(m_apFtpObj.get() , SIGNAL(commandFinished(int, bool)),
             this, SLOT(ftpCommandFinished(int, bool)));     
     connect(m_apFtpObj.get() , SIGNAL(dataTransferProgress(qint64, qint64)),
-            this, SLOT(updateDataTransferProgress(qint64, qint64)));
+            this, SLOT(ftpDataTransferProgress(qint64, qint64)));
     connect(m_apFtpObj.get(), SIGNAL(done(bool)), SLOT(ftpDone(bool)));
+    connect(m_apFtpObj.get(), SIGNAL( stateChanged(int)), SLOT(ftpStateChanged(int)));
 }
 
 void FtpDownload::start()
 {
-    //m_apFtpObj.reset( new QFtp() );
-    //get host
     QString tmpName( m_FileDestination.c_str() );
     tmpName += "/";
     tmpName += m_FileName.c_str();
@@ -50,29 +51,12 @@ void FtpDownload::start()
         return;
     
     //get from options and set passive connection
+    m_pDownloadInfo->m_State = DownloadState::INIT;
+    emit( statusChanged( DownloadState::INIT ));
+    
     m_apFtpObj->connectToHost(m_apHost.get()->host());
-    QString user, pass;
     
-    if( m_Options )
-    {
-        user = QString::fromStdString(boost::any_cast<std::string>( m_Options->option( "username" )).c_str());
-        pass = QString::fromStdString(boost::any_cast<std::string>( m_Options->option( "password" )).c_str());
     }
-    
-    if( user.isEmpty() || pass.isEmpty())
-    {
-        if (!m_apHost.get()->userName().isEmpty())
-        {
-            user = QUrl::fromPercentEncoding( m_apHost.get()->userName().toLatin1());
-            pass = m_apHost.get()->password();
-        }
-    }
-    
-    m_apFtpObj->login( user , pass );
-    
-    if (!m_apHost.get()->path().isEmpty())
-        m_apFtpObj->cd(m_apHost.get()->path());
-}
 
 void FtpDownload::stop()
 {
@@ -87,15 +71,60 @@ void FtpDownload::restart()
 void FtpDownload::ftpCommandFinished ( int id, bool error )
 {
     qDebug() << "commandFinished";
+    if( error )
+    {
+        qDebug() << "curCmd:"<< m_apFtpObj->currentCommand() << " failed";
+        qDebug() << m_apFtpObj->errorString();
+       
+        if( m_apFtpObj->currentCommand() == QFtp::Cd )
+        {
+            ftpLogin();
+        }
+        else
+        {
+            m_pDownloadInfo->m_State = DownloadState::FAILED;
+            emit( m_pDownloadInfo->m_State );
+            ftpDisconect();
+        }
+        return;
+    }
+    
+    switch( m_apFtpObj->currentCommand() )
+	{
+        case QFtp::ConnectToHost:
+        case QFtp::Login:
+        {
+            makeCdOrDownload();
+            break;
+        }
+        
+        case QFtp::Cd:
+        {
+            qDebug() << "cd";
+            beginDownload();
+            break;
+        }
+        case QFtp::Get:
+        {
+            qDebug() << "download finished";
+            ftpDisconect();
+        }
+        default:
+        {
+            break;
+        }
+    }
 }
 
 void FtpDownload::ftpCommandStarted ( int id )
 {
     qDebug() << "commandStarted";
 }
+
 void FtpDownload::ftpDataTransferProgress ( qint64 done, qint64 total )
 {
-    qDebug() << "dataTransferProgress";
+    LOG(QString("dataTransferProgress %1 of %2").arg(done).arg(total));
+    emit bytesRead(done,total);
 }
 void FtpDownload::ftpDone ( bool error )
 {
@@ -117,6 +146,11 @@ void FtpDownload::ftpReadyRead ()
 void FtpDownload::ftpStateChanged ( int state )
 {
     qDebug() << "stateChanged";
+    if(( m_pDownloadInfo->m_State != DownloadState::DONE ) && ( state == QFtp::Unconnected ))
+    {
+        m_pDownloadInfo->m_State = DownloadState::FAILED;
+        emit( m_pDownloadInfo->m_State );
+    }
 }
 
 void FtpDownload::ftpDisconect()
@@ -125,13 +159,74 @@ void FtpDownload::ftpDisconect()
     {
         qDebug() << "abort and close connection";
         m_apFtpObj->abort();
-        //m_apFtpObj->deleteLater();
-        //m_apFtpObj.reset( NULL );
     }
+    m_apFile->close();
 }
 
 void FtpDownload::timerEvent(QTimerEvent *event)
 {
 
+}
+
+void FtpDownload::renameFile()
+{
+
+}
+
+void FtpDownload::beginDownload()
+{
+    if( m_apFile->open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        m_pDownloadInfo->m_State = DownloadState::DOWNLOADING;
+        emit( m_pDownloadInfo->m_State );
+        m_apFtpObj.get()->get(m_FileName.c_str(), m_apFile.get());
+    }
+    else
+    {
+        m_pDownloadInfo->m_State = DownloadState::FAILED;
+        emit( m_pDownloadInfo->m_State );
+        ftpDisconect();
+    }
+}
+
+void FtpDownload::ftpLogin()
+{
+    if( m_Options )
+    {
+        m_user = QString::fromStdString(boost::any_cast<std::string>( m_Options->option( "username" )).c_str());
+        m_pass = QString::fromStdString(boost::any_cast<std::string>( m_Options->option( "password" )).c_str());
+    }
+    
+    if( m_user.isEmpty() || m_pass.isEmpty())
+    {
+        if (!m_apHost.get()->userName().isEmpty())
+        {
+            m_user = QUrl::fromPercentEncoding( m_apHost.get()->userName().toLatin1());
+            m_pass = m_apHost.get()->password();
+        }
+    }
+    if( !m_user.isEmpty() && !m_pass.isEmpty() )
+        m_apFtpObj->login( m_user , m_pass );
+}
+
+void FtpDownload::makeCdOrDownload()
+{
+    //download launch 2 because user should be logged in first
+    if(  m_pDownloadInfo->m_State == DownloadState::DOWNLOADING )
+    {
+        beginDownload();
+        return;
+    }
+    
+    if (!m_apHost.get()->path().isEmpty())
+    {
+        QString tmp( m_apHost.get()->path());
+        tmp = tmp.left( tmp.lastIndexOf("/"));
+        m_apFtpObj->cd( tmp );
+    }
+    else
+    {
+        beginDownload();
+    }
 }
 

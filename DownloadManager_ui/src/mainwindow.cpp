@@ -154,12 +154,15 @@ void MainWindow::keyPressEvent(QKeyEvent *event )
     {
         //m_DownloadWidget->addDownload( "http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath() );
         //m_DownloadWidget->addDownload("http://download.kde.org/stable/4.1.3/src/kdeaccessibility-4.1.3.tar.bz2",QDir::homePath());
-        QClipboard *clipboard = QApplication::clipboard();
+        m_DownloadWidget->addDownload("ftp://lansberg@lansberg.webd.pl/public_html/pinio/LeSeptiemeReve_vs_Pinio_-_b2b_promomix_15.11.2007[sui-side_com].MP3",
+                                        QDir::homePath());
+       /* QClipboard *clipboard = QApplication::clipboard();
         QString text = clipboard->text(QClipboard::Clipboard);
         QStringList urls = text.split( QRegExp("\\s+") );
         Q_FOREACH(QString one, urls ) 
         {
             m_DownloadWidget->addDownload( one, Proxy::settings()->value("DefaultDownloadDirectory", Settings::NOSUBGROUP ).value<QString>() );
         }
+        */
     }
 }
