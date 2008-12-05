@@ -100,15 +100,15 @@ namespace server_settings_page
         passwordLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addSpacing(25);
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
         layout->addWidget(enginesCombo);
-        layout->addSpacing(20);
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
         layout->addLayout(downloadsLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addWidget(credentialsCheck);
-        layout->addSpacing(6);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets/2);
         layout->addLayout(userLayout);
-        layout->addSpacing(6);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets/2);
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);

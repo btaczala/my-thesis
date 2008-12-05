@@ -34,8 +34,6 @@
 #include <rslogger.h>
 #include <downloadmanager.h>
 
-// const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
-
 QDownloadWidget::QDownloadWidget(QWidget * parent) 
 : QTreeWidget(parent )
 , m_pContextMenu( new QMenu() )
@@ -53,27 +51,6 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setAlternatingRowColors( true );
     setRootIsDecorated( false );
-
-
-
-    /*
-    QTreeWidgetItem* item = new QTreeWidgetItem();
-
-    QTreeWidgetItem* item = new QTreeWidgetItem(StandardItem);
-
-    item->setText(0, "movie.avi");
-    item->setIcon(0, itemIcon);
-    item->setText(4, "Downloading");
-    item->setData(0, Qt::UserRole, QVariant(false));
-    addTopLevelItem(item);
-
-    QTreeWidgetItem* item1 = new QTreeWidgetItem(StandardItem);
-    item1->setText(0, "music.mp3");
-    item1->setIcon(0, itemIcon);
-    item1->setText(4, "Downloading");
-    item1->setData(0, Qt::UserRole, QVariant(false));
-    addTopLevelItem(item1);
-    */
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
@@ -103,21 +80,16 @@ QDownloadWidget::~QDownloadWidget()
 }
 void QDownloadWidget::InitializeColumns()
 {
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnId, tr("id"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnPath,tr("Path"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownload,tr("Download"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnElapsedTime,tr("Elapsed Time"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnEstimatedTime,tr("Estimated Time"),true) );
-    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownloadRate,tr("Download Rate"),true) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnId, tr("id"), true, 220) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnPath,tr("Path")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnFileSize,tr("File size")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnProgress,tr("Progress")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownload,tr("Download")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnElapsedTime,tr("Elapsed Time")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnEstimatedTime,tr("Estimated Time")) );
+    m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnDownloadRate,tr("Download Rate")) );
 
-    // Proxy::settings()->value(QString, context).value<QString>() 
     QStringList headers;
-
-    //QSettings setts("Yattaman", "QDownloadManager");
-
-    //QString columns = setts.value(QDownloadWidgetColumnInfo::settingsName).value<QString>();
     
     QString columns = Proxy::settings()->value( SettingsValNames::scColumnsInfo, Settings::UI).value<QString>();
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
@@ -140,15 +112,14 @@ void QDownloadWidget::ReloadColumns(bool readSettings)
 {
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
-        setColumnHidden(i->getId(), !(i->isVisible()));
+        header()->resizeSection(i->getId(), i->getWidth());
 
-        setColumnWidth(i->getId(), 100);
+        setColumnHidden(i->getId(), !(i->isVisible()));        
     }
 }
 
 void QDownloadWidget::SaveColumns()
 {
-    //QSettings setts("Yattaman", "QDownloadManager");
     std::stringstream ss;
     for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
@@ -159,7 +130,6 @@ void QDownloadWidget::SaveColumns()
             ss << i->getName().toStdString();
     }
     Proxy::settings()->setValue( SettingsValNames::scColumnsInfo, QString( ss.str().c_str() ), Settings::UI ) ; 
-    //setts.setValue(QDownloadWidgetColumnInfo::settingsName, QString(ss.str().c_str()));
 }
 
 void QDownloadWidget::paintEvent( QPaintEvent *event )
@@ -175,7 +145,8 @@ void QDownloadWidget::StartPauseSelectedDownload()
     {
         LOG(QString(" Unable to get selected downloads" ) );
         return ; 
-    };
+    }
+
     int index = -1; 
     Q_FOREACH( QTreeWidgetItem * pItem, list ) 
     {
@@ -264,6 +235,7 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
     m_pContextMenu->popup(mapToGlobal(event->pos()));
     m_pContextMenu->exec();
 }
+
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
     
@@ -280,25 +252,30 @@ void QDownloadWidget::addDownload( const QString & url, const QString & fileDest
     pItem->setText(4, "");
     pItem->setSizeHint(0, QSize(100, 20));
     addTopLevelItem(pItem);
-};
+}
+
 void QDownloadWidget::statusChanged( int position, DownloadState::States status )
 {
     QTreeWidgetItem *pItem = topLevelItem(position);
     if ( pItem ) 
         pItem->setText(4,DownloadStateToString(status));
-};
+}
+
 void QDownloadWidget::downloadDoneAt( int position)
 {
     QWidget::update();
-};
+}
+
 void QDownloadWidget::downloadOnHold( int position)
 {
     QWidget::update();
-};
+}
+
 void QDownloadWidget::globalProgressChanged( int value)
 {
     QWidget::update();
-};
+}
+
 /*
 void QDownloadWidget::bytesReadAt(int position,int read,int total)
 {
@@ -367,6 +344,7 @@ void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
         pItem->setText(7,downloadRate);
 
 }
+
 void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
 {
     int seconds = timeElapsed % 60 ; 
@@ -513,6 +491,7 @@ namespace DownloadWidgetDelegates
         QApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOption, painter);
         painter->restore();
     }
+
     void DownloadItemDelegate::drawDetailedItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
         QSize size = QItemDelegate::sizeHint(option, index);
@@ -540,6 +519,5 @@ namespace DownloadWidgetDelegates
         widget->show();
     }
 }
-
 
 

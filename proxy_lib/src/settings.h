@@ -14,6 +14,9 @@ namespace SettingsValNames
     
     // UI NAMES
     static const char scColumnsInfo [] = "QDownloadWidgetColumnInfo" ;
+    static const char scMinimize2Tray[] = "minimize2tray";
+    static const char scClose2Tray[] = "close2tray";
+    static const char scConfirmAppExit[] = "confirmAppExit";
     // PLUGINS NAMES
     static const char scPluginUsername[] = "username";
     static const char scPluginPassword[] = "password";

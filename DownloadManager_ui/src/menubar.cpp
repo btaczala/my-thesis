@@ -42,4 +42,4 @@ MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_Settings
     addMenu(m_SettingsMenu);
     addMenu(m_HelpMenu);
 
-};
+}

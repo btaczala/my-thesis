@@ -23,6 +23,8 @@ class SystemDock : public QSystemTrayIcon
     Q_OBJECT 
 public:
     SystemDock( QObject *parent );
+signals:
+    void trayActivated(QSystemTrayIcon::ActivationReason reason);
 private slots : 
     void activated ( QSystemTrayIcon::ActivationReason reason ); 
 };

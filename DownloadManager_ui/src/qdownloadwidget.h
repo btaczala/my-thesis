@@ -36,7 +36,11 @@ class QDownloadHeaderView : public QHeaderView
 {
     Q_OBJECT
 public:
-    QDownloadHeaderView(QWidget* parent = 0): QHeaderView(Qt::Horizontal, parent){ ; }
+    QDownloadHeaderView(QWidget* parent = 0): QHeaderView(Qt::Horizontal, parent)
+    {
+        setResizeMode(QHeaderView::Interactive); 
+        setMovable(true);
+    }
 protected:
     virtual void contextMenuEvent ( QContextMenuEvent * event ) { emit contextMenu(event); }
 signals:
@@ -95,9 +99,9 @@ public:
     class QDownloadWidgetColumnInfo
     {
     public:
-        QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible) // has to be const when passing temporary object
+        QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible = true, int width = 100) // has to be const when passing temporary object
         {
-            _id = id; _colName = colName; _visible = visible;
+            _id = id; _colName = colName; _visible = visible; _width = width;
         }
         enum ColumnType // gcc does not support unnamed enums ( ? ) 
         {
@@ -113,14 +117,17 @@ public:
         int getId() const { return _id; }
         const QString& getName() const { return _colName; }
         bool isVisible() const { return _visible; }
-
+        int getWidth() const { return _width; }
+        
         void setVisible(bool visible) { _visible = visible; }
+        void setWidth(int width){ _width = width; }
 
         static const QString settingsName;
     private:
         int _id;
         QString _colName;
         bool _visible;
+        int _width;
     };
 
     typedef std::vector<QDownloadWidgetColumnInfo> ColumnCollection;

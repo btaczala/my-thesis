@@ -24,6 +24,12 @@
 #include <QTabWidget>
 #include <QBoxLayout>
 
+namespace settings_ui
+{
+    static const int SpaceBeforeFirstWidget = 25;
+    static const int SpaceBeetwenWidgets = 12;
+}
+
 class ISettingsPage : public QWidget
 {
     Q_OBJECT

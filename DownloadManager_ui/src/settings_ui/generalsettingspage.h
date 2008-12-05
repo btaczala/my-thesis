@@ -51,6 +51,10 @@ namespace general_settings_tabs
         Q_OBJECT
     public:
         ApplicationTab(QWidget* parent = 0);
+    public slots:
+        void onClose2TrayCheck(int state);
+        void onMinimize2TrayCheck(int state);
+        void onConfirmAppExit(int state);
     };
 }
 

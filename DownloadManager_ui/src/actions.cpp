@@ -38,7 +38,8 @@ const Actions* Actions::instance()
 {
     static std::auto_ptr<Actions> ret( new Actions() ) ; 
     return ret.get() ; 
-};
+}
+
 Actions::Actions()
 {
     // the actions will be orphans, 

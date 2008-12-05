@@ -84,9 +84,9 @@ namespace connection_settings_page
         downloadsLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addSpacing(25);
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
         layout->addLayout(bandwidthLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(downloadsLayout);
         layout->addStretch(1);
 
@@ -137,13 +137,13 @@ namespace connection_settings_page
         passwordLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addSpacing(25);
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
         layout->addWidget(useProxyCheck);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(serverLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(userLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);

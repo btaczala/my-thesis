@@ -103,13 +103,13 @@ namespace general_settings_tabs
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addSpacing(25);
         layout->addLayout(folderLayout);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addWidget(autoDownloadCheck);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addWidget(autoDownloadStartCheck);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addWidget(removeDownloadedCheck);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(delayLayout);
         layout->addStretch(1);
 
@@ -124,7 +124,7 @@ namespace general_settings_tabs
             return;
 
         m_defaultFolderEdit->setText(dir);
-        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir,Settings::NOSUBGROUP ) ; 
+        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir,Settings::NOSUBGROUP);
     }
 
     void DownloadTab::delayStateChanged(int state)
@@ -139,36 +139,65 @@ namespace general_settings_tabs
         QCheckBox* autostartCheck = new QCheckBox;
         autostartCheck->setText(tr("Start application on system startup"));
 
-        QCheckBox* minimizeCheck = new QCheckBox;
-        minimizeCheck->setText(tr("Move to tray icon when closed"));
+        bool minimize2tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
+        QCheckBox* minimize2TrayCheck = new QCheckBox;
+        minimize2TrayCheck->setText(tr("Move to tray icon when minimized"));
+        minimize2TrayCheck->setChecked(minimize2tray);
+        connect(minimize2TrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onMinimize2TrayCheck(int)));
 
-        QCheckBox* systemtrayCheck = new QCheckBox;
-        systemtrayCheck->setText(tr("Start in system tray area"));
+        bool close2tray = Proxy::settings()->value(SettingsValNames::scClose2Tray, Settings::NOSUBGROUP).value<bool>();
+        QCheckBox* close2TrayCheck = new QCheckBox;
+        close2TrayCheck->setText(tr("Move to tray icon when closed - Tip: Press Shift key to force exit"));
+        close2TrayCheck->setChecked(close2tray);
+        connect(close2TrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onClose2TrayCheck(int)));
 
-        QCheckBox* oneAppCheck = new QCheckBox;
-        oneAppCheck->setText(tr("Allow only 1 copy of application at a time"));
+        QCheckBox* startInTrayCheck = new QCheckBox;
+        startInTrayCheck->setText(tr("Start in system tray area"));
 
-        QCheckBox* confirmExitCheck = new QCheckBox;
-        confirmExitCheck->setText(tr("Confirm exit"));
+        QCheckBox* oneInstanceCheck = new QCheckBox;
+        oneInstanceCheck->setText(tr("Allow only 1 copy of application at a time"));
+
+        bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit, Settings::NOSUBGROUP).value<bool>();
+        QCheckBox* confirmAppExitCheck = new QCheckBox;
+        confirmAppExitCheck->setText(tr("Confirm application exit"));
+        confirmAppExitCheck->setChecked(confirmAppExit);
+        connect(confirmAppExitCheck, SIGNAL(stateChanged(int)), this, SLOT(onConfirmAppExit(int)));
 
         QCheckBox* confirmDeleteCheck = new QCheckBox;
         confirmDeleteCheck->setText(tr("Confirm item delete"));
 
         QVBoxLayout* layout = new QVBoxLayout;
-        layout->addSpacing(25);
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
         layout->addWidget(autostartCheck);
-        layout->addSpacing(12);
-        layout->addWidget(minimizeCheck);
-        layout->addSpacing(12);
-        layout->addWidget(systemtrayCheck);
-        layout->addSpacing(12);
-        layout->addWidget(oneAppCheck);
-        layout->addSpacing(12);
-        layout->addWidget(confirmExitCheck);
-        layout->addSpacing(12);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        layout->addWidget(minimize2TrayCheck);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        layout->addWidget(close2TrayCheck);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        layout->addWidget(startInTrayCheck);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        layout->addWidget(oneInstanceCheck);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        layout->addWidget(confirmAppExitCheck);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addWidget(confirmDeleteCheck);
         layout->addStretch(1);
 
         setLayout(layout);
+    }
+
+    void ApplicationTab::onClose2TrayCheck(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scClose2Tray, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
+    }
+
+    void ApplicationTab::onMinimize2TrayCheck(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scMinimize2Tray, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
+    }
+
+    void ApplicationTab::onConfirmAppExit(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scConfirmAppExit, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
     }
 }

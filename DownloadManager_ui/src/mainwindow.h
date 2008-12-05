@@ -22,6 +22,7 @@
 #include <QtGui>
 #include <QMainWindow>
 #include <memory>
+#include "systemdock.h"
 
 /**
 	@author Bartek Taczała <b@kontrasty.szczecin.pl>
@@ -36,22 +37,40 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
     public:
-        MainWindow(QWidget * parent = 0);
+        MainWindow(QWidget* parent = 0);
         ~MainWindow() throw() ; 
     public slots:
         void about();
         void showSettingsDialog();
+        void trayActivated(QSystemTrayIcon::ActivationReason reason);
+        void onClose();
+        void moveToTray();
+    signals:
+        void signalMoveToTray();
+
     protected:
         void InitilizeToolbarWidget();
         void InitilizeDownloadWidget();
         void InitializeWidgets();
         void InitializeMenuBar();
+        void InitializeTrayIcon();
+
+        bool confirmAppExit();
 
         void InitializeActions();
-        virtual void keyPressEvent(QKeyEvent *event);
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void keyReleaseEvent(QKeyEvent* event);
+        virtual void closeEvent(QCloseEvent* event);
+        virtual void changeEvent(QEvent* event);
+#ifdef WIN32
+        virtual bool winEvent(MSG* message, long* result );
+#endif
+
     private:
         std::auto_ptr<MenuBar>         m_MenuBar; 
         std::auto_ptr<QToolBar>        m_ToolbarWidget; 
         std::auto_ptr<QDownloadWidget> m_DownloadWidget;
+        std::auto_ptr<QSystemTrayIcon>      m_trayIcon;
+        bool m_forceExit;
 };
 #endif

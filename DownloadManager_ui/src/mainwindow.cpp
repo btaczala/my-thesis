@@ -25,16 +25,22 @@
 #include "actions.h"
 #include "settings_ui/settingsdialog.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <proxy.h>
 #include <settings.h>
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
-     m_ToolbarWidget(new QToolBar("Download Toolbar", this))
+    m_ToolbarWidget(new QToolBar("Download Toolbar", this)), m_trayIcon( new QSystemTrayIcon(this))
 {
+    m_forceExit = false;
+
     InitializeWidgets();
     InitializeActions();
-};
+}
 
 MainWindow::~MainWindow() throw()
 {
@@ -45,6 +51,7 @@ void MainWindow::InitializeWidgets()
     InitializeMenuBar();
     InitilizeToolbarWidget();
     InitilizeDownloadWidget();
+    InitializeTrayIcon();
 
     QRect rect = QApplication::desktop()->geometry();
 
@@ -88,9 +95,36 @@ void MainWindow::InitilizeDownloadWidget()
     setCentralWidget(m_DownloadWidget.get());
 }
 
+void MainWindow::InitializeTrayIcon()
+{
+    m_trayIcon->setIcon(QIcon(":/user.png"));
+}
+
+bool MainWindow::confirmAppExit()
+{
+    bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit, Settings::NOSUBGROUP).value<bool>();
+
+    if (!confirmAppExit)
+        return true;
+
+    QMessageBox msg(QMessageBox::Question, tr("Exit confirm"), tr("Are you sure you want to quit?"), 
+        QMessageBox::Yes | QMessageBox::No, this);
+
+    msg.setDefaultButton(QMessageBox::No);
+    
+    return (msg.exec() == QMessageBox::Yes);
+}
+
+void MainWindow::moveToTray()
+{
+    m_trayIcon->show();
+    hide();
+    connect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+}
+
 void MainWindow::InitializeActions()
 {
-    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( close() ) ) ; 
+    connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( onClose() ) ) ; 
     connect( Actions::getAction(Actions::scAboutActionText), SIGNAL( triggered() ), this, SLOT( about() ) ) ; 
     connect( Actions::getAction(Actions::scAboutQtActionText), SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) ) ; 
     connect( Actions::getAction(Actions::scSettingsActionText), SIGNAL( triggered()), this, SLOT(showSettingsDialog()));
@@ -98,6 +132,9 @@ void MainWindow::InitializeActions()
     connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget.get() ,SLOT( StopSelectedDownload() ));
     connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
     connect ( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
+
+
+    connect( this, SIGNAL(signalMoveToTray()), this, SLOT(moveToTray()), Qt::QueuedConnection);
 }
 
 void MainWindow::showSettingsDialog()
@@ -105,6 +142,23 @@ void MainWindow::showSettingsDialog()
     SettingsDialog dialog(this);
 
     dialog.exec();
+}
+
+void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::Trigger)
+    {
+        show();
+
+        m_trayIcon->hide();
+        disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    }
+}
+
+void MainWindow::onClose()
+{
+    m_forceExit = true;
+    close();
 }
 
 void MainWindow::about()
@@ -148,7 +202,8 @@ void MainWindow::about()
 
     about.exec();
 }
-void MainWindow::keyPressEvent(QKeyEvent *event ) 
+
+void MainWindow::keyPressEvent(QKeyEvent* event) 
 {
     if ( event->key() == Qt::Key_V && event->modifiers() == Qt::ControlModifier )
     {
@@ -164,4 +219,77 @@ void MainWindow::keyPressEvent(QKeyEvent *event )
         }
         
     }
+    else if (event->modifiers() == Qt::ShiftModifier)
+    {
+        m_forceExit = true;
+    }
+
+    QMainWindow::keyPressEvent(event);
 }
+
+void MainWindow::keyReleaseEvent(QKeyEvent* event)
+{
+    if (event->modifiers() == Qt::ShiftModifier)
+    {
+        m_forceExit = false;
+    }
+
+    QMainWindow::keyReleaseEvent(event);
+}
+
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    bool close2Tray = Proxy::settings()->value(SettingsValNames::scClose2Tray, Settings::NOSUBGROUP).value<bool>();
+
+    if (!m_forceExit && close2Tray)
+    {
+        moveToTray();
+        event->ignore();
+    }
+    else if (confirmAppExit())
+    {
+        event->accept();
+    }
+    else
+    {
+        event->ignore();
+    }
+}
+
+void MainWindow::changeEvent(QEvent* event)
+{
+    if (event->type() == QEvent::WindowStateChange)
+    {
+        unsigned int state = windowState();
+ 	    if (state == Qt::WindowMinimized)
+        {
+            bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
+            
+            if (minimize2Tray)
+            {
+                emit signalMoveToTray();
+                event->ignore();
+            }
+        }
+    }
+}
+
+#ifdef WIN32
+
+bool MainWindow::winEvent( MSG * message, long * result )
+{
+    if (message->message == WM_SYSCOMMAND && message->wParam == SC_MINIMIZE) 
+    {
+        bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
+        
+        if (minimize2Tray)
+        {
+            emit signalMoveToTray();
+            (*result) = false;
+            return true;
+        }
+    }
+
+    return false;
+}
+#endif
