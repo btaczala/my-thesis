@@ -130,8 +130,8 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     double dTotal = totalBytes();
     double dResTotal = dDone / dTotal;
     dResTotal *= 100;
-    m_Progress = (int)dResTotal;
-    qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
+    //m_Progress = (int)dResTotal;
+    //qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
     emit bytesRead(dDone,dTotal) ;
     
     //FIXME: calculateProgress();

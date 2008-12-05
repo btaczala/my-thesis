@@ -193,7 +193,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
             return ; 
         }
         m_rssmState = DOWNLOADING;
-        setState( DownloadState::DOWNLOADING, true );  
+        setState( DownloadState::DOWNLOADING, true ); 
     }
     if( state() == DownloadState::PAUSED )
     {

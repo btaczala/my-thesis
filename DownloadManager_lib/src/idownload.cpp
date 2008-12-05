@@ -48,7 +48,11 @@ QString DownloadStateToString( DownloadState::States state )
     };
 }
 
-IDownload::IDownload(OptionsContainer* options) : m_pDownloadInfo( new DownloadState ), m_Options( options ), m_SecondsDownloading(0), m_Error("Success")
+IDownload::IDownload(OptionsContainer* options) 
+: m_pDownloadInfo( new DownloadState )
+, m_Options( options )
+, m_SecondsDownloading(0)
+, m_Error("Success")
 {
 }
 
@@ -93,6 +97,16 @@ void IDownload::setFileName()
 
 void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
 {
+    if( m_pDownloadInfo->m_State != DownloadState::DOWNLOADING && _state == DownloadState::DOWNLOADING )
+    {
+        startTimer(Download::TIMERINT);
+    }
+    
+    if( m_pDownloadInfo->m_State == DownloadState::DOWNLOADING && _state != DownloadState::DOWNLOADING )
+    {
+        killTimer(m_TimerId);
+        m_SecondsDownloading = 0;
+    }
      m_pDownloadInfo->m_State = _state;
      emit( statusChanged(_state) );
 }
@@ -101,6 +115,21 @@ void IDownload::setError( const std::string& _err )
 {
      m_Error = _err; 
      qDebug() <<_err.c_str();
+}
+
+void IDownload::timerEvent(QTimerEvent* event)
+{
+    //set property and specify which events should be sent and which not
+    static qint64 prevDownloaded = 0;
+    if( m_pDownloadInfo->m_DownloadedBytes - prevDownloaded > 0 )
+    {
+        emit downloadRate( QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - prevDownloaded)/ 1024),0, 'f',2) );
+    }   
+    m_SecondsDownloading++;
+    emit( elapsedTime(m_SecondsDownloading / 2));
+    emit( bytesRead( m_pDownloadInfo->m_DownloadedBytes, m_pDownloadInfo->m_TotalBytes ));
+    prevDownloaded = m_pDownloadInfo->m_DownloadedBytes;
+    
 }
 /*
         //fixme: calculateProgress()

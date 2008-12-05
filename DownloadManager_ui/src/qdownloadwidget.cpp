@@ -36,7 +36,10 @@
 
 // const QString QDownloadWidget::QDownloadWidgetColumnInfo::settingsName  = "QDownloadWidgetColumnInfo";
 
-QDownloadWidget::QDownloadWidget(QWidget * parent) : QTreeWidget(parent ),m_pContextMenu( new QMenu() ), m_CurrentColumnID(-1)
+QDownloadWidget::QDownloadWidget(QWidget * parent) 
+: QTreeWidget(parent )
+, m_pContextMenu( new QMenu() )
+, m_CurrentColumnID(-1)
 {
     InitializeColumns();
     m_pDownloadManager  = new DownloadManager();
@@ -262,8 +265,10 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 }
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
+    
     if ( ! m_pDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
         return ; 
+    
     QIcon itemIcon(QPixmap(":/download_item.png"));
 
     QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
@@ -335,6 +340,7 @@ void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
         pItem->setText(5,text);
 
 }
+
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
 {
@@ -441,7 +447,7 @@ namespace DownloadWidgetDelegates
         IDownload *pDownload = a->m_pDownloadManager->downloadAt( iRow ) ;
         if ( pDownload ) 
         {
-            progress = pDownload->progress() ; 
+            progress = pDownload->progress();
         //fixme! calculate progress here
         }
         // getProgress will return current progress. 

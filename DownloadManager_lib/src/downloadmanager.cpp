@@ -232,11 +232,11 @@ int DownloadManager::percentage()
 }
 void DownloadManager::connectWith(IDownload * pDownload)
 {
-    //QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
+    QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {

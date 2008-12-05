@@ -57,6 +57,11 @@ public:
     } m_State ; 
 };
 
+namespace Download
+{
+    static int TIMERINT = 500; //1sek
+}
+
 QString DownloadStateToString( DownloadState::States state ) ;
 class OptionsContainer;
 
@@ -90,25 +95,28 @@ class IDownload : public QObject
                                                                 m_pDownloadInfo->m_DownloadedBytes = _done; };
         void                                setTotalBytes( qint64 _total ){ m_pDownloadInfo->m_TotalBytes = _total; };
         void                                setDownloadedBytes( qint64 _done ){ m_pDownloadInfo->m_DownloadedBytes = _done; };
-        void                                setError( const std::string& _err );        
+        void                                setError( const std::string& _err );  
+        void                                timerEvent(QTimerEvent* event);
     protected:
         
         std::string                         m_UrlAddress ; 
         std::string                         m_FileDestination ;
         std::string                         m_FileName;
         std::string                         m_Error ; 
-        mutable unsigned int                m_Progress;
+        //mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
-        unsigned int                        m_SecondsDownloading ;
+
     private:
         std::auto_ptr< DownloadState >      m_pDownloadInfo ;
+        int                                 m_TimerId;
+        unsigned int                        m_SecondsDownloading ;
         
     signals :
-        //virtual void                        downloadStatus(const int & istate ) = 0;
-        //virtual void                        bytesRead( int read, int howMany ) = 0 ; 
-        void                                statusChanged( DownloadState::States status );
-        //virtual void                        downloadRate( const QString & dwnlRate) = 0 ; 
-        //virtual void                        elapsedTime( unsigned int elapsedTime ) = 0 ; 
+        void                        downloadStatus(const int & istate );
+        void                        bytesRead( int read, int howMany ); 
+        void                        statusChanged( DownloadState::States status );
+        void                        downloadRate( const QString & dwnlRate);
+        void                        elapsedTime( unsigned int elapsedTime ); 
         
 };
 #endif //  IDOWNLOAD_H
