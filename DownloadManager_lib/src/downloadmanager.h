@@ -27,6 +27,7 @@
 #include <QMutex>
 
 #include "idownload.h"
+#include "progressinfo.h"
 
 
 class IDownload ; 
@@ -169,10 +170,11 @@ class DownloadManager : public QObject
         void                    slot_listChanged() ; 
         void                    init();
         void                    statusChanged(DownloadState::States what);
-        void                    bytesRead(int read,int total);
-        void                    downloadDone();
-        void                    downloadRate(const QString & dwnlRate);
-        void                    elapsedTime( unsigned int elapsedTime );
+        //void                    bytesRead(int read,int total);
+        //void                    downloadDone();
+        //void                    downloadRate(const QString & dwnlRate);
+        //void                    elapsedTime( unsigned int elapsedTime );
+        void                    progressInfo( const ProgressInfo& _info);
     public slots:
         /**
          * @brief  Updates list of download. 
@@ -196,7 +198,7 @@ class DownloadManager : public QObject
          * Will emit that download at 'at' postion finished downloading. 
          * @param at 
          */
-        void                    downloadDoneAt ( int at ) ;
+       // void                    downloadDoneAt ( int at ) ;
          
         
         /**
@@ -212,8 +214,9 @@ class DownloadManager : public QObject
          * @param read - how many have we read
          * @param total - how big is file. 
          */
-        void                    bytesReadAt ( int at, int read, int total ) ; 
-        void                    downloadRateAt( int at, const QString & downloadRate ) ;
-        void                    elapsedTimeAt( int at, unsigned int elapsedTime );
+       // void                    bytesReadAt ( int at, int read, int total ) ; 
+        //void                    downloadRateAt( int at, const QString & downloadRate ) ;
+        //void                    elapsedTimeAt( int at, unsigned int elapsedTime );
+        void                    progressInfoAt( int at, const ProgressInfo& _info );
 };
 #endif // DOWNLOADMANAGER_H

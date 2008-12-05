@@ -84,9 +84,10 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     connect( m_pDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
     connect( m_pDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
     connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
-    connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
-    connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
-    connect( m_pDownloadManager,SIGNAL( elapsedTimeAt( int, unsigned int  ) ),this,SLOT( elapsedTimeAt( int,unsigned int ) ) );
+    //connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
+    //connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
+    //connect( m_pDownloadManager,SIGNAL( elapsedTimeAt( int, unsigned int  ) ),this,SLOT( elapsedTimeAt( int,unsigned int ) ) );
+    connect(m_pDownloadManager,SIGNAL( progressInfoAt( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 }
 
 QDownloadWidget::~QDownloadWidget()
@@ -298,6 +299,7 @@ void QDownloadWidget::globalProgressChanged( int value)
 {
     QWidget::update();
 };
+/*
 void QDownloadWidget::bytesReadAt(int position,int read,int total)
 {
     int read_kBytes = read / 1024 ; 
@@ -320,7 +322,44 @@ void QDownloadWidget::bytesReadAt(int position,int read,int total)
     QString text = QString::number( minutes ) + ":" + sec ; 
     pItem->setText(6,text);
 
-};
+}
+*/
+void QDownloadWidget::progressInfoAt( int position, const ProgressInfo& _info )
+{
+    int read_kBytes = _info._DownloadedBytes / 1024 ; 
+    int total_kBytes = _info._TotalBytes / 1024 ; 
+    emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
+    QTreeWidgetItem *pItem = topLevelItem(position);
+    if ( pItem == NULL ) 
+        return ; 
+    pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
+
+    // estimated time ;) 
+    bool ok ; 
+    double rate = _info._DownloadRate.toDouble(&ok);
+    if ( !ok ) 
+        return ; 
+
+    int howMuch = (int)((double)(total_kBytes - read_kBytes) / rate);
+    int seconds = howMuch % 60 ; 
+    int minutes = (howMuch  - seconds)/60 ; 
+    QString sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
+    QString text = QString::number( minutes ) + ":" + sec ; 
+    pItem->setText(6,text);
+    
+    //downloadRate
+    pItem->setText(7,_info._DownloadRate);
+
+    //elapsed time
+    seconds = _info._ElapsedTime % 60 ; 
+    minutes = ( _info._ElapsedTime - seconds)/60 ; 
+    
+    sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
+    text = QString::number( minutes ) + ":" + sec ;  
+    pItem->setText(5,text);
+
+}
+/*
 void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
 {
     QTreeWidgetItem *pItem = topLevelItem(position);
@@ -340,7 +379,7 @@ void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
         pItem->setText(5,text);
 
 }
-
+*/
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
 {

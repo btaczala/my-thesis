@@ -211,12 +211,14 @@ void DownloadManager::statusChanged(DownloadState::States what)
     if ( pos !=-1 )
         emit statusChanged(pos,what);
 }
+/*
 void DownloadManager::downloadDone()
 {
     int pos = getPositionWithinSlot( sender() ) ;  
     if ( pos !=-1 )
         emit downloadDoneAt(pos); 
 }
+*/
 int DownloadManager::percentage() 
 {
     DownloadListType::iterator it = m_DownloadList.begin(); 
@@ -232,11 +234,11 @@ int DownloadManager::percentage()
 }
 void DownloadManager::connectWith(IDownload * pDownload)
 {
-    QObject::connect ( pDownload, SIGNAL( done() ), this,SLOT( downloadDone() ) ) ;
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
-    QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
+    //QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
+    QObject::connect ( pDownload, SIGNAL( progressInfo( const ProgressInfo& ) ), this,SLOT( progressInfo( const ProgressInfo&  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {
@@ -253,6 +255,7 @@ int DownloadManager::getPositionWithinSlot( QObject * sender )
     IDownload *pDownload = qobject_cast<IDownload*>( sender ); 
     return findPosition( pDownload->urlAddress() ); 
 }
+/*
 void DownloadManager::bytesRead(int read, int total)
 {
     int pos = getPositionWithinSlot( sender() ) ;  
@@ -272,8 +275,14 @@ void DownloadManager::elapsedTime(unsigned int elapsedTime)
         emit elapsedTimeAt( pos, elapsedTime );
     
 }
+*/
 
-
+void DownloadManager::progressInfo( const ProgressInfo& _info )
+{
+    int pos = getPositionWithinSlot( sender() );
+    if( pos != -1 )
+        emit (progressInfoAt( pos, _info ));
+}
 
 void DownloadManager::update()
 {

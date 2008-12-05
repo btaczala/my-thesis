@@ -20,6 +20,8 @@
 
 #include "idownload.h"
 #include "rslogger.h"
+
+
 QString DownloadStateToString( DownloadState::States state ) 
 {
     switch ( state ) 
@@ -119,38 +121,16 @@ void IDownload::setError( const std::string& _err )
 
 void IDownload::timerEvent(QTimerEvent* event)
 {
-    //set property and specify which events should be sent and which not
+    ProgressInfo info;
     static qint64 prevDownloaded = 0;
     if( m_pDownloadInfo->m_DownloadedBytes - prevDownloaded > 0 )
     {
-        emit downloadRate( QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - prevDownloaded)/ 1024),0, 'f',2) );
-    }   
+        info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - prevDownloaded)/ 1024),0, 'f',2);
+    }
     m_SecondsDownloading++;
-    emit( elapsedTime(m_SecondsDownloading / 2));
-    emit( bytesRead( m_pDownloadInfo->m_DownloadedBytes, m_pDownloadInfo->m_TotalBytes ));
+    info._ElapsedTime = m_SecondsDownloading / 2;
+    info._DownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
+    info._TotalBytes = m_pDownloadInfo->m_TotalBytes;
+    emit( progressInfo( info ));
     prevDownloaded = m_pDownloadInfo->m_DownloadedBytes;
-    
 }
-/*
-        //fixme: calculateProgress()
-        m_pDownloadInfo->m_DownloadFileSize = total ; 
-        int bytesDownloadedOverall = (m_pDownloadInfo->m_DownloadFileSize - total) > 0 ?  m_pDownloadInfo->m_DownloadFileSize - total : 0 ; 
-        m_pDownloadInfo->m_BytesDownloaded = done + bytesDownloadedOverall; 
-        double dDone = m_pDownloadInfo->m_BytesDownloaded;
-        double dTotal = m_pDownloadInfo->m_DownloadFileSize;
-        double dResTotal = dDone / dTotal;
-        dResTotal *= 100;
-        m_Progress = (int)dResTotal;
-//         qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
-        if ( m_emitCounter == scSkipEmit ) 
-        {
-            emit bytesRead(dDone,dTotal) ;
-            m_emitCounter = 0 ; 
-        }
-        else 
-            m_emitCounter++;
-        m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
-        m_pDownloadInfo->bytesReadCurrent = done ; 
-        */
-
-

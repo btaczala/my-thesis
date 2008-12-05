@@ -24,6 +24,8 @@
 #include <string>
 #include <QObject>
 
+#include "progressinfo.h"
+
 
 /*! \struct DownloadState
  * \brief Holds information about bytes read. 
@@ -37,13 +39,7 @@ public:
     , m_TotalBytes(0){};
     qint64                  m_DownloadedBytes;
     qint64                  m_TotalBytes;
-    /*UInt                    m_DownloadFileSize ; 
-    UInt                    m_BytesDownloaded ; 
-    int                     bytesReadCurrent;
-    int                     bytesReadPreviously;
-    unsigned long           m_bytesToRead ;
-    unsigned long           m_Percentage ;  
-    */
+
     enum States
     {
         // ?: is it a proper state ? 
@@ -113,10 +109,8 @@ class IDownload : public QObject
         
     signals :
         void                        downloadStatus(const int & istate );
-        void                        bytesRead( int read, int howMany ); 
         void                        statusChanged( DownloadState::States status );
-        void                        downloadRate( const QString & dwnlRate);
-        void                        elapsedTime( unsigned int elapsedTime ); 
+        void                        progressInfo( const ProgressInfo& _info );
         
 };
 #endif //  IDOWNLOAD_H

@@ -144,9 +144,10 @@ public slots:
     void statusChanged( int position, DownloadState::States status );
     void downloadDoneAt( int position );
     void downloadOnHold( int position ) ; 
-    void bytesReadAt( int position , int read , int total );
-    void downloadRateAt( int position , const QString & downloadRate );
-    void elapsedTimeAt( int position , unsigned int timeElapsed );
+    //void bytesReadAt( int position , int read , int total );
+   //void downloadRateAt( int position , const QString & downloadRate );
+    //void elapsedTimeAt( int position , unsigned int timeElapsed );
+    void progressInfoAt( int, const ProgressInfo& _info );
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void InitializeColumns();

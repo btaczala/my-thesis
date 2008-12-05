@@ -32,6 +32,7 @@ SET( DownloadManager_HDRS
     src/engine.h
     src/engine.inl
     src/optionscontainer.h
+    src/progressinfo.h
     src/engines/rapidshare/qrapidsharedownload.h
     src/engines/rapidshare/qrapidshareuser.h
     src/engines/http/httpdownload.h
