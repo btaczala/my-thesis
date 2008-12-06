@@ -82,26 +82,22 @@ Q_OBJECT
  private:
     QRapidshareDownload( const QRapidshareDownload & _cpy ) ; // hide 
 
-    //virtual void                        timerEvent(QTimerEvent *event); 
     QString                             parseResponseAndGetNewUrl(const QString & resp);
     qint64                              parseResponseAndGetFileSize(const QString & resp);
     QString                             parsePostReponseAndGetAddress(const QString & resp);
     void                                setUrlFileAddress(const QString & _addr ) ;
-    void                                renameFile();
 
     bool                                checkForErrors( const QByteArray& response );
     QString                             transformUrlPathToLocalPath(const QString & url);
     QRapidshareDownload&                operator=( const QRapidshareDownload& rhs );
  private:
     QString                             m_ReferrerFileAddress;
-    QString                             m_qFileDestination;
     QString                             m_DownloadServerHost ; 
     std::auto_ptr<QHttp>                m_apHttpObj;
     std::auto_ptr<QHttpRequestHeader>   m_apHttpRequestHeader;
 
     bool                                m_bIsPrepared;
     std::auto_ptr<QUrl>                 m_apFileUrl;
-    std::auto_ptr<QFile>                m_apFile;
     QString                             m_HostName;
     QString                             m_PathOnServer;
     QString                             m_RequestType;  

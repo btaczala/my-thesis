@@ -23,6 +23,7 @@
 #include <memory>
 #include <string>
 #include <QObject>
+#include <QFile>
 
 #include "progressinfo.h"
 
@@ -56,6 +57,7 @@ public:
 namespace Download
 {
     static int TIMERINT = 500; //1sek
+    static const QString TMPSTRING = ".part";
 }
 
 QString DownloadStateToString( DownloadState::States state ) ;
@@ -86,6 +88,13 @@ class IDownload : public QObject
     
     protected:
         void                                setFileName();
+        void                                initFile();
+        void                                removeFromFile( const QString& _post );
+        void                                renameFile();
+        void                                closeFile();
+        bool                                openFile();
+        bool                                isFileOpen();
+        qint64                                writeToFile( const char* _data, qint64 _amount );
         void                                calculateProgress( qint64 _done, qint64 _total ){ 
                                                                 m_pDownloadInfo->m_TotalBytes = _total;
                                                                 m_pDownloadInfo->m_DownloadedBytes = _done; };
@@ -97,15 +106,15 @@ class IDownload : public QObject
         
         std::string                         m_UrlAddress ; 
         std::string                         m_FileDestination ;
-        std::string                         m_FileName;
         std::string                         m_Error ; 
-        //mutable unsigned int                m_Progress;
         OptionsContainer*                   m_Options;
+        
 
     private:
         std::auto_ptr< DownloadState >      m_pDownloadInfo ;
         int                                 m_TimerId;
         unsigned int                        m_SecondsDownloading ;
+        std::auto_ptr<QFile>                m_apFile;
         
     signals :
         void                        downloadStatus(const int & istate );

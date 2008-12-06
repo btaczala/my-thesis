@@ -52,13 +52,15 @@ HttpDownload::~HttpDownload()
 void HttpDownload::start()
 {
     // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
-    QString tmpName( m_FileDestination.c_str() );
+    
+    /*QString tmpName( m_FileDestination.c_str() );
     tmpName += "/";
     tmpName += m_FileName.c_str();
     tmpName += ".part";
     
     m_apFile->setFileName( tmpName );
     qDebug() << tmpName;
+    */
     setState( DownloadState::DOWNLOADING, true );
     QUrl url(m_UrlAddress.c_str());
 	

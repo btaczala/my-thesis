@@ -38,14 +38,16 @@ void FtpDownload::setConnection()
 
 void FtpDownload::start()
 {
-    QString tmpName( m_FileDestination.c_str() );
-    tmpName += "/";
-    tmpName += m_FileName.c_str();
-    tmpName += ".part";
-    
-    m_apFile->setFileName( tmpName );
-    qDebug() << tmpName;
-    m_apHost.reset( new QUrl( m_UrlAddress.c_str() ));
+    //fixme:
+    //
+//    QString tmpName( m_FileDestination.c_str() );
+//    tmpName += "/";
+//    tmpName += m_FileName.c_str();
+//    tmpName += ".part";
+//    
+//    m_apFile->setFileName( tmpName );
+//    qDebug() << tmpName;
+//    m_apHost.reset( new QUrl( m_UrlAddress.c_str() ));
     
      if (!m_apHost.get()->isValid() || m_apHost.get()->scheme().toLower() != QLatin1String("ftp"))
         return;
@@ -175,8 +177,10 @@ void FtpDownload::beginDownload()
 {
     if( m_apFile->open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        setState( DownloadState::DOWNLOADING, true );
-        m_apFtpObj.get()->get(m_FileName.c_str(), m_apFile.get());
+        //fixme
+        
+       // setState( DownloadState::DOWNLOADING, true );
+//        m_apFtpObj.get()->get(m_FileName.c_str(), m_apFile.get());
     }
     else
     {
