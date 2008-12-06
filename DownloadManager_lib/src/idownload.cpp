@@ -182,7 +182,8 @@ void IDownload::renameFile()
 
 void IDownload::closeFile()
 {
-    m_apFile->close();
+	if( m_apFile.get())
+    	m_apFile->close();
 }
 
 bool IDownload::openFile()
