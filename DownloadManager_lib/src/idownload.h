@@ -37,9 +37,12 @@ public:
     DownloadState() /*m_DownloadFileSize(0),m_BytesDownloaded(0),bytesReadCurrent(0),bytesReadPreviously(0),m_bytesToRead(0),m_Percentage(0), */
     : m_State(STOPPED)
     , m_DownloadedBytes(0)
-    , m_TotalBytes(0){};
+    , m_TotalBytes(0)
+    , m_PrevDownloadedBytes(0){};
+    
     qint64                  m_DownloadedBytes;
     qint64                  m_TotalBytes;
+    qint64                  m_PrevDownloadedBytes;
 
     enum States
     {

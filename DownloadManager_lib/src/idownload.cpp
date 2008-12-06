@@ -122,17 +122,17 @@ void IDownload::setError( const std::string& _err )
 void IDownload::timerEvent(QTimerEvent* event)
 {
     ProgressInfo info;
-    static qint64 prevDownloaded = 0;
-    if( m_pDownloadInfo->m_DownloadedBytes - prevDownloaded > 0 )
+    //static qint64 prevDownloaded = 0;
+    if( m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes > 0 )
     {
-        info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - prevDownloaded)/ 1024),0, 'f',2);
+        info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes)/ 1024),0, 'f',2);
     }
     m_SecondsDownloading++;
     info._ElapsedTime = m_SecondsDownloading / 2;
     info._DownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
     info._TotalBytes = m_pDownloadInfo->m_TotalBytes;
     emit( progressInfo( info ));
-    prevDownloaded = m_pDownloadInfo->m_DownloadedBytes;
+    m_pDownloadInfo->m_PrevDownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
 }
 
 void IDownload::initFile()
@@ -160,8 +160,14 @@ void IDownload::removeFromFile( const QString& _post )
     if( m_apFile.get())
     {
         QString fileName = m_apFile->fileName();
-        m_apFile->setFileName(fileName.remove( _post ));
-        qDebug() << m_apFile->fileName();
+        int ind = fileName.lastIndexOf( _post );
+        if ( ind != -1 )
+        {
+            fileName = fileName.left( ind );
+            fileName += Download::TMPSTRING;
+            m_apFile->setFileName(fileName);
+            qDebug() << m_apFile->fileName();
+        }
     }
 }
 
