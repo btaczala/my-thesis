@@ -24,10 +24,10 @@
 #include "httpdownload.h"
 #include "rslogger.h"
 
-HttpDownload::HttpDownload(OptionsContainer* options): IDownload(options)
-//, m_HttpObj( QHttp() )
+HttpDownload::HttpDownload(OptionsContainer* options)
+: IDownload(options)
+, m_HttpObj( new QHttp() )
 , m_apHttpRequestHeader(new QHttpRequestHeader() )
-, m_apFile(new QFile() )
 {
 	
     QObject::connect( &m_HttpObj, SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
@@ -51,16 +51,7 @@ HttpDownload::~HttpDownload()
 }
 void HttpDownload::start()
 {
-    // FIXME: ok it mean init but as far as qrapidshare engine should be aware. for IDownload it should be DownloadState::Download
-    
-    /*QString tmpName( m_FileDestination.c_str() );
-    tmpName += "/";
-    tmpName += m_FileName.c_str();
-    tmpName += ".part";
-    
-    m_apFile->setFileName( tmpName );
-    qDebug() << tmpName;
-    */
+    initFile();
     setState( DownloadState::DOWNLOADING, true );
     QUrl url(m_UrlAddress.c_str());
 	
@@ -97,10 +88,9 @@ void HttpDownload::requestStarted(const int & idReq)
 void HttpDownload::requestFinished(const int & idReq, const bool & isFalse)
 {
 	qDebug("requestFinished");
-    m_apFile->close();
     if( isFalse )
     {
-        qDebug() << m_HttpObj.errorString() ;
+        setError( m_HttpObj.errorString().toStdString());
         return ; 
     }
     
@@ -122,52 +112,23 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     char *buff = NULL ; 
     qint64 iBytes2 = 0;
     qint64 bytes = m_HttpObj.bytesAvailable();
-    m_readedBytes+=bytes;
-    
-    unsigned int curFileSize = totalBytes();
-    
-    int bytesDownloadedOverall = (curFileSize - total) > 0 ?  curFileSize - total : 0 ; 
-    setDownloadedBytes( done + bytesDownloadedOverall );
-    double dDone = done + bytesDownloadedOverall;
-    double dTotal = totalBytes();
-    double dResTotal = dDone / dTotal;
-    dResTotal *= 100;
-    //m_Progress = (int)dResTotal;
-    //qDebug() << "emit :DownloadStatus("<< m_Progress <<")";  
-    emit bytesRead(dDone,dTotal) ;
-    
-    //FIXME: calculateProgress();
-    //m_pDownloadInfo->bytesReadPreviously =m_pDownloadInfo->bytesReadCurrent;
-    //m_pDownloadInfo->bytesReadCurrent = done ; 
     buff = new char[bytes];
+    
+    calculateProgress( done, total );
     iBytes2 = m_HttpObj.read(buff, bytes);
     if ( -1 == iBytes2)
         qDebug()<<("ERROR while reading from Http stream ");
     else
     {
-        qDebug() << "readed bytes " << iBytes2;
-        if( !m_apFile->isOpen())
+        if( openFile() )
         {
-            qDebug() << ("isClosed, open it");
-            if( ! m_apFile->open(QIODevice::WriteOnly | QIODevice::Append) )
+            qint64 btmp = writeToFile(buff,iBytes2);
+            if( -1 == btmp )
             {
-                qDebug()<<("unable to open file '-_- "); //. 
-                // message = bad
-                // 
-                return ;
+                qDebug()<<("write failed");
+                return;
             }
-            else
-                qDebug() << "opened";
         }
-        
-        qint64 btmp = m_apFile->write(buff,iBytes2); 
-        if( -1 == btmp )
-        {
-            qDebug()<<("write failed");
-            return;
-        }
-        else
-            qDebug() << ("written successful") << btmp;
     }
     delete[] buff;
     
@@ -175,9 +136,6 @@ void HttpDownload::dataReadProgress(const int & done, const int & total)
     {
         setState(DownloadState::DONE );
     }
-    
-    m_timerId = startTimer(1000);
-    m_readedBytes = 0;
 }
 
 void HttpDownload::responseHeaderReceived( const QHttpResponseHeader & resp)
@@ -189,16 +147,13 @@ void HttpDownload::done(const bool & error)
 {
 	if( error )
     {
-        qDebug() << m_HttpObj.errorString();
+        setError(m_HttpObj.errorString().toStdString());
         return ;
     }
     
     if( state() == DownloadState::DONE )
     {   
-        m_apFile->close();
-        renameFile();
         emit statusChanged( state() );
-       //killTimer(m_timerId);
     }
 }
 
@@ -215,21 +170,4 @@ void HttpDownload::proxyAuthenticationRequired ( const QNetworkProxy & proxy, QA
 void HttpDownload::readyRead ( const QHttpResponseHeader & resp )
 {
 	
-}
-
-void HttpDownload::renameFile()
-{
-    if(m_apFile.get()!=NULL )
-    {
-        QString tmp( m_apFile->fileName() );
-        tmp = tmp.left(tmp.indexOf(".part"));
-        QFile::rename(m_apFile->fileName(), tmp );
-        qDebug() << tmp ;
-    }
-}
-
-void HttpDownload::timerEvent(QTimerEvent *event)
-{
-    emit downloadRate( QString("%1").arg( ((double) m_readedBytes / 1024),0, 'f',2) ); 
-    m_readedBytes = 0;
 }

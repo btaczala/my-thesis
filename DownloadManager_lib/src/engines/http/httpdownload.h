@@ -43,7 +43,6 @@ Q_OBJECT
     void                                start(); 
     void                                stop(); // abort () 
     void                                restart(); 
-    QString                             transformUrlPathToLocalPath();
  
     bool                                operator==( const HttpDownload & _cmp );
     
@@ -51,14 +50,10 @@ Q_OBJECT
     HttpDownload( const HttpDownload & _cpy ) ; // hide 
     HttpDownload&                       operator=( const HttpDownload& rhs );
     void                                renameFile();
-    virtual void                        timerEvent(QTimerEvent *event); 
  private:
     QString                             m_DownloadServerHost ;
     QHttp                               m_HttpObj;
     std::auto_ptr<QHttpRequestHeader>   m_apHttpRequestHeader;
-    std::auto_ptr<QFile>                m_apFile;
-    qint64                              m_readedBytes;
-    int                                 m_timerId;
 
  private slots:
     void                                requestStarted(const int & idReq) ;
@@ -74,10 +69,6 @@ Q_OBJECT
  
 signals:
     void                                statusChanged( DownloadState::States status );
-    //void                                downloadStatus(const int & istate );
-    void                                downloadRate(const QString & dwnlRate);
-    void                                bytesRead( int read, int howMany ) ; 
-    void                                elapsedTime( unsigned int elapsedTime ) ; 
  };
 #endif //HTTPDOWNLOAD_H
 //eof
