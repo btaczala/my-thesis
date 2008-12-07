@@ -15,7 +15,7 @@
 DownloadManager::DownloadManager() : m_iMaxDownloadFiles(3),m_iCurrentDownloadingFiles(0),m_pEngineManager(new EngineManager()), m_State ( STOPPED )
 {
     //QTimer::singleShot(1000,this,SLOT(init()));
-    init();
+    //init();
 }
 DownloadManager::~DownloadManager()
 {

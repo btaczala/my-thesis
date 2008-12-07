@@ -24,8 +24,9 @@ class Proxy
          */
 		static Settings * settings();
         static void init();
+        static void deinit();
         
-        static void setDownloadManager( DownloadManager *ptr ) ; 
+        //static void setDownloadManager( DownloadManager *ptr ) ; 
         
         
         
@@ -33,7 +34,7 @@ class Proxy
 		static Proxy* proxy() ;
 		Proxy() ; 
 		Proxy(const Proxy & rhs) ; // hidden 
-        DownloadManager*                        m_pDownloadManager ;  
+        boost::shared_ptr<DownloadManager>      m_pDownloadManager ;  
         boost::shared_ptr<Settings>		        m_apSettings ; 
 };
 #endif //__PROXY_H__

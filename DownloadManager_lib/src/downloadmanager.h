@@ -46,8 +46,9 @@ class DownloadManager : public QObject
          * @var DownloadListType - type of container 
          */
         typedef std::vector<IDownloadSmartPtr> DownloadListType ; 
-                                DownloadManager() ; 
-                                ~DownloadManager() ; 
+        DownloadManager() ; 
+        ~DownloadManager() ; 
+        void                    init();
         /**
          * @brief Will add download into queue
          * @param urlAddress url address of file to download
@@ -118,6 +119,8 @@ class DownloadManager : public QObject
         DownloadManagerState state () const ; 
 
         IDownload *downloadAt ( unsigned int position ) ; 
+        
+        
     private : 
         DownloadListType        m_DownloadList ; 
         unsigned int            m_iMaxDownloadFiles ; 
@@ -168,7 +171,7 @@ class DownloadManager : public QObject
         void                    increaseNumberOfCurrentDownloads();
     private slots:
         void                    slot_listChanged() ; 
-        void                    init();
+
         void                    statusChanged(DownloadState::States what);
         //void                    bytesRead(int read,int total);
         //void                    downloadDone();

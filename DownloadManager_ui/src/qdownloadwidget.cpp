@@ -40,9 +40,8 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
 , m_CurrentColumnID(-1)
 {
     InitializeColumns();
-    m_pDownloadManager  = new DownloadManager();
-    Proxy::setDownloadManager(m_pDownloadManager);
-    Proxy::settings()->loadSettings();
+    m_pDownloadManager  = Proxy::downloadManager();
+    //Proxy::settings()->loadSettings();
     setHeader(new QDownloadHeaderView(this));
     
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
@@ -74,9 +73,6 @@ QDownloadWidget::~QDownloadWidget()
     disconnect();
     delete m_downloadItemDelegate;
     
-    delete m_pDownloadManager;
-    m_pDownloadManager = NULL ; 
-    Proxy::setDownloadManager(NULL);
 }
 void QDownloadWidget::InitializeColumns()
 {

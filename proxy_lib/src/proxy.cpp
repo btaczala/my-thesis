@@ -17,7 +17,7 @@ Proxy * Proxy::proxy()
 	static std::auto_ptr<Proxy> pr ( new Proxy() ) ; 
 	return pr.get() ;
 }
-Proxy::Proxy() : m_apSettings( new Settings() ) , m_pDownloadManager( NULL ) 
+Proxy::Proxy() : m_apSettings( new Settings() ) , m_pDownloadManager( new DownloadManager() ) 
 {
 };
 Proxy::~Proxy()
@@ -29,7 +29,7 @@ DownloadManager * Proxy::downloadManager()
 {
     if ( proxy()->m_pDownloadManager== NULL ) 
         LOG(QString("Download Manager ptr is NULL " ) );
-	return proxy()->m_pDownloadManager; 
+	return proxy()->m_pDownloadManager.get(); 
 }
 const EngineManager * Proxy::engineManager() 
 {
@@ -41,10 +41,12 @@ Settings * Proxy::settings()
 };
 void Proxy::init()
 {
-    proxy() ;
+    proxy()->m_apSettings->loadSettings();
+    proxy()->m_pDownloadManager->init();
 }
 
-void Proxy::setDownloadManager(DownloadManager * ptr)
+void Proxy::deinit()
 {
-    proxy()->m_pDownloadManager = ptr ; 
+    proxy()->m_apSettings.reset();
+    proxy()->m_pDownloadManager.reset();
 }

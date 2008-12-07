@@ -38,13 +38,17 @@ int main(int argc, char *argv[])
     QSettings::setDefaultFormat( QSettings::IniFormat ) ; 
     QString cp = QDir::currentPath() ;
     QSettings::setPath( QSettings::IniFormat, QSettings::UserScope, cp);
-    //Proxy::init() ; 
+    
 	Q_INIT_RESOURCE(main_resources);
-	MainWindow window;
-	window.show();
+    Proxy::init() ; 
+	MainWindow *window = new MainWindow();
+	window->show();
 	int iRet = app.exec();
 #ifdef WIN32
 	///_CrtDumpMemoryLeaks();
 #endif // WIN32
+    delete window; 
+    Proxy::deinit();
+    qDebug() << "End of App";
 	return iRet;
 }
