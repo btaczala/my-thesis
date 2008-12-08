@@ -202,6 +202,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
             if( ! openFile() )
             {
                 setError("unable to open file");
+                setState(DownloadState::FAILED, true);
                 return ;
             }
             qint64 btmp = writeToFile(buff,iBytes2); 

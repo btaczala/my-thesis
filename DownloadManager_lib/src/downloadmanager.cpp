@@ -255,27 +255,6 @@ int DownloadManager::getPositionWithinSlot( QObject * sender )
     IDownload *pDownload = qobject_cast<IDownload*>( sender ); 
     return findPosition( pDownload->urlAddress() ); 
 }
-/*
-void DownloadManager::bytesRead(int read, int total)
-{
-    int pos = getPositionWithinSlot( sender() ) ;  
-    if ( pos !=-1 )
-        emit bytesReadAt(pos,read,total);    
-}
-void DownloadManager::downloadRate( const  QString &downloadRate )
-{
-    int pos = getPositionWithinSlot( sender() ) ;  
-    if ( pos !=-1 )
-        emit downloadRateAt( pos, downloadRate );
-}
-void DownloadManager::elapsedTime(unsigned int elapsedTime)
-{
-    int pos = getPositionWithinSlot( sender() ) ;  
-    if ( pos !=-1 )
-        emit elapsedTimeAt( pos, elapsedTime );
-    
-}
-*/
 
 void DownloadManager::progressInfo( const ProgressInfo& _info )
 {
@@ -337,8 +316,8 @@ bool DownloadManager::canIDownload() const
 {
     if ( state() == DOWNLOADING ) 
     {
-        if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles < m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
-            return true ; 
+        if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles < m_DownloadManagerSettings.m_MaxDownloadingFiles )
+            return true ;
     }
     return false ; 
 }

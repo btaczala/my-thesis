@@ -75,7 +75,7 @@ const std::string & IDownload::urlAddress() const
 }
 void IDownload::setDestinationAddress(const std::string &localAddress)
 {
-    m_FileDestination = localAddress ; 
+    m_FileDestination = localAddress;
 }
 const std::string & IDownload::destinationAddress() const
 {
@@ -98,19 +98,21 @@ void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
     {
         startTimer(Download::TIMERINT);
     }
-    
+
     if( m_pDownloadInfo->m_State == DownloadState::DOWNLOADING && _state != DownloadState::DOWNLOADING )
     {
         killTimer(m_TimerId);
         m_SecondsDownloading = 0;
     }
-    
+
     if( _state == DownloadState::DONE )
     {
         renameFile();
     }
      m_pDownloadInfo->m_State = _state;
-     emit( statusChanged(_state) );
+
+    if( triggerEmit == true )
+        emit( statusChanged(_state) );
 }
 
 void IDownload::setError( const std::string& _err )
@@ -137,14 +139,20 @@ void IDownload::timerEvent(QTimerEvent* event)
 
 void IDownload::initFile()
 {
+qDebug() << "initFile";
     if( m_FileDestination.empty() || m_UrlAddress.empty() )
+    {
+        qDebug() << m_FileDestination.c_str();
+        qDebug() << m_UrlAddress.c_str();
         return;
+    }
     else
     {
         m_apFile.reset( new QFile());
         QString fileName(m_FileDestination.c_str());
-        fileName += "/";
-    
+        if( fileName.right(1) != "/" )
+          fileName += "/";
+
         QString tmp(m_UrlAddress.c_str());
         tmp = tmp.right(tmp.length() - tmp.lastIndexOf("/") - 1);
         fileName += tmp;
