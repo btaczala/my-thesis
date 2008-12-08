@@ -41,6 +41,7 @@ namespace general_settings_tabs
     public slots:
         void browseForDefaultFolder();
         void delayStateChanged(int state);
+        void defaultDirEdited();
     private:
         QLineEdit* m_defaultFolderEdit;
         QSpinBox* m_downloadDelay;

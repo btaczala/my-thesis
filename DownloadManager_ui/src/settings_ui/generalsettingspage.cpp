@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include <QtGui>
+#include <QFile>
 #include "generalsettingspage.h"
 
 #include <proxy.h>
@@ -47,7 +48,6 @@ void GeneralSettingsPage::Initialize()
     m_tabWidget->addTab(new general_settings_tabs::DownloadTab, tr("Download"));
     m_tabWidget->addTab(new general_settings_tabs::ApplicationTab, tr("Application"));
 
-    
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(m_tabWidget);
     mainLayout->setMargin(0);
@@ -64,11 +64,18 @@ namespace general_settings_tabs
     {
         QLabel* defaultFolderLabel = new QLabel(tr("Default download folder:"));
         m_defaultFolderEdit = new QLineEdit();
-        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory").value<QString>() ;
-        m_defaultFolderEdit->setText( defaultDir.isEmpty() ? QDir::homePath() : defaultDir ) ;
+        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory").value<QString>();
+        if( defaultDir.isEmpty() )
+        {
+            defaultDir = QDir::homePath();
+            Proxy::settings()->setValue( "DefaultDownloadDirectory", defaultDir);
+        }
+        m_defaultFolderEdit->setText(defaultDir);
+
         QPushButton* defaultFolderButton = new QPushButton(tr("Browse..."));
 
         connect(defaultFolderButton, SIGNAL(clicked()), this, SLOT(browseForDefaultFolder()));
+        connect(m_defaultFolderEdit, SIGNAL( editingFinished()), this, SLOT( defaultDirEdited()));
 
         QHBoxLayout* folderLayout = new QHBoxLayout;
         folderLayout->addWidget(defaultFolderLabel);
@@ -125,6 +132,15 @@ namespace general_settings_tabs
 
         m_defaultFolderEdit->setText(dir);
         Proxy::settings()->setValue( "DefaultDownloadDirectory",dir);
+    }
+
+    void DownloadTab::defaultDirEdited()
+    {
+        QString dir = m_defaultFolderEdit->text();
+        if( QFile::exists( dir ))
+        {
+            Proxy::settings()->setValue( "DefaultDownloadDirectory",dir);
+        }
     }
 
     void DownloadTab::delayStateChanged(int state)
