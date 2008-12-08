@@ -51,8 +51,6 @@ void MainWindow::initializeWidgets()
     initializeDownloadWidget();
     initializeTrayIcon();
     initializeGeometry();
-    
-    setIcon(QIcon(":/app_icon.png"));
 }
 
 void MainWindow::initializeMenuBar()
