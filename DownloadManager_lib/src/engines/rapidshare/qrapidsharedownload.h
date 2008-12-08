@@ -104,6 +104,7 @@ Q_OBJECT
     QFile                               m_FileLog;
     QList<const char*>                  m_errorsList;
     RS_State                            m_rssmState;
+    qint64                              m_iPDownloaded;
 
  private slots:
     void                                requestStarted(const int & idReq) ;

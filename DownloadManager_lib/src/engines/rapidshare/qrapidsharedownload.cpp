@@ -13,6 +13,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 , m_apHttpObj( new QHttp() )
 , m_apHttpRequestHeader(new QHttpRequestHeader() )
 , m_apFileUrl( new QUrl() )
+, m_iPDownloaded(0)
 {
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
@@ -92,6 +93,7 @@ void QRapidshareDownload::stop()
 
 void QRapidshareDownload::restart()
 {
+    m_iPDownloaded = downloadedBytes();
 //     RSDM_LOG_FUNC ;
     //m_apHttpRequestHeader->removeValue(); // LENGTH REQUIRED ?? ;(
     m_apHttpRequestHeader->setRequest("GET", m_apFileUrl->path() );
@@ -188,8 +190,11 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
     }
     if ( state()  == DownloadState::DOWNLOADING ) 
     {
-        calculateProgress( done, total );
-     
+      calculateProgress( done + m_iPDownloaded, total + m_iPDownloaded);
+        qDebug() << done;
+        qDebug() << total;
+        qDebug() << m_iPDownloaded;
+
         if ( buff == NULL ) 
         {
             buff = new char[bytes];
@@ -215,7 +220,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
         delete[] buff;
     }
 
-    if( done == total &&  m_rssmState ==  DOWNLOADING ) 
+    if( done + m_iPDownloaded == total + m_iPDownloaded &&  m_rssmState ==  DOWNLOADING )
     {
         setState( DownloadState::DONE );
         m_rssmState = FINISHED;
