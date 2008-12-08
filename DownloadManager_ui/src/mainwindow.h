@@ -73,5 +73,6 @@ class MainWindow : public QMainWindow
         std::auto_ptr<QSystemTrayIcon>  m_trayIcon;
         bool                            m_forceExit;
         Qt::WindowStates                m_oldstate; //used by tray icon functions
+        QMenu                           m_trayContextMenu;
 };
 #endif

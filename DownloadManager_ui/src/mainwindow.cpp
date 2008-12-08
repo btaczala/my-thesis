@@ -88,6 +88,8 @@ void MainWindow::initializeDownloadWidget()
 void MainWindow::initializeTrayIcon()
 {
     m_trayIcon->setIcon(QIcon(":/app_icon.png"));
+    m_trayContextMenu.addAction(tr("Restore"));
+    m_trayIcon->setContextMenu(&m_trayContextMenu);
 }
 
 void MainWindow::initializeGeometry()
@@ -137,9 +139,9 @@ void MainWindow::moveToTray()
 
 void MainWindow::restoreFromTray()
 {
+//platform specific issues  
+#if WIN32
     show();
-    m_trayIcon->hide();
-    disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
     if (isVisible())
     {
         //code below restore window state  for real since
@@ -150,6 +152,13 @@ void MainWindow::restoreFromTray()
         else
             showNormal();
     }
+#else
+    setWindowState(Qt::WindowNoState);
+    setVisible(true);
+#endif
+    
+    m_trayIcon->hide();
+    disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::initializeActions()
