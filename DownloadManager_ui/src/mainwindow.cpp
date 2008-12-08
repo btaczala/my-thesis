@@ -25,10 +25,6 @@
 #include "actions.h"
 #include "settings_ui/settingsdialog.h"
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include <proxy.h>
 #include <settings.h>
 
@@ -37,39 +33,35 @@ MainWindow::MainWindow(QWidget * parent)
     m_ToolbarWidget(new QToolBar("Download Toolbar", this)), m_trayIcon( new QSystemTrayIcon(this))
 {
     m_forceExit = false;
+    m_oldstate = Qt::WindowNoState;
 
-    InitializeWidgets();
-    InitializeActions();
+    initializeWidgets();
+    initializeActions();
 }
 
 MainWindow::~MainWindow() throw()
 {
+    Proxy::settings()->setValue(SettingsValNames::scMainWindowGeometry, saveGeometry());
 }
 
-void MainWindow::InitializeWidgets()
+void MainWindow::initializeWidgets()
 {
-    InitializeMenuBar();
-    InitilizeToolbarWidget();
-    InitilizeDownloadWidget();
-    InitializeTrayIcon();
-
-    QRect rect = QApplication::desktop()->geometry();
-
-    int x = static_cast<int>(rect.x() + rect.width() * 1/8);
-    int y = static_cast<int>(rect.y() + rect.height() * 1/8);
-    int w = static_cast<int>(rect.width() * 3/4);
-    int h = static_cast<int>(rect.height() * 3/4);
-
-    setGeometry(x, y, w, h);
+    initializeMenuBar();
+    initializeToolbarWidget();
+    initializeDownloadWidget();
+    initializeTrayIcon();
+    initializeGeometry();
+    
+    setIcon(QIcon(":/app_icon.png"));
 }
 
-void MainWindow::InitializeMenuBar()
+void MainWindow::initializeMenuBar()
 {
     QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
 	setMenuBar(menuBar);
 }
 
-void MainWindow::InitilizeToolbarWidget()
+void MainWindow::initializeToolbarWidget()
 {
     m_ToolbarWidget->setToolButtonStyle(Qt::ToolButtonIconOnly);
     m_ToolbarWidget->setFloatable(false);
@@ -90,19 +82,42 @@ void MainWindow::InitilizeToolbarWidget()
     addToolBar(m_ToolbarWidget.get());
 }
 
-void MainWindow::InitilizeDownloadWidget()
+void MainWindow::initializeDownloadWidget()
 {
     setCentralWidget(m_DownloadWidget.get());
 }
 
-void MainWindow::InitializeTrayIcon()
+void MainWindow::initializeTrayIcon()
 {
-    m_trayIcon->setIcon(QIcon(":/user.png"));
+    m_trayIcon->setIcon(QIcon(":/app_icon.png"));
+}
+
+void MainWindow::initializeGeometry()
+{   
+
+    QByteArray storedGeometry(Proxy::settings()->value(SettingsValNames::scMainWindowGeometry).toByteArray());
+    
+    if (storedGeometry.isEmpty())
+    {
+        //load default         
+        QRect rect = QApplication::desktop()->geometry();
+
+        rect.setX(static_cast<int>(rect.x() + rect.width() * 1/8));
+        rect.setY(static_cast<int>(rect.y() + rect.height() * 1/8));
+        rect.setWidth(static_cast<int>(rect.width() * 3/4));
+        rect.setHeight(static_cast<int>(rect.height() * 3/4));
+
+        setGeometry(rect);
+    }
+    else
+    {
+        restoreGeometry(storedGeometry);
+    }    
 }
 
 bool MainWindow::confirmAppExit()
 {
-    bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit, Settings::NOSUBGROUP).value<bool>();
+    bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit).value<bool>();
 
     if (!confirmAppExit)
         return true;
@@ -122,7 +137,24 @@ void MainWindow::moveToTray()
     connect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 }
 
-void MainWindow::InitializeActions()
+void MainWindow::restoreFromTray()
+{
+    show();
+    m_trayIcon->hide();
+    disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    if (isVisible())
+    {
+        //code below restore window state  for real since
+        //show() doesn't bring window to front, it's just leavs window minimized in taskbar
+        activateWindow();
+        if (m_oldstate & Qt::WindowMaximized)
+            showMaximized();
+        else
+            showNormal();
+    }
+}
+
+void MainWindow::initializeActions()
 {
     connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( onClose() ) ) ; 
     connect( Actions::getAction(Actions::scAboutActionText), SIGNAL( triggered() ), this, SLOT( about() ) ) ; 
@@ -135,6 +167,7 @@ void MainWindow::InitializeActions()
 
 
     connect( this, SIGNAL(signalMoveToTray()), this, SLOT(moveToTray()), Qt::QueuedConnection);
+    connect( this, SIGNAL(signalRestoreFromTray()), this, SLOT(restoreFromTray()), Qt::QueuedConnection);
 }
 
 void MainWindow::showSettingsDialog()
@@ -146,12 +179,9 @@ void MainWindow::showSettingsDialog()
 
 void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason)
 {
-    if (reason == QSystemTrayIcon::Trigger)
+    if (reason & QSystemTrayIcon::Trigger)
     {
-        show();
-
-        m_trayIcon->hide();
-        disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+        emit restoreFromTray();
     }
 }
 
@@ -215,7 +245,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
         QStringList urls = text.split( QRegExp("\\s+") );
         Q_FOREACH(QString one, urls ) 
         {
-            m_DownloadWidget->addDownload( one, Proxy::settings()->value("DefaultDownloadDirectory", Settings::NOSUBGROUP ).value<QString>() );
+            m_DownloadWidget->addDownload( one, Proxy::settings()->value("DefaultDownloadDirectory").value<QString>() );
         }
         
     }
@@ -239,7 +269,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent* event)
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {
-    bool close2Tray = Proxy::settings()->value(SettingsValNames::scClose2Tray, Settings::NOSUBGROUP).value<bool>();
+    bool close2Tray = Proxy::settings()->value(SettingsValNames::scClose2Tray).value<bool>();
 
     if (!m_forceExit && close2Tray)
     {
@@ -260,36 +290,19 @@ void MainWindow::changeEvent(QEvent* event)
 {
     if (event->type() == QEvent::WindowStateChange)
     {
+        QWindowStateChangeEvent* e = static_cast<QWindowStateChangeEvent*>(event);
         unsigned int state = windowState();
- 	    if (state == Qt::WindowMinimized)
+        m_oldstate = e->oldState();
+ 	    if (state & Qt::WindowMinimized)
         {
-            bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
+            bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray).value<bool>();
             
             if (minimize2Tray)
             {
                 emit signalMoveToTray();
-                event->ignore();
             }
         }
     }
+
+    QMainWindow::changeEvent(event);
 }
-
-#ifdef WIN32
-
-bool MainWindow::winEvent( MSG * message, long * result )
-{
-    if (message->message == WM_SYSCOMMAND && message->wParam == SC_MINIMIZE) 
-    {
-        bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
-        
-        if (minimize2Tray)
-        {
-            emit signalMoveToTray();
-            (*result) = false;
-            return true;
-        }
-    }
-
-    return false;
-}
-#endif

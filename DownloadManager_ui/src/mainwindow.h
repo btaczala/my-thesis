@@ -45,32 +45,33 @@ class MainWindow : public QMainWindow
         void trayActivated(QSystemTrayIcon::ActivationReason reason);
         void onClose();
         void moveToTray();
+        void restoreFromTray();
     signals:
         void signalMoveToTray();
+        void signalRestoreFromTray();
 
     protected:
-        void InitilizeToolbarWidget();
-        void InitilizeDownloadWidget();
-        void InitializeWidgets();
-        void InitializeMenuBar();
-        void InitializeTrayIcon();
+        void initializeToolbarWidget();
+        void initializeDownloadWidget();
+        void initializeWidgets();
+        void initializeMenuBar();
+        void initializeTrayIcon();
+        void initializeGeometry();
 
         bool confirmAppExit();
 
-        void InitializeActions();
+        void initializeActions();
         virtual void keyPressEvent(QKeyEvent* event);
         virtual void keyReleaseEvent(QKeyEvent* event);
         virtual void closeEvent(QCloseEvent* event);
         virtual void changeEvent(QEvent* event);
-#ifdef WIN32
-        virtual bool winEvent(MSG* message, long* result );
-#endif
 
     private:
-        std::auto_ptr<MenuBar>         m_MenuBar; 
-        std::auto_ptr<QToolBar>        m_ToolbarWidget; 
-        std::auto_ptr<QDownloadWidget> m_DownloadWidget;
-        std::auto_ptr<QSystemTrayIcon>      m_trayIcon;
-        bool m_forceExit;
+        std::auto_ptr<MenuBar>          m_MenuBar; 
+        std::auto_ptr<QToolBar>         m_ToolbarWidget; 
+        std::auto_ptr<QDownloadWidget>  m_DownloadWidget;
+        std::auto_ptr<QSystemTrayIcon>  m_trayIcon;
+        bool                            m_forceExit;
+        Qt::WindowStates                m_oldstate; //used by tray icon functions
 };
 #endif

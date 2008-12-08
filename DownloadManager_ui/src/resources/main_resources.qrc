@@ -17,5 +17,6 @@
 		<file>settings.png</file>
 		<file>network_settings.png</file>
 		<file>server_settings.png</file>
+		<file>app_icon.png</file>
     </qresource>
 </RCC>

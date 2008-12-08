@@ -64,7 +64,7 @@ namespace general_settings_tabs
     {
         QLabel* defaultFolderLabel = new QLabel(tr("Default download folder:"));
         m_defaultFolderEdit = new QLineEdit();
-        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory",Settings::NOSUBGROUP).value<QString>() ;
+        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory").value<QString>() ;
         m_defaultFolderEdit->setText( defaultDir.isEmpty() ? QDir::homePath() : defaultDir ) ;
         QPushButton* defaultFolderButton = new QPushButton(tr("Browse..."));
 
@@ -124,7 +124,7 @@ namespace general_settings_tabs
             return;
 
         m_defaultFolderEdit->setText(dir);
-        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir,Settings::NOSUBGROUP);
+        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir);
     }
 
     void DownloadTab::delayStateChanged(int state)
@@ -139,13 +139,13 @@ namespace general_settings_tabs
         QCheckBox* autostartCheck = new QCheckBox;
         autostartCheck->setText(tr("Start application on system startup"));
 
-        bool minimize2tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray, Settings::NOSUBGROUP).value<bool>();
+        bool minimize2tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray).value<bool>();
         QCheckBox* minimize2TrayCheck = new QCheckBox;
         minimize2TrayCheck->setText(tr("Move to tray icon when minimized"));
         minimize2TrayCheck->setChecked(minimize2tray);
         connect(minimize2TrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onMinimize2TrayCheck(int)));
 
-        bool close2tray = Proxy::settings()->value(SettingsValNames::scClose2Tray, Settings::NOSUBGROUP).value<bool>();
+        bool close2tray = Proxy::settings()->value(SettingsValNames::scClose2Tray).value<bool>();
         QCheckBox* close2TrayCheck = new QCheckBox;
         close2TrayCheck->setText(tr("Move to tray icon when closed - Tip: Press Shift key to force exit"));
         close2TrayCheck->setChecked(close2tray);
@@ -157,7 +157,7 @@ namespace general_settings_tabs
         QCheckBox* oneInstanceCheck = new QCheckBox;
         oneInstanceCheck->setText(tr("Allow only 1 copy of application at a time"));
 
-        bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit, Settings::NOSUBGROUP).value<bool>();
+        bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit).value<bool>();
         QCheckBox* confirmAppExitCheck = new QCheckBox;
         confirmAppExitCheck->setText(tr("Confirm application exit"));
         confirmAppExitCheck->setChecked(confirmAppExit);
@@ -188,16 +188,16 @@ namespace general_settings_tabs
 
     void ApplicationTab::onClose2TrayCheck(int state)
     {
-        Proxy::settings()->setValue(SettingsValNames::scClose2Tray, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
+        Proxy::settings()->setValue(SettingsValNames::scClose2Tray, static_cast<int>(state == Qt::Checked));
     }
 
     void ApplicationTab::onMinimize2TrayCheck(int state)
     {
-        Proxy::settings()->setValue(SettingsValNames::scMinimize2Tray, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
+        Proxy::settings()->setValue(SettingsValNames::scMinimize2Tray, static_cast<int>(state == Qt::Checked));
     }
 
     void ApplicationTab::onConfirmAppExit(int state)
     {
-        Proxy::settings()->setValue(SettingsValNames::scConfirmAppExit, static_cast<int>(state == Qt::Checked), Settings::NOSUBGROUP);
+        Proxy::settings()->setValue(SettingsValNames::scConfirmAppExit, static_cast<int>(state == Qt::Checked));
     }
 }

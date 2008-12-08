@@ -9,11 +9,13 @@
 namespace SettingsValNames
 {
     // LIBRARY NAMES
-    static const char scContentLength [] = "ContentLength" ;
-    static const char scMaxDownloads [] = "MaxDownloads" ;
+    static const char scContentLength[] = "ContentLength";
+    static const char scMaxDownloads[] = "MaxDownloads";
     
     // UI NAMES
-    static const char scColumnsInfo [] = "QDownloadWidgetColumnInfo" ;
+    static const char scColumnsInfo[] = "QDownloadWidgetColumnInfo";
+    static const char scMainWindowGeometry[] = "MainWindowGeometry";
+    //settings
     static const char scMinimize2Tray[] = "minimize2tray";
     static const char scClose2Tray[] = "close2tray";
     static const char scConfirmAppExit[] = "confirmAppExit";
@@ -61,7 +63,7 @@ class Settings
          * @param subgroup It's used only with context = PLUGIN. This is the subgroup ( each plugin has a subgroup ) for plugin 
          * @see Context
          */
-        void                setValue (const QString & valName, const QVariant & value, Context context, const QString & subgroup="") ; 
+        void                setValue (const QString & valName, const QVariant & value, Context context = Settings::NOSUBGROUP, const QString & subgroup="") ; 
         /**
          * Returns value of setting
          * @param valName setting name
@@ -70,7 +72,7 @@ class Settings
          * @return 
          * @see setValue
          */
-        QVariant            value( const QString & valName, Context context, const QString & subgroup="") ; 
+        QVariant            value( const QString & valName, Context context = Settings::NOSUBGROUP, const QString & subgroup="") ; 
 
         /**
          * load application settings. Should be invoked as soon as possible after application starts
