@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget * parent)
 
 MainWindow::~MainWindow() throw()
 {
-    Proxy::settings()->setValue(SettingsValNames::scMainWindowGeometry, saveGeometry());
+    Proxy::settings()->setValue(SettingsValNames::scMainWindowGeometry, saveGeometry(), Settings::UI);
 }
 
 void MainWindow::initializeWidgets()
@@ -95,7 +95,7 @@ void MainWindow::initializeTrayIcon()
 void MainWindow::initializeGeometry()
 {   
 
-    QByteArray storedGeometry(Proxy::settings()->value(SettingsValNames::scMainWindowGeometry).toByteArray());
+    QByteArray storedGeometry(Proxy::settings()->value(SettingsValNames::scMainWindowGeometry, Settings::UI).toByteArray());
     
     if (storedGeometry.isEmpty())
     {
@@ -104,7 +104,7 @@ void MainWindow::initializeGeometry()
 
         rect.setX(static_cast<int>(rect.x() + rect.width() * 1/8));
         rect.setY(static_cast<int>(rect.y() + rect.height() * 1/8));
-        rect.setWidth(static_cast<int>(rect.width() * 3/4));
+        rect.setWidth(static_cast<int>(rect.width() * 5/6));
         rect.setHeight(static_cast<int>(rect.height() * 3/4));
 
         setGeometry(rect);

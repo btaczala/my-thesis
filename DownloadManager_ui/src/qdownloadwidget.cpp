@@ -24,7 +24,6 @@
 #include <QtGui>
 #include <QTime>
 #include "columnsconfigdialog.h"
-#include <sstream>
 #include "actions.h"
 
 #include <proxy.h>
@@ -34,15 +33,18 @@
 #include <rslogger.h>
 #include <downloadmanager.h>
 
+const int QDownloadWidget::QDownloadWidgetColumnInfo::VERSION = 1;
+
 QDownloadWidget::QDownloadWidget(QWidget * parent) 
 : QTreeWidget(parent )
 , m_pContextMenu( new QMenu() )
 , m_CurrentColumnID(-1)
 {
-    InitializeColumns();
+    setHeader(new QDownloadHeaderView(this));
+    connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(sectionMoved(int, int, int)));
+    initializeColumns();
     m_pDownloadManager  = Proxy::downloadManager();
     //Proxy::settings()->loadSettings();
-    setHeader(new QDownloadHeaderView(this));
     
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
 
@@ -69,12 +71,12 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
 QDownloadWidget::~QDownloadWidget()
 {
     RSDM_LOG_FUNC;
-    SaveColumns();
+    saveColumns();
     disconnect();
     delete m_downloadItemDelegate;
     
 }
-void QDownloadWidget::InitializeColumns()
+void QDownloadWidget::initializeColumns()
 {
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnId, tr("id"), true, 220) );
     m_columns.push_back( QDownloadWidgetColumnInfo( QDownloadWidgetColumnInfo::ColumnPath,tr("Path")) );
@@ -87,45 +89,84 @@ void QDownloadWidget::InitializeColumns()
 
     QStringList headers;
     
-    QString columns = Proxy::settings()->value( SettingsValNames::scColumnsInfo, Settings::UI).value<QString>();
     for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
         headers << i->getName();
-        if (!columns.isEmpty())
-            i->setVisible(columns.contains(i->getName()));
     }
 
     setHeaderLabels(headers);
     
-    ReloadColumns();
+    restoreColumns();
+    reloadColumns();
 
     m_downloadItemDelegate = new DownloadWidgetDelegates::DownloadItemDelegate(this);
 
     setItemDelegate(m_downloadItemDelegate);
 }
 
-void QDownloadWidget::ReloadColumns(bool readSettings)
+void QDownloadWidget::reloadColumns(bool readSettings)
 {
-    for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+    for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
         header()->resizeSection(i->getId(), i->getWidth());
+        
+        if (i->getVisualIndex() != UNSET_COL)
+            header()->moveSection(i->getId(), i->getVisualIndex());
 
-        setColumnHidden(i->getId(), !(i->isVisible()));        
+        setColumnHidden(i->getId(), !(i->isVisible()));
     }
 }
 
-void QDownloadWidget::SaveColumns()
-{
-    std::stringstream ss;
+void QDownloadWidget::saveColumns()
+{    
     for(ColumnCollection::const_iterator i = m_columns.begin(); i != m_columns.end(); ++i)
     {
-        if (!ss.str().empty())
-            ss << ";";
+        QByteArray array;
+        QDataStream str(&array, QIODevice::WriteOnly);
 
-        if (i->isVisible())
-            ss << i->getName().toStdString();
+        str << QDownloadWidgetColumnInfo::VERSION
+            << i->getWidth()
+            << i->getVisualIndex()
+            << i->isVisible();
+
+        Proxy::settings()->setValue( i->getName(), array, Settings::UI , "columns") ; 
     }
-    Proxy::settings()->setValue( SettingsValNames::scColumnsInfo, QString( ss.str().c_str() ), Settings::UI ) ; 
+}
+
+void QDownloadWidget::restoreColumns()
+{
+    for(ColumnCollection::iterator i = m_columns.begin(); i != m_columns.end(); ++i)
+    {
+        QByteArray array(Proxy::settings()->value( i->getName(), Settings::UI, "columns").toByteArray());
+
+        if (array.isEmpty())
+            continue;
+
+        QDataStream str(&array, QIODevice::ReadOnly);
+
+        int version = 0, width = 0, visualIndex;
+        bool visible = true;
+        str >> version;
+
+        if (version != QDownloadWidgetColumnInfo::VERSION)
+            continue;
+
+        str >> width
+            >> visualIndex
+            >> visible;
+
+        i->setWidth(width);
+        i->setVisualIndex(visualIndex);
+        i->setVisible(visible);
+    }
+}
+
+void QDownloadWidget::columnResized(int column, int oldSize, int newSize)
+{
+    if (m_columns[column].isVisible())
+        m_columns[column].setWidth(newSize);
+   
+    QTreeWidget::columnResized(column, oldSize, newSize);
 }
 
 void QDownloadWidget::paintEvent( QPaintEvent *event )
@@ -210,6 +251,11 @@ void QDownloadWidget::columnHide()
             columnChanged(&m_columns[i]);
         }
     }
+}
+
+void QDownloadWidget::sectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex)
+{
+    m_columns[logicalIndex].setVisualIndex(newVisualIndex);
 }
 
 void QDownloadWidget::contextMenu(QContextMenuEvent * event )

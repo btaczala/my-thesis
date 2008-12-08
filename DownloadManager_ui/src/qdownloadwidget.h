@@ -32,6 +32,8 @@ class QPaintEvent;
 class QContextMenuEvent;
 class DownloadManager;
 
+#define UNSET_COL (-1)
+
 class QDownloadHeaderView : public QHeaderView
 {
     Q_OBJECT
@@ -99,10 +101,11 @@ public:
     class QDownloadWidgetColumnInfo
     {
     public:
-        QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible = true, int width = 100) // has to be const when passing temporary object
+        QDownloadWidgetColumnInfo( int id, const QString& colName, bool visible = true, int width = 100, int visualIndex = UNSET_COL) // has to be const when passing temporary object
         {
-            _id = id; _colName = colName; _visible = visible; _width = width;
+            _id = id; _colName = colName; _visible = visible; _width = width; _visualIndex = visualIndex;
         }
+
         enum ColumnType // gcc does not support unnamed enums ( ? ) 
         {
             ColumnId = 0,
@@ -114,17 +117,21 @@ public:
             ColumnEstimatedTime,
             ColumnDownloadRate,
         };
+
         int getId() const { return _id; }
         const QString& getName() const { return _colName; }
         bool isVisible() const { return _visible; }
         int getWidth() const { return _width; }
+        int getVisualIndex() const { return _visualIndex; }
         
         void setVisible(bool visible) { _visible = visible; }
-        void setWidth(int width){ _width = width; }
+        void setWidth(int width) { _width = width; }
+        void setVisualIndex(int visualIndex) {_visualIndex = visualIndex; }
 
-        static const QString settingsName;
+        static const int VERSION;
     private:
         int _id;
+        int _visualIndex;
         QString _colName;
         bool _visible;
         int _width;
@@ -146,6 +153,7 @@ public slots:
     void columnChanged(QDownloadWidget::QDownloadWidgetColumnInfo* column);
     void contextMenu(QContextMenuEvent * event );
     void columnHide(); 
+    void sectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
 
     void globalProgressChanged( int value ) ; 
     void statusChanged( int position, DownloadState::States status );
@@ -157,14 +165,19 @@ public slots:
     void progressInfoAt( int, const ProgressInfo& _info );
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
-    void InitializeColumns();
-    void ReloadColumns(bool readSettings = false);
-    void SaveColumns();
+    void initializeColumns();
+    void reloadColumns(bool readSettings = false);
+    void saveColumns();
+    void restoreColumns();
 
 protected:
     virtual void paintEvent(QPaintEvent *event);
     virtual void contextMenuEvent(QContextMenuEvent * event );
+protected slots:
 
+    void columnResized(int column, int oldSize, int newSize);
+
+protected:
     ColumnCollection m_columns;
     QPointer<QMenu>  m_pContextMenu ; 
     int              m_CurrentColumnID ; 
