@@ -191,9 +191,6 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
     if ( state()  == DownloadState::DOWNLOADING ) 
     {
       calculateProgress( done + m_iPDownloaded, total + m_iPDownloaded);
-        qDebug() << done;
-        qDebug() << total;
-        qDebug() << m_iPDownloaded;
 
         if ( buff == NULL ) 
         {
