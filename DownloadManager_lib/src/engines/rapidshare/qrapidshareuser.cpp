@@ -28,6 +28,7 @@ const QString QRapidshareUser::ComposeCookie()
     cookie += userName;
     cookie +="-";
     QString password = Proxy::settings()->value(SettingsValNames::scPluginPassword,Settings::PLUGINS,"rapidshare").value<QString>() ;
+    password = Proxy::decrypt(password);
     QString aa = password.toAscii();
     foreach(QChar a,aa)
     {
