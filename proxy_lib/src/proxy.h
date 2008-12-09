@@ -3,6 +3,7 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
+#include <QString>
 
 class DownloadManager ; 
 class EngineManager ; 
@@ -28,7 +29,8 @@ class Proxy
         
         //static void setDownloadManager( DownloadManager *ptr ) ; 
         
-        
+        static QString encrypt(QString& data);
+        static QString decrypt(QString& data);
         
 	private:
 		static Proxy* proxy() ;

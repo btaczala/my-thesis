@@ -113,23 +113,28 @@ namespace server_settings_page
         layout->addStretch(1);
         setLayout(layout);
 
-        std::string userName = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginUsername) );
-        std::string userPass = boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginPassword) ) ; 
-        LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName.c_str() ).arg( userPass.c_str() ));
-        if ( userName.empty() || userPass.empty() ) 
+        QString userName = QString::fromStdString( boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginUsername)));
+        QString userPass = QString::fromStdString( boost::any_cast<std::string>(Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginPassword)));
+        
+        if (!userPass.isEmpty())
+            userPass = Proxy::decrypt(userPass);
+
+        
+        LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName ).arg( userPass ));
+        if ( userName.isEmpty() || userPass.isEmpty() ) 
             credentialsCheck->setCheckState( Qt::Unchecked );
         else
         {
             credentialsCheck->setCheckState( Qt::Checked );
-            m_UserEdit->setText( userName.c_str() ) ; 
-            m_PasswordEdit->setText( userPass.c_str() ) ; 
+            m_UserEdit->setText(userName); 
+            m_PasswordEdit->setText(userPass); 
         }
         useCredentialChecked(credentialsCheck->checkState());
     }
     ServerTab::~ ServerTab()
     {
         Proxy::settings()->setValue( SettingsValNames::scPluginUsername,m_UserEdit->text(),Settings::PLUGINS,"rapidshare");
-        Proxy::settings()->setValue( SettingsValNames::scPluginPassword,m_PasswordEdit->text(),Settings::PLUGINS,"rapidshare");
+        Proxy::settings()->setValue( SettingsValNames::scPluginPassword,Proxy::encrypt(m_PasswordEdit->text()),Settings::PLUGINS,"rapidshare");
     }
     void ServerTab::useCredentialChecked(int state ) 
     {

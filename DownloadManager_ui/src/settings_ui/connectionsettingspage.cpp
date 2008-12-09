@@ -107,7 +107,9 @@ namespace connection_settings_page
         QString proxyPort = Proxy::settings()->value(SettingsValNames::scProxyPort).toString();
         QString proxyUser = Proxy::settings()->value(SettingsValNames::scProxyUser).toString();
         QString proxyPass = Proxy::settings()->value(SettingsValNames::scProxyPass).toString();
-        
+
+        if (!proxyPass.isEmpty())
+            proxyPass = Proxy::decrypt(proxyPass);
 
         m_useProxyCheck = new QCheckBox;
         m_useProxyCheck->setText(tr("Use proxy server"));
@@ -169,7 +171,7 @@ namespace connection_settings_page
         Proxy::settings()->setValue(SettingsValNames::scProxyServer, m_serverEdit->text());
         Proxy::settings()->setValue(SettingsValNames::scProxyPort, m_portEdit->text());
         Proxy::settings()->setValue(SettingsValNames::scProxyUser, m_userEdit->text());
-        Proxy::settings()->setValue(SettingsValNames::scProxyPass, m_passwordEdit->text());
+        Proxy::settings()->setValue(SettingsValNames::scProxyPass, Proxy::decrypt(m_passwordEdit->text()));
     }
 
     void ProxyTab::useProxyStateChanged(int state)

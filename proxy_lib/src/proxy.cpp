@@ -8,9 +8,19 @@
 #include <rslogger.h>
 #include <QTime>
 #include <cmath>
-
+#include <algorithm>
 #include "settings.h"
 
+namespace
+{
+    struct advancedXor13
+    {
+        QChar operator()(QChar& c)
+        {
+            return c.unicode() ^ 13;
+        }
+    };
+}
 
 Proxy * Proxy::proxy() 
 {
@@ -49,4 +59,20 @@ void Proxy::deinit()
 {
     proxy()->m_apSettings.reset();
     proxy()->m_pDownloadManager.reset();
+}
+
+QString Proxy::encrypt(QString& data)
+{
+    QString buf(data);
+    //haha - we're using advanced Xor 13 algorithm
+    std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
+    return buf;
+}
+
+
+QString Proxy::decrypt(QString& data)
+{
+    QString buf(data);
+    std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
+    return buf;
 }
