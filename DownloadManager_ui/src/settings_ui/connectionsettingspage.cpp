@@ -74,8 +74,7 @@ namespace connection_settings_page
         downloadsLabel->setMinimumWidth(labelWidth);
         m_pDownloadsSpin.reset( new QSpinBox ) ; 
         m_pDownloadsSpin->setRange(1,999);
-//         downloadsSpin->setValue(2);
-        int v = Proxy::settings()->value( SettingsValNames::scMaxDownloads/*"MaxDownloads"*/,Settings::LIBRARY).value<int>() ;
+        int v = Proxy::settings()->value( SettingsValNames::scMaxDownloads,Settings::LIBRARY).value<int>() ;
         m_pDownloadsSpin->setValue ( v==0 ? 2 : v );
         m_pDownloadsSpin->setMaximumWidth(45);
         QHBoxLayout* downloadsLayout = new QHBoxLayout;
@@ -92,6 +91,7 @@ namespace connection_settings_page
 
         setLayout(layout);
     }
+
     ConnectionTab::~ConnectionTab()
     {
         Proxy::settings()->setValue( SettingsValNames::scMaxDownloads,m_pDownloadsSpin->value(),Settings::LIBRARY);
@@ -102,43 +102,58 @@ namespace connection_settings_page
     ProxyTab::ProxyTab(QWidget *parent)
         :QWidget(parent)
     {
-        QCheckBox* useProxyCheck = new QCheckBox;
-        useProxyCheck->setText(tr("Use proxy server"));
+        bool useAppProxy = Proxy::settings()->value(SettingsValNames::scUseAppProxy).toBool();
+        QString proxyServer = Proxy::settings()->value(SettingsValNames::scProxyServer).toString();
+        QString proxyPort = Proxy::settings()->value(SettingsValNames::scProxyPort).toString();
+        QString proxyUser = Proxy::settings()->value(SettingsValNames::scProxyUser).toString();
+        QString proxyPass = Proxy::settings()->value(SettingsValNames::scProxyPass).toString();
+        
 
-        const short int labelWidth = 80;
+        m_useProxyCheck = new QCheckBox;
+        m_useProxyCheck->setText(tr("Use proxy server"));
+        m_useProxyCheck->setChecked(useAppProxy);
+        connect(m_useProxyCheck, SIGNAL(stateChanged(int)), this, SLOT(useProxyStateChanged(int)));
 
         QLabel* serverLabel = new QLabel(tr("Proxy server:"));
-        serverLabel->setMinimumWidth(labelWidth);
-        QLineEdit* serverEdit = new QLineEdit;
+        serverLabel->setMinimumWidth(DialogSettings::ServerLabelMinimumWidth);
+        m_serverEdit = new QLineEdit;
+        m_serverEdit->setText(proxyServer);
+        m_serverEdit->setEnabled(useAppProxy);
         QLabel* portLabel = new QLabel(tr("Port:"));
-        QLineEdit* portEdit = new QLineEdit;
-        portEdit->setMaximumWidth(60);
+        m_portEdit = new QLineEdit;
+        m_portEdit->setText(proxyPort);
+        m_portEdit->setEnabled(useAppProxy);
+        m_portEdit->setMaximumWidth(DialogSettings::PortEditMaximumWidth);
         QHBoxLayout* serverLayout = new QHBoxLayout;
         serverLayout->addWidget(serverLabel);
-        serverLayout->addWidget(serverEdit);
+        serverLayout->addWidget(m_serverEdit);
         serverLayout->addWidget(portLabel);
-        serverLayout->addWidget(portEdit);
+        serverLayout->addWidget(m_portEdit);
 
         QLabel* userLabel = new QLabel(tr("Proxy user:"));
-        userLabel->setMinimumWidth(labelWidth);
-        QLineEdit* userEdit = new QLineEdit;
+        userLabel->setMinimumWidth(DialogSettings::UserLabelMinimumWidth);
+        m_userEdit = new QLineEdit;
+        m_userEdit->setText(proxyUser);
+        m_userEdit->setEnabled(useAppProxy);
         QHBoxLayout* userLayout = new QHBoxLayout;
         userLayout->addWidget(userLabel);
-        userLayout->addWidget(userEdit);
+        userLayout->addWidget(m_userEdit);
         userLayout->addStretch(1);
 
         QLabel* passwordLabel = new QLabel(tr("Proxy password:"));
-        passwordLabel->setMinimumWidth(labelWidth);
-        QLineEdit* passwordEdit = new QLineEdit;
-        passwordEdit->setEchoMode(QLineEdit::Password);
+        passwordLabel->setMinimumWidth(DialogSettings::PasswordLabelMinimumWidth);
+        m_passwordEdit = new QLineEdit;
+        m_passwordEdit->setText(proxyPass);
+        m_passwordEdit->setEnabled(useAppProxy);
+        m_passwordEdit->setEchoMode(QLineEdit::Password);
         QHBoxLayout* passwordLayout = new QHBoxLayout;
         passwordLayout->addWidget(passwordLabel);
-        passwordLayout->addWidget(passwordEdit);
+        passwordLayout->addWidget(m_passwordEdit);
         passwordLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
-        layout->addWidget(useProxyCheck);
+        layout->addWidget(m_useProxyCheck);
         layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
         layout->addLayout(serverLayout);
         layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
@@ -147,6 +162,26 @@ namespace connection_settings_page
         layout->addLayout(passwordLayout);
         layout->addStretch(1);
         setLayout(layout);
+    }
+
+    ProxyTab::~ProxyTab()
+    {
+        Proxy::settings()->setValue(SettingsValNames::scProxyServer, m_serverEdit->text());
+        Proxy::settings()->setValue(SettingsValNames::scProxyPort, m_portEdit->text());
+        Proxy::settings()->setValue(SettingsValNames::scProxyUser, m_userEdit->text());
+        Proxy::settings()->setValue(SettingsValNames::scProxyPass, m_passwordEdit->text());
+    }
+
+    void ProxyTab::useProxyStateChanged(int state)
+    {
+        bool enabled = state == Qt::Checked;
+
+        Proxy::settings()->setValue(SettingsValNames::scUseAppProxy, enabled);
+
+        m_serverEdit->setEnabled(enabled);
+        m_portEdit->setEnabled(enabled);
+        m_userEdit->setEnabled(enabled);
+        m_passwordEdit->setEnabled(enabled);
     }
 }
 

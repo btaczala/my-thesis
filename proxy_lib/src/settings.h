@@ -11,6 +11,11 @@ namespace SettingsValNames
     // LIBRARY NAMES
     static const char scContentLength[] = "ContentLength";
     static const char scMaxDownloads[] = "MaxDownloads";
+    static const char scUseAppProxy[] = "useAppProxy";
+    static const char scProxyUser[] = "proxyUser";
+    static const char scProxyPass[] = "proxyPass";
+    static const char scProxyServer[] = "proxyServer";
+    static const char scProxyPort[] = "proxyPort";
     
     // UI NAMES
     static const char scColumnsInfo[] = "QDownloadWidgetColumnInfo";

@@ -24,6 +24,9 @@
 #include <memory>
 
 class QSpinBox;
+class QCheckBox;
+class QLineEdit;
+
 namespace connection_settings_page
 {
     class ConnectionTab : public QWidget
@@ -41,6 +44,24 @@ namespace connection_settings_page
         Q_OBJECT
     public:
         ProxyTab(QWidget* parent = 0);
+        virtual ~ProxyTab();
+    public slots:
+        void useProxyStateChanged(int state);
+
+    protected:
+        struct DialogSettings
+        {
+            static const int ServerLabelMinimumWidth = 80;
+            static const int PortEditMaximumWidth = 60;
+            static const int UserLabelMinimumWidth = 80;
+            static const int PasswordLabelMinimumWidth = 80;
+        };
+        
+        QCheckBox* m_useProxyCheck;
+        QLineEdit* m_serverEdit;
+        QLineEdit* m_portEdit;
+        QLineEdit* m_userEdit;
+        QLineEdit* m_passwordEdit;        
     };
 }
 
