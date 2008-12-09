@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     public:
         MainWindow(QWidget* parent = 0);
-        ~MainWindow() throw() ; 
+        virtual ~MainWindow() throw() ; 
     public slots:
         void about();
         void showSettingsDialog();
@@ -46,6 +46,7 @@ class MainWindow : public QMainWindow
         void onClose();
         void moveToTray();
         void restoreFromTray();
+        void addNewDownload();
     signals:
         void signalMoveToTray();
         void signalRestoreFromTray();

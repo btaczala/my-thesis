@@ -31,7 +31,7 @@ namespace connection_settings_page
         Q_OBJECT
     public:
         ConnectionTab(QWidget* parent = 0);
-        ~ConnectionTab();
+        virtual ~ConnectionTab();
     private:
         std::auto_ptr<QSpinBox> m_pDownloadsSpin;
     };

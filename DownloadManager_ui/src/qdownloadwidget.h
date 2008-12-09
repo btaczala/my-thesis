@@ -88,7 +88,7 @@ class QDownloadWidget : public QTreeWidget
     Q_OBJECT
 public:
     QDownloadWidget(QWidget * parent = 0);
-    ~QDownloadWidget(); 
+    virtual ~QDownloadWidget(); 
 
     /**
      * If engine found url will be added to download manager list, and to treewidget. 

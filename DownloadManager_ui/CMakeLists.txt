@@ -27,6 +27,7 @@ SET( APP_SRCS
     src/toolbar.cpp
     src/actions.cpp
 	src/columnsconfigdialog.cpp
+	src/adddownloaddialog.cpp
 	src/settings_ui/settingsdialog.cpp
 	src/settings_ui/generalsettingspage.cpp
 	src/settings_ui/connectionsettingspage.cpp
@@ -41,6 +42,7 @@ SET( APP_HDRS
     src/toolbar.h
     src/actions.h
     src/columnsconfigdialog.h
+	src/adddownloaddialog.h
 	src/settings_ui/settingsdialog.h
 	src/settings_ui/isettingspage.h
 	src/settings_ui/generalsettingspage.h
@@ -55,6 +57,7 @@ SET( APP_MOC_HDRS
 	src/systemdock.h
     src/menubar.h
     src/toolbar.h
+	src/adddownloaddialog.h
 	src/settings_ui/settingsdialog.h
 	src/settings_ui/isettingspage.h
 	src/settings_ui/generalsettingspage.h

@@ -17,45 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef SETTINGSDIALOG_H
-#define SETTINGSDIALOG_H
+#ifndef ADDDOWNLOADDIALOG_H
+#define ADDDOWNLOADDIALOG_H
 
 #include <QDialog>
-#include "isettingspage.h"
 
-class QListWidget;
-class QStackedWidget;
-class QListWidgetItem;
-
-class SettingsDialog : public QDialog
+class AddDownloadDialog : public QDialog
 {
     Q_OBJECT
 public:
-    SettingsDialog(QWidget* parent = 0);
-
-    void addPage(ISettingsPage* page, bool activate = false);
-
-public slots:
-    void changePage(QListWidgetItem* current, QListWidgetItem* previous);
-
-protected: 
+    AddDownloadDialog(QWidget* parent = NULL);
+    virtual ~AddDownloadDialog();
+protected:
     void initialize();
 
     struct DialogSettings
     {
-        static const int ContentsWidgetIconWidth = 48;
-        static const int ContentsWidgetIconHeigth = 48;
-        static const int ContentsWidgetMinimumWidth = 86;
-        static const int ContentsWidgetMaximumWidth = 86;
-        static const int ContentsWidgetSpacing = 12;
-        static const int MainLayoutColumnMinimumWidth = 360;
-        static const int MainLayoutRowMinimumHeigth = 360;
+        static const int MinimumUrlTextEditWidth = 340;
+        static const int UrlLabelMaxmimumWidth = 90;
+        static const int FolderButtonMaxmimumWidth = 30;
+        static const int FolderLabelMaxmimumWidth = 85;
+        static const int MainLayoutWidgetSpacing = 12;
     };
 
-private:
-    QListWidget* m_contentsWidget;
-    QStackedWidget* m_pagesWidget;
 };
-
 
 #endif

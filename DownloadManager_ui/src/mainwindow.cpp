@@ -24,6 +24,7 @@
 #include "qdownloadwidget.h"
 #include "actions.h"
 #include "settings_ui/settingsdialog.h"
+#include "adddownloaddialog.h"
 
 #include <proxy.h>
 #include <settings.h>
@@ -64,7 +65,7 @@ void MainWindow::initializeToolbarWidget()
     m_ToolbarWidget->setToolButtonStyle(Qt::ToolButtonIconOnly);
     m_ToolbarWidget->setFloatable(false);
     m_ToolbarWidget->setMovable(false);
-    m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewActionText ) );
+    m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewDownloadActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewGroupActionText ) );
     m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
@@ -161,6 +162,13 @@ void MainWindow::restoreFromTray()
     disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 }
 
+void MainWindow::addNewDownload()
+{
+    AddDownloadDialog dlg(this);
+
+    dlg.exec();
+}
+
 void MainWindow::initializeActions()
 {
     connect( Actions::getAction(Actions::scQuitActionText), SIGNAL( triggered() ), this, SLOT( onClose() ) ) ; 
@@ -168,9 +176,10 @@ void MainWindow::initializeActions()
     connect( Actions::getAction(Actions::scAboutQtActionText), SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) ) ; 
     connect( Actions::getAction(Actions::scSettingsActionText), SIGNAL( triggered()), this, SLOT(showSettingsDialog()));
     
+    connect( Actions::getAction(Actions::scNewDownloadActionText), SIGNAL(triggered()), this, SLOT(addNewDownload()));
     connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget.get() ,SLOT( StopSelectedDownload() ));
     connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
-    connect ( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
+    connect( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
 
 
     connect( this, SIGNAL(signalMoveToTray()), this, SLOT(moveToTray()), Qt::QueuedConnection);

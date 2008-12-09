@@ -30,7 +30,7 @@ namespace server_settings_page
         Q_OBJECT
     public:
         ServerTab(QWidget* parent = 0);
-        ~ServerTab();
+        virtual ~ServerTab();
     private slots:
         void useCredentialChecked( int state ) ; 
     private:

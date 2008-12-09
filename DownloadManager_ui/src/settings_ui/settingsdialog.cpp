@@ -27,22 +27,22 @@
 SettingsDialog::SettingsDialog(QWidget *parent) 
     :QDialog(parent)
 {
-    Initialize();
-    AddPage(new GeneralSettingsPage(this), true);
-    AddPage(new ConnectionSettingsPage(this));
-    AddPage(new ServerSettingsPage(this));
+    initialize();
+    addPage(new GeneralSettingsPage(this), true);
+    addPage(new ConnectionSettingsPage(this));
+    addPage(new ServerSettingsPage(this));
 }
 
 
-void SettingsDialog::Initialize()
+void SettingsDialog::initialize()
 {
     m_contentsWidget = new QListWidget;
     m_contentsWidget->setViewMode(QListView::IconMode);
-    m_contentsWidget->setIconSize(QSize(48, 48));
+    m_contentsWidget->setIconSize(QSize(DialogSettings::ContentsWidgetIconWidth, DialogSettings::ContentsWidgetIconHeigth));
     m_contentsWidget->setMovement(QListView::Static);
-    m_contentsWidget->setMinimumWidth(86);
-    m_contentsWidget->setMaximumWidth(86);
-    m_contentsWidget->setSpacing(12);
+    m_contentsWidget->setMinimumWidth(DialogSettings::ContentsWidgetMinimumWidth);
+    m_contentsWidget->setMaximumWidth(DialogSettings::ContentsWidgetMaximumWidth);
+    m_contentsWidget->setSpacing(DialogSettings::ContentsWidgetSpacing);
 
     m_pagesWidget = new QStackedWidget;
 
@@ -58,8 +58,8 @@ void SettingsDialog::Initialize()
     buttonsLayout->addWidget(closeButton);
 
     QGridLayout* mainLayout = new QGridLayout;
-    mainLayout->setColumnMinimumWidth(1, 360);
-    mainLayout->setRowMinimumHeight(0, 400);
+    mainLayout->setColumnMinimumWidth(1, DialogSettings::MainLayoutColumnMinimumWidth);
+    mainLayout->setRowMinimumHeight(0, DialogSettings::MainLayoutRowMinimumHeigth);
     mainLayout->addWidget(m_contentsWidget, 0, 0);
     mainLayout->addWidget(m_pagesWidget, 0, 1);
     mainLayout->addLayout(buttonsLayout,1, 1);
@@ -82,7 +82,7 @@ void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previ
     m_pagesWidget->setCurrentIndex(m_contentsWidget->row(current));
 }
 
-void SettingsDialog::AddPage(ISettingsPage* page, bool activate)
+void SettingsDialog::addPage(ISettingsPage* page, bool activate)
 {
     QListWidgetItem* item = new QListWidgetItem(m_contentsWidget);
     item->setIcon(page->getIcon());

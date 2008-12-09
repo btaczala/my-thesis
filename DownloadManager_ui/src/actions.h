@@ -30,7 +30,7 @@ public:
     typedef QMap<QString,QActionShPtr >   MapType ; 
     static QAction* getAction(const QString & actionName ) ; 
 
-    static const QString scNewActionText ; 
+    static const QString scNewDownloadActionText ; 
     static const QString scNewGroupActionText ; 
     static const QString scStartRestoreActionText ; 
     static const QString scStopActionText ; 
