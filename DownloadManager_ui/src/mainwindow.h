@@ -39,6 +39,11 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget* parent = 0);
         virtual ~MainWindow() throw() ; 
+
+        static QStringList getLinksFromClipboard();
+
+        void addDownload(const QString& url, const QString& fileDestination); 
+
     public slots:
         void about();
         void showSettingsDialog();

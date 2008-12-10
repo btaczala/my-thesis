@@ -20,7 +20,12 @@
 
 #include <QtGui>
 #include "adddownloaddialog.h"
+#include "mainwindow.h"
+#include <downloadmanager.h>
+#include <proxy.h>
+#include <settings.h>
 
+const QColor AddDownloadDialog::DialogSettings::invalidItemBackgroundColor = QColor(0xef, 0x29, 0x29);
 
 AddDownloadDialog::AddDownloadDialog(QWidget* parent)
     : QDialog(parent)
@@ -30,7 +35,40 @@ AddDownloadDialog::AddDownloadDialog(QWidget* parent)
 
 AddDownloadDialog::~AddDownloadDialog()
 {
+}
 
+void AddDownloadDialog::accept()
+{
+    QString str = m_urlEdit->toPlainText();
+    QString folder = m_folderCombo->currentText();
+    int i = m_folderCombo->currentIndex();
+
+    if (str.isEmpty())
+    {
+        markWidgetContentAsInvalid(m_urlEdit);
+        return;
+    }
+
+    if (folder.isEmpty())
+    {
+        markWidgetContentAsInvalid(m_folderCombo);
+        return;
+    }
+
+    QStringList urls = str.split(QRegExp("\\s+"));
+
+    Q_FOREACH(QString url, urls)
+    {
+        qobject_cast<MainWindow*>(parent())->addDownload(url, folder);
+    }
+}
+
+void AddDownloadDialog::resetItemBackground()
+{
+    if (m_urlEdit->hasFocus())
+        resetItemBackground(m_urlEdit);
+    else if (m_folderCombo->hasFocus())
+        resetItemBackground(m_folderCombo);
 }
 
 void AddDownloadDialog::initialize()
@@ -39,17 +77,16 @@ void AddDownloadDialog::initialize()
 
     QVBoxLayout* urlLabelLayout = new QVBoxLayout;
     QLabel* urlLabel = new QLabel(tr("Download URL(s)"));
-    urlLabel->setMaximumWidth(DialogSettings::UrlLabelMaxmimumWidth);
     urlLabelLayout->addWidget(urlLabel);
-    urlLabelLayout->addStretch(1);
-    
+    urlLabelLayout->addStretch(1);    
     layout->addLayout(urlLabelLayout, 0, 0);
-    QTextEdit* urlEdit = new QTextEdit;
-    urlEdit->setAcceptRichText(false);
-    urlEdit->setAutoFormatting(QTextEdit::AutoNone);
-    urlEdit->setLineWrapMode(QTextEdit::NoWrap);
-    urlEdit->setMinimumWidth(DialogSettings::MinimumUrlTextEditWidth);
-    layout->addWidget(urlEdit, 0, 1);
+
+    m_urlEdit = new QTextEdit;
+    m_urlEdit->setAcceptRichText(false);
+    m_urlEdit->setAutoFormatting(QTextEdit::AutoNone);
+    m_urlEdit->setLineWrapMode(QTextEdit::NoWrap);
+    m_urlEdit->setMinimumWidth(DialogSettings::MinimumUrlTextEditWidth);
+    layout->addWidget(m_urlEdit, 0, 1);
 
     QHBoxLayout* pasteLayout = new QHBoxLayout;
     QPushButton* pasteButton = new QPushButton(tr("Paste from clipboard"));
@@ -59,17 +96,22 @@ void AddDownloadDialog::initialize()
 
     QHBoxLayout* folderLayout = new QHBoxLayout;
     QLabel* folderLabel = new QLabel(tr("Download Folder:"));
-    folderLabel->setMaximumWidth(DialogSettings::FolderLabelMaxmimumWidth);
     layout->addWidget(folderLabel, 2, 0);
-    QComboBox* folderCombo = new QComboBox;
+    m_folderCombo = new QComboBox;
+    m_folderCombo->setEditable(true);
+    QCompleter* completer = new QCompleter;
+    completer->setModel(new QDirModel());
+    m_folderCombo->setCompleter(completer);
+    m_folderCombo->setInsertPolicy(QComboBox::InsertAtCurrent);
     QPushButton* folderButton = new QPushButton(tr("..."));
     folderButton->setMaximumWidth(DialogSettings::FolderButtonMaxmimumWidth);
-    folderLayout->addWidget(folderCombo);
+    folderLayout->addWidget(m_folderCombo);
     folderLayout->addWidget(folderButton);
     layout->addLayout(folderLayout, 2, 1);
 
     QHBoxLayout* buttonLayout = new QHBoxLayout;
     QPushButton* okButton = new QPushButton(tr("OK"));
+    okButton->setDefault(true);
     QPushButton* cancelButton = new QPushButton(tr("Cancel"));
     buttonLayout->addStretch(1);
     buttonLayout->addWidget(okButton);
@@ -79,5 +121,55 @@ void AddDownloadDialog::initialize()
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(close()));
 
+    connect(pasteButton, SIGNAL(clicked()), m_urlEdit, SLOT(paste()));
+    connect(folderButton, SIGNAL(clicked()), this, SLOT(browseForDownloadFolder()));
+
+    connect(m_urlEdit, SIGNAL(textChanged()), this, SLOT(resetItemBackground()));
+    connect(m_folderCombo, SIGNAL(editTextChanged(const QString&)), this, SLOT(resetItemBackground()));
+
     setLayout(layout);
+
+    pasteButton->click();
+
+    QString defaultDir = Proxy::settings()->value(SettingsValNames::scDefaultDownloadDirectory).toString();
+    if (!defaultDir.isEmpty())
+        m_folderCombo->addItem(defaultDir);
+
+    QTextCursor cursor = m_urlEdit->textCursor();
+    cursor.setPosition(QTextCursor::Start);
+    m_urlEdit->setTextCursor(cursor);
+}
+
+
+void AddDownloadDialog::markWidgetContentAsInvalid(QWidget* widget)
+{
+    QPalette p = widget->palette();
+    p.setColor(QPalette::Base, DialogSettings::invalidItemBackgroundColor);
+    widget->setPalette(p);
+}
+
+void AddDownloadDialog::resetItemBackground(QWidget *widget)
+{
+    QPalette p = widget->palette();
+    p.setColor(QPalette::Base, QApplication::palette().color(QPalette::Base));
+    widget->setPalette(p);
+}
+
+void AddDownloadDialog::browseForDownloadFolder()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Find download folder..."));
+
+    if (dir.isEmpty())
+        return;
+
+    int item = m_folderCombo->findText(dir);
+
+    if (item != -1)
+    {
+        m_folderCombo->setCurrentIndex(item);
+        return;
+    }
+
+    m_folderCombo->addItem(dir);
+    m_folderCombo->setCurrentIndex(m_folderCombo->count()-1);
 }

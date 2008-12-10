@@ -38,10 +38,10 @@ namespace general_settings_tabs
         Q_OBJECT
     public:
         DownloadTab(QWidget* parent = 0);
+        ~DownloadTab();
     public slots:
         void browseForDefaultFolder();
         void delayStateChanged(int state);
-        void defaultDirEdited();
     private:
         QLineEdit* m_defaultFolderEdit;
         QSpinBox* m_downloadDelay;
@@ -69,7 +69,7 @@ public:
     virtual QString getTitle() const;
 
 protected: 
-    void Initialize();
+    void initialize();
 
 };
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Tomasz Czyzewski  						*
+ *   Copyright (C) 2008 by Tomasz Czyzewski                                *
  *   tomasz.czy@gmail.com                                                  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -21,6 +21,10 @@
 #define ADDDOWNLOADDIALOG_H
 
 #include <QDialog>
+#include <QColor>
+
+class QTextEdit;
+class QComboBox;
 
 class AddDownloadDialog : public QDialog
 {
@@ -28,17 +32,28 @@ class AddDownloadDialog : public QDialog
 public:
     AddDownloadDialog(QWidget* parent = NULL);
     virtual ~AddDownloadDialog();
+
+public slots:
+    virtual void accept();
+    void resetItemBackground();
+    void browseForDownloadFolder();
+
 protected:
     void initialize();
+    void markWidgetContentAsInvalid(QWidget* widget);
+    void resetItemBackground(QWidget* widget);
 
     struct DialogSettings
     {
-        static const int MinimumUrlTextEditWidth = 340;
-        static const int UrlLabelMaxmimumWidth = 90;
+        static const int MinimumUrlTextEditWidth = 430;
         static const int FolderButtonMaxmimumWidth = 30;
-        static const int FolderLabelMaxmimumWidth = 85;
         static const int MainLayoutWidgetSpacing = 12;
+        static const QColor invalidItemBackgroundColor;
     };
+
+protected:
+    QTextEdit* m_urlEdit;
+    QComboBox* m_folderCombo;
 
 };
 

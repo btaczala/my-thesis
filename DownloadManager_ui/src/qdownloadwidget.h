@@ -95,7 +95,7 @@ public:
      * @param url 
      * @param fileDestination 
      */
-    void addDownload ( const QString & url, const QString & fileDestination ) ; 
+    void addDownload(const QString & url, const QString & fileDestination); 
     
 
     class QDownloadWidgetColumnInfo

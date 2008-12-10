@@ -9,6 +9,7 @@
 namespace SettingsValNames
 {
     // LIBRARY NAMES
+    static const char scDefaultDownloadDirectory[] = "DefaultDownloadDirectory";
     static const char scContentLength[] = "ContentLength";
     static const char scMaxDownloads[] = "MaxDownloads";
     static const char scUseAppProxy[] = "useAppProxy";

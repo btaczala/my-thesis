@@ -28,7 +28,7 @@
 GeneralSettingsPage::GeneralSettingsPage(QWidget *parent) 
     :ISettingsPage(parent)
 {
-    Initialize();
+    initialize();
 }
 
 QIcon GeneralSettingsPage::getIcon() const
@@ -41,10 +41,8 @@ QString GeneralSettingsPage::getTitle() const
     return tr("General");
 }
 
-void GeneralSettingsPage::Initialize()
+void GeneralSettingsPage::initialize()
 {    
-
-
     m_tabWidget->addTab(new general_settings_tabs::DownloadTab, tr("Download"));
     m_tabWidget->addTab(new general_settings_tabs::ApplicationTab, tr("Application"));
 
@@ -53,7 +51,6 @@ void GeneralSettingsPage::Initialize()
     mainLayout->setMargin(0);
 
     setLayout(mainLayout);
-
 }
 
 
@@ -64,18 +61,15 @@ namespace general_settings_tabs
     {
         QLabel* defaultFolderLabel = new QLabel(tr("Default download folder:"));
         m_defaultFolderEdit = new QLineEdit();
-        QString defaultDir = Proxy::settings()->value("DefaultDownloadDirectory").value<QString>();
+        QString defaultDir = Proxy::settings()->value(SettingsValNames::scDefaultDownloadDirectory).toString();
         if( defaultDir.isEmpty() )
         {
             defaultDir = QDir::homePath();
-            Proxy::settings()->setValue( "DefaultDownloadDirectory", defaultDir);
+            Proxy::settings()->setValue(SettingsValNames::scDefaultDownloadDirectory, defaultDir);
         }
         m_defaultFolderEdit->setText(defaultDir);
 
         QPushButton* defaultFolderButton = new QPushButton(tr("Browse..."));
-
-        connect(defaultFolderButton, SIGNAL(clicked()), this, SLOT(browseForDefaultFolder()));
-        connect(m_defaultFolderEdit, SIGNAL( editingFinished()), this, SLOT( defaultDirEdited()));
 
         QHBoxLayout* folderLayout = new QHBoxLayout;
         folderLayout->addWidget(defaultFolderLabel);
@@ -105,8 +99,6 @@ namespace general_settings_tabs
         delayLayout->addWidget(secondsLabel);
         delayLayout->addStretch(1);
 
-        connect(delaydownloadCheck, SIGNAL(stateChanged(int)), this, SLOT(delayStateChanged(int)));
-
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addSpacing(25);
         layout->addLayout(folderLayout);
@@ -120,7 +112,19 @@ namespace general_settings_tabs
         layout->addLayout(delayLayout);
         layout->addStretch(1);
 
+        connect(delaydownloadCheck, SIGNAL(stateChanged(int)), this, SLOT(delayStateChanged(int)));
+        connect(defaultFolderButton, SIGNAL(clicked()), this, SLOT(browseForDefaultFolder()));
+
         setLayout(layout);
+    }
+
+    DownloadTab::~DownloadTab()
+    {
+        QString dir = m_defaultFolderEdit->text();
+        if( QFile::exists( dir ))
+        {
+            Proxy::settings()->setValue( SettingsValNames::scDefaultDownloadDirectory, dir);
+        }
     }
 
     void DownloadTab::browseForDefaultFolder()
@@ -131,16 +135,6 @@ namespace general_settings_tabs
             return;
 
         m_defaultFolderEdit->setText(dir);
-        Proxy::settings()->setValue( "DefaultDownloadDirectory",dir);
-    }
-
-    void DownloadTab::defaultDirEdited()
-    {
-        QString dir = m_defaultFolderEdit->text();
-        if( QFile::exists( dir ))
-        {
-            Proxy::settings()->setValue( "DefaultDownloadDirectory",dir);
-        }
     }
 
     void DownloadTab::delayStateChanged(int state)

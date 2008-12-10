@@ -45,6 +45,20 @@ MainWindow::~MainWindow() throw()
     Proxy::settings()->setValue(SettingsValNames::scMainWindowGeometry, saveGeometry(), Settings::UI);
 }
 
+QStringList MainWindow::getLinksFromClipboard()
+{
+    QClipboard* clipboard = QApplication::clipboard();
+    QString text = clipboard->text(QClipboard::Clipboard);
+    QStringList urls = text.split( QRegExp("\\s+") );
+
+    return urls;
+}
+
+void MainWindow::addDownload(const QString& url, const QString& fileDestination)
+{
+    m_DownloadWidget->addDownload(url, fileDestination);
+}
+
 void MainWindow::initializeWidgets()
 {
     initializeMenuBar();
@@ -210,17 +224,18 @@ void MainWindow::onClose()
 void MainWindow::about()
 {
     QLabel *icon = new QLabel;
-    icon->setPixmap(QPixmap(":/user.png"));
+    icon->setPixmap(QPixmap(":/app_icon.png"));
 
     QLabel *text = new QLabel;
     text->setWordWrap(true);
-    text->setText("<p>The <b>QDownload Manager...</b> example demonstrates how to"
-                  " write a complete peer-to-peer file sharing"
-                  " application using Qt's network and thread classes.</p>"
-                  "<p>This feature complete client implementation of"
-                  " the BitTorrent protocol can efficiently"
-                  " maintain several hundred network connections"
-                  " simultaneously.</p>");
+    text->setText("<p>The <b>QDownload Manager...</b> <br/> "
+                  "  This program is free software; you can redistribute it and/or modify "
+                  " it under the terms of the GNU General Public License as published by "
+                  " the Free Software Foundation; either version 2 of the License, or "
+                  " (at your option) any later version.</p><br/>"
+                  " <p>Application icons has been downloaded from sites: <br> "
+                  " <a href=\"http://www.dryicons.com\">http://www.dryicons.com</a><br/> "
+                  " <a href=\"http://www.freeiconsweb.com\">http://www.freeiconsweb.com</a><br/> " );
 
     QPushButton *quitButton = new QPushButton("OK");
 
@@ -252,18 +267,25 @@ void MainWindow::about()
 void MainWindow::keyPressEvent(QKeyEvent* event) 
 {
     if ( event->key() == Qt::Key_V && event->modifiers() == Qt::ControlModifier )
-    {
-        //m_DownloadWidget->addDownload( "http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath() );
-        //m_DownloadWidget->addDownload("http://download.kde.org/stable/4.1.3/src/kdeaccessibility-4.1.3.tar.bz2",QDir::homePath());
-        
-        QClipboard *clipboard = QApplication::clipboard();
-        QString text = clipboard->text(QClipboard::Clipboard);
-        QStringList urls = text.split( QRegExp("\\s+") );
+    {   
+        QStringList urls = MainWindow::getLinksFromClipboard();
         Q_FOREACH(QString one, urls ) 
         {
-            m_DownloadWidget->addDownload( one, Proxy::settings()->value("DefaultDownloadDirectory").value<QString>() );
-        }
-        
+            addDownload(one, Proxy::settings()->value("DefaultDownloadDirectory").value<QString>());
+        }        
+    }
+    else if (event->key() == Qt::Key_F2)
+    {
+        addNewDownload();
+    }
+    else if (event->key() == Qt::Key_F6)
+    {
+        showSettingsDialog();
+    }
+    else if (event->key() == Qt::Key_F10)
+    {
+        m_forceExit = true;
+        close();
     }
     else if (event->modifiers() == Qt::ShiftModifier)
     {
