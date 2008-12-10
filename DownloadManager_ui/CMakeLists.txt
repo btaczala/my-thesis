@@ -74,6 +74,11 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 INCLUDE_DIRECTORIES( "../proxy_lib/src" )
 INCLUDE_DIRECTORIES( "../DownloadManager_lib/src" )
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})
+
+if (WIN32) 
+#Windows default application icon
+	SET( APP_SRCS ${APP_SRCS} src/resources/resources.rc)
+endif (WIN32)
 QT4_WRAP_UI (APP_UI_HDRS ${APP_UI_FORMS} )
 QT4_WRAP_CPP (APP_MOC_SRCS ${APP_MOC_HDRS})
 #message ( STATUS ${proxy_lib} ) 

@@ -80,7 +80,6 @@ void MainWindow::initializeToolbarWidget()
     m_ToolbarWidget->setFloatable(false);
     m_ToolbarWidget->setMovable(false);
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewDownloadActionText ) );
-    m_ToolbarWidget->addAction( Actions::getAction( Actions::scNewGroupActionText ) );
     m_ToolbarWidget->addSeparator();
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStartRestoreActionText ) );
     m_ToolbarWidget->addAction( Actions::getAction( Actions::scStopActionText ) );
@@ -195,7 +194,6 @@ void MainWindow::initializeActions()
     connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
     connect( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
 
-
     connect( this, SIGNAL(signalMoveToTray()), this, SLOT(moveToTray()), Qt::QueuedConnection);
     connect( this, SIGNAL(signalRestoreFromTray()), this, SLOT(restoreFromTray()), Qt::QueuedConnection);
 }
@@ -271,7 +269,7 @@ void MainWindow::keyPressEvent(QKeyEvent* event)
         QStringList urls = MainWindow::getLinksFromClipboard();
         Q_FOREACH(QString one, urls ) 
         {
-            addDownload(one, Proxy::settings()->value("DefaultDownloadDirectory").value<QString>());
+            addDownload(one, Proxy::settings()->value(SettingsValNames::scDefaultDownloadDirectory).toString());
         }        
     }
     else if (event->key() == Qt::Key_F2)

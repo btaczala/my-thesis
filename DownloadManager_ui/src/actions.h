@@ -27,16 +27,15 @@ class Actions
 {
 public:
     typedef boost::shared_ptr<QAction>    QActionShPtr; 
-    typedef QMap<QString,QActionShPtr >   MapType ; 
-    static QAction* getAction(const QString & actionName ) ; 
+    typedef QMap<QString,QActionShPtr >   MapType; 
+    static QAction* getAction(const QString & actionName ); 
 
-    static const QString scNewDownloadActionText ; 
-    static const QString scNewGroupActionText ; 
-    static const QString scStartRestoreActionText ; 
-    static const QString scStopActionText ; 
-    static const QString scRemoveActionText ; 
-    static const QString scQuitActionText ; 
-    static const QString scHideUnHideAppActionText ; 
+    static const QString scNewDownloadActionText; 
+    static const QString scStartRestoreActionText; 
+    static const QString scStopActionText; 
+    static const QString scRemoveActionText; 
+    static const QString scQuitActionText; 
+    static const QString scHideUnHideAppActionText; 
     static const QString scConfigureColumnsActionText;
     static const QString scSettingsActionText;
     static const QString scAboutActionText;

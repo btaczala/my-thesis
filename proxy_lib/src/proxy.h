@@ -29,8 +29,8 @@ class Proxy
         
         //static void setDownloadManager( DownloadManager *ptr ) ; 
         
-        static QString encrypt(QString& data);
-        static QString decrypt(QString& data);
+        static QString encrypt(const QString& data);
+        static QString decrypt(const QString& data);
         
 	private:
 		static Proxy* proxy() ;

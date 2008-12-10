@@ -24,7 +24,6 @@ MenuBar::MenuBar(QWidget *parent) : QMenuBar(parent),m_FileMenu(NULL),m_Settings
 	m_FileMenu = new QMenu( tr("File"),parent ) ; 
     
     m_FileMenu->addAction( Actions::getAction( Actions::scNewDownloadActionText ) ) ;
-    m_FileMenu->addAction( Actions::getAction( Actions::scNewGroupActionText ) ) ;  
     m_FileMenu->addSeparator();
     m_FileMenu->addAction( Actions::getAction ( Actions::scHideUnHideAppActionText ) ) ;
     m_FileMenu->addAction( Actions::getAction ( Actions::scQuitActionText ) ) ;

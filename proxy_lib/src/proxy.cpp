@@ -61,7 +61,7 @@ void Proxy::deinit()
     proxy()->m_pDownloadManager.reset();
 }
 
-QString Proxy::encrypt(QString& data)
+QString Proxy::encrypt(const QString& data)
 {
     QString buf(data);
     //haha - we're using advanced Xor 13 algorithm
@@ -70,7 +70,7 @@ QString Proxy::encrypt(QString& data)
 }
 
 
-QString Proxy::decrypt(QString& data)
+QString Proxy::decrypt(const QString& data)
 {
     QString buf(data);
     std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());

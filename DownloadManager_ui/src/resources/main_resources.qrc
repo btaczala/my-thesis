@@ -1,18 +1,11 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource>
-        <file>icon_systray.png</file>
-		<file>user.png</file>
 		<file>configure.png</file>
-		<file>data_transfer.png</file>
 		<file>download_item.png</file>
 		<file>exit.png</file>
-		<file>start.png</file>
 		<file>stop.png</file>
 		<file>start_resume.png</file>
-		<file>start_resume_red.png</file>
 		<file>new_file.png</file>
-        <file>new_group.png</file>
-		<file>red_cross.png</file>
 		<file>remove.png</file>
 		<file>settings.png</file>
 		<file>network_settings.png</file>
