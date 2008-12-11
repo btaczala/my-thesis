@@ -246,6 +246,7 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
         if ( !newUrl.isEmpty() )
         {
 
+            //setUrlFileAddress( newUrl );
             m_apHttpRequestHeader.reset(new QHttpRequestHeader() );
             m_DownloadServerHost = QUrl(newUrl).host();
 
@@ -260,7 +261,7 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
             setState( DownloadState::DOWNLOADING , true );
             m_rssmState = DOWNLOADING;
             qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
-            LOG(QString("Starting download now!"));
+            LOG(QString("Starting download now %1!").arg(newUrl));
         }
     }
     else

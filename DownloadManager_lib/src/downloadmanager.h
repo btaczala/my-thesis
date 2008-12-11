@@ -186,11 +186,6 @@ class DownloadManager : public QObject
         void                    update() ; 
     signals:
         /**
-         * Will emit global progress. 
-         * @param value 
-         */
-        void                    globalProgress(int value);
-        /**
          * Will emit that download at 'at' changed its state. 
          * @param at - download position
          * @param state - changed state
@@ -198,28 +193,11 @@ class DownloadManager : public QObject
         void                    statusChanged ( int at, DownloadState::States state  ) ; 
         
         /**
-         * Will emit that download at 'at' postion finished downloading. 
-         * @param at 
-         */
-       // void                    downloadDoneAt ( int at ) ;
-         
-        
-        /**
-         * Will emit if download at 'at' for some reasons will stop ( not user action )
-         * Probably network error, or drive full
-         * @param at 
-         */
-        void                    downloadOnHold( int at ) ;
-        
-        /**
          * Will emit bytes downloaded 
          * @param at - position
          * @param read - how many have we read
          * @param total - how big is file. 
          */
-       // void                    bytesReadAt ( int at, int read, int total ) ; 
-        //void                    downloadRateAt( int at, const QString & downloadRate ) ;
-        //void                    elapsedTimeAt( int at, unsigned int elapsedTime );
         void                    progressInfoAt( int at, const ProgressInfo& _info );
 };
 #endif // DOWNLOADMANAGER_H

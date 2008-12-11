@@ -8,6 +8,7 @@
 class DownloadManager ; 
 class EngineManager ; 
 class Settings;
+class SignalHandler ;
 class Proxy 
 {
     public:
@@ -24,6 +25,11 @@ class Proxy
          * @brief Will return Global Settings
          */
 		static Settings * settings();
+        /**
+         * @brief will return global signal handler
+         * @return 
+         */
+        static const SignalHandler * signalHandler() ; 
         static void init();
         static void deinit();
         
@@ -37,6 +43,7 @@ class Proxy
 		Proxy() ; 
 		Proxy(const Proxy & rhs) ; // hidden 
         boost::shared_ptr<DownloadManager>      m_pDownloadManager ;  
-        boost::shared_ptr<Settings>		        m_apSettings ; 
+        boost::shared_ptr<Settings>		        m_apSettings ;
+        boost::shared_ptr<SignalHandler>             m_apSignalHandler ;
 };
 #endif //__PROXY_H__

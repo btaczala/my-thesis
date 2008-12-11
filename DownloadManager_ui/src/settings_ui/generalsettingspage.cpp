@@ -126,7 +126,6 @@ namespace general_settings_tabs
             Proxy::settings()->setValue( SettingsValNames::scDefaultDownloadDirectory, dir);
         }
     }
-
     void DownloadTab::browseForDefaultFolder()
     {
         QString dir = QFileDialog::getExistingDirectory(this, tr("Find default download folder..."));
