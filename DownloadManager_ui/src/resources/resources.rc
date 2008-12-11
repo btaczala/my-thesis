@@ -21,15 +21,9 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "Test MFC Application\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
-            VALUE "InternalName", "Test\0"
-            VALUE "LegalCopyright", "Copyright (C) 2002\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "Test.EXE\0"
-            VALUE "ProductName", "Test Application\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "CompanyName", APP_COMPANY "\0"
+            VALUE "ProductName", APP_NAME "\0"
+            VALUE "ProductVersion", APP_VERSION "\0"
         END
     END
     BLOCK "VarFileInfo"

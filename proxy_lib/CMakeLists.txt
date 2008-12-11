@@ -19,6 +19,7 @@ SET( Proxy_SRCS
 SET( Proxy_HDRS
     src/proxy.h
 	src/settings.h
+	src/version.h
 )
 
 add_library( proxy_lib STATIC ${Proxy_SRCS} ${Proxy_HDRS} )

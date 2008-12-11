@@ -42,7 +42,11 @@ int main(int argc, char *argv[])
 	Q_INIT_RESOURCE(main_resources);
     Proxy::init() ; 
 	MainWindow *window = new MainWindow();
-	window->show();
+    bool startInTray = Proxy::settings()->value(SettingsValNames::scStartInTrayArea).toBool();
+    if (startInTray)
+        window->moveToTray();
+    else
+	    window->show();
 	int iRet = app.exec();
 #ifdef WIN32
 	///_CrtDumpMemoryLeaks();

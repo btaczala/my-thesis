@@ -70,7 +70,7 @@ void MainWindow::initializeWidgets()
 
 void MainWindow::initializeMenuBar()
 {
-    QMenuBar *menuBar = dynamic_cast<QMenuBar*>(m_MenuBar.get());
+    QMenuBar *menuBar = qobject_cast<QMenuBar*>(m_MenuBar);
 	setMenuBar(menuBar);
 }
 
@@ -91,12 +91,12 @@ void MainWindow::initializeToolbarWidget()
 
     m_ToolbarWidget->setIconSize(QSize(48,48));
 
-    addToolBar(m_ToolbarWidget.get());
+    addToolBar(m_ToolbarWidget);
 }
 
 void MainWindow::initializeDownloadWidget()
 {
-    setCentralWidget(m_DownloadWidget.get());
+    setCentralWidget(m_DownloadWidget);
 }
 
 void MainWindow::initializeTrayIcon()
@@ -148,7 +148,7 @@ void MainWindow::moveToTray()
 {
     m_trayIcon->show();
     hide();
-    connect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::restoreFromTray()
@@ -172,7 +172,7 @@ void MainWindow::restoreFromTray()
 #endif
     
     m_trayIcon->hide();
-    disconnect(m_trayIcon.get(), SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    disconnect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
 }
 
 void MainWindow::addNewDownload()
@@ -190,9 +190,9 @@ void MainWindow::initializeActions()
     connect( Actions::getAction(Actions::scSettingsActionText), SIGNAL( triggered()), this, SLOT(showSettingsDialog()));
     
     connect( Actions::getAction(Actions::scNewDownloadActionText), SIGNAL(triggered()), this, SLOT(addNewDownload()));
-    connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget.get() ,SLOT( StopSelectedDownload() ));
-    connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget.get(), SLOT( StartPauseSelectedDownload() ) );
-    connect( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget.get(), SLOT(RemoveSelectedDownload() ) );
+    connect( Actions::getAction(Actions::scStopActionText), SIGNAL( triggered() ),m_DownloadWidget ,SLOT( StopSelectedDownload() ));
+    connect( Actions::getAction(Actions::scStartRestoreActionText), SIGNAL( triggered() ), m_DownloadWidget, SLOT( StartPauseSelectedDownload() ) );
+    connect( Actions::getAction(Actions::scRemoveActionText), SIGNAL(triggered()), m_DownloadWidget, SLOT(RemoveSelectedDownload() ) );
 
     connect( this, SIGNAL(signalMoveToTray()), this, SLOT(moveToTray()), Qt::QueuedConnection);
     connect( this, SIGNAL(signalRestoreFromTray()), this, SLOT(restoreFromTray()), Qt::QueuedConnection);
@@ -226,14 +226,19 @@ void MainWindow::about()
 
     QLabel *text = new QLabel;
     text->setWordWrap(true);
-    text->setText("<p>The <b>QDownload Manager...</b> <br/> "
-                  "  This program is free software; you can redistribute it and/or modify "
-                  " it under the terms of the GNU General Public License as published by "
-                  " the Free Software Foundation; either version 2 of the License, or "
-                  " (at your option) any later version.</p><br/>"
-                  " <p>Application icons has been downloaded from sites: <br> "
-                  " <a href=\"http://www.dryicons.com\">http://www.dryicons.com</a><br/> "
-                  " <a href=\"http://www.freeiconsweb.com\">http://www.freeiconsweb.com</a><br/> " );
+
+    QString dialogTitle(QString("%1 - %2").arg(Proxy::getAppName()).arg(Proxy::getAppVersion()));
+
+    QString appInfo(
+        QString(tr("<p><b>%1 %2 %3 </b> <br/> "
+          "  This program is free software; you can redistribute it and/or modify "
+          " it under the terms of the GNU General Public License as published by "
+          " the Free Software Foundation; either version 2 of the License, or "
+          " (at your option) any later version.</p>"
+          " <p>Application icons has been downloaded from sites: <br> "
+          " <a href=\"http://www.dryicons.com\">http://www.dryicons.com</a><br/> "
+          " <a href=\"http://www.freeiconsweb.com\">http://www.freeiconsweb.com</a></p> " )).arg(Proxy::getAppCompany()).arg(Proxy::getAppName()).arg(Proxy::getAppVersion()));
+    text->setText(appInfo);
 
     QPushButton *quitButton = new QPushButton("OK");
 
@@ -254,7 +259,7 @@ void MainWindow::about()
 
     QDialog about(this);
     about.setModal(true);
-    about.setWindowTitle(tr("About QDownload Manager..."));
+    about.setWindowTitle(dialogTitle);
     about.setLayout(mainLayout);
 
     connect(quitButton, SIGNAL(clicked()), &about, SLOT(close()));

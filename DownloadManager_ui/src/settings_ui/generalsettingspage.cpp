@@ -160,8 +160,11 @@ namespace general_settings_tabs
         close2TrayCheck->setChecked(close2tray);
         connect(close2TrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onClose2TrayCheck(int)));
 
+        bool startInTray = Proxy::settings()->value(SettingsValNames::scStartInTrayArea).toBool();
         QCheckBox* startInTrayCheck = new QCheckBox;
         startInTrayCheck->setText(tr("Start in system tray area"));
+        startInTrayCheck->setChecked(startInTray);
+        connect(startInTrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onStartInTray(int)));
 
         QCheckBox* oneInstanceCheck = new QCheckBox;
         oneInstanceCheck->setText(tr("Allow only 1 copy of application at a time"));
@@ -208,5 +211,10 @@ namespace general_settings_tabs
     void ApplicationTab::onConfirmAppExit(int state)
     {
         Proxy::settings()->setValue(SettingsValNames::scConfirmAppExit, static_cast<int>(state == Qt::Checked));
+    }
+
+    void ApplicationTab::onStartInTray(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scStartInTrayArea, static_cast<int>(state == Qt::Checked));
     }
 }

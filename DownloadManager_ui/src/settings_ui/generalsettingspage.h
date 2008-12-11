@@ -56,6 +56,7 @@ namespace general_settings_tabs
         void onClose2TrayCheck(int state);
         void onMinimize2TrayCheck(int state);
         void onConfirmAppExit(int state);
+        void onStartInTray(int state);
     };
 }
 

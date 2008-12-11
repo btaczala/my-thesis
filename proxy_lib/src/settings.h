@@ -25,6 +25,7 @@ namespace SettingsValNames
     static const char scMinimize2Tray[] = "minimize2tray";
     static const char scClose2Tray[] = "close2tray";
     static const char scConfirmAppExit[] = "confirmAppExit";
+    static const char scStartInTrayArea[] = "startInTrayArea";
     // PLUGINS NAMES
     static const char scPluginUsername[] = "username";
     static const char scPluginPassword[] = "password";

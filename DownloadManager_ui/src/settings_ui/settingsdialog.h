@@ -45,8 +45,8 @@ protected:
     {
         static const int ContentsWidgetIconWidth = 48;
         static const int ContentsWidgetIconHeigth = 48;
-        static const int ContentsWidgetMinimumWidth = 86;
-        static const int ContentsWidgetMaximumWidth = 86;
+        static const int ContentsWidgetMinimumWidth = 94;
+        static const int ContentsWidgetMaximumWidth = 94;
         static const int ContentsWidgetSpacing = 12;
         static const int MainLayoutColumnMinimumWidth = 360;
         static const int MainLayoutRowMinimumHeigth = 360;

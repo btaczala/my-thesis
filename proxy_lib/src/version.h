@@ -20,4 +20,12 @@
 #ifndef VERSION_H
 #define VERSION_H
 
+#define APP_COMPANY         "Yattaman"
+#define APP_NAME           "QDownload Manager"
+#define APP_VERSION_MAJOR   "0"
+#define APP_VERSION_MINOR   "0"
+#define APP_VERSION_BUILD   "1a"
+#define APP_VERSION         APP_VERSION_MAJOR "." APP_VERSION_MINOR "." APP_VERSION_BUILD
+
+
 #endif

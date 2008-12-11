@@ -73,10 +73,10 @@ class MainWindow : public QMainWindow
         virtual void changeEvent(QEvent* event);
 
     private:
-        std::auto_ptr<MenuBar>          m_MenuBar; 
-        std::auto_ptr<QToolBar>         m_ToolbarWidget; 
-        std::auto_ptr<QDownloadWidget>  m_DownloadWidget;
-        std::auto_ptr<QSystemTrayIcon>  m_trayIcon;
+        MenuBar*                        m_MenuBar; 
+        QToolBar*                       m_ToolbarWidget; 
+        QDownloadWidget*                m_DownloadWidget;
+        QSystemTrayIcon*                m_trayIcon;
         bool                            m_forceExit;
         Qt::WindowStates                m_oldstate; //used by tray icon functions
         QMenu                           m_trayContextMenu;

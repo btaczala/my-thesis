@@ -72,14 +72,14 @@ namespace connection_settings_page
 
         QLabel* downloadsLabel = new QLabel(tr("Simultanious downloads:"));
         downloadsLabel->setMinimumWidth(labelWidth);
-        m_pDownloadsSpin.reset( new QSpinBox ) ; 
+        m_pDownloadsSpin = new QSpinBox; 
         m_pDownloadsSpin->setRange(1,999);
         int v = Proxy::settings()->value( SettingsValNames::scMaxDownloads,Settings::LIBRARY).value<int>() ;
         m_pDownloadsSpin->setValue ( v==0 ? 2 : v );
         m_pDownloadsSpin->setMaximumWidth(45);
         QHBoxLayout* downloadsLayout = new QHBoxLayout;
         downloadsLayout->addWidget(downloadsLabel);
-        downloadsLayout->addWidget( m_pDownloadsSpin.get() );
+        downloadsLayout->addWidget( m_pDownloadsSpin );
         downloadsLayout->addStretch(1);
 
         QVBoxLayout* layout = new QVBoxLayout;

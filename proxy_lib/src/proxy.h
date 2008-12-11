@@ -4,6 +4,7 @@
 #include <string>
 #include <boost/shared_ptr.hpp>
 #include <QString>
+#include "version.h"
 
 class DownloadManager ; 
 class EngineManager ; 
@@ -37,6 +38,10 @@ class Proxy
         
         static QString encrypt(const QString& data);
         static QString decrypt(const QString& data);
+
+        static QString getAppVersion(){ return QString(APP_VERSION); }
+        static QString getAppName(){ return QString(APP_NAME); }
+        static QString getAppCompany(){ return QString(APP_COMPANY); }
         
 	private:
 		static Proxy* proxy() ;

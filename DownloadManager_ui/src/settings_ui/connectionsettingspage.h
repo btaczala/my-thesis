@@ -21,7 +21,6 @@
 #define CONNECTIONSETTINGSPAGE_H
 
 #include "isettingspage.h"
-#include <memory>
 
 class QSpinBox;
 class QCheckBox;
@@ -36,7 +35,7 @@ namespace connection_settings_page
         ConnectionTab(QWidget* parent = 0);
         virtual ~ConnectionTab();
     private:
-        std::auto_ptr<QSpinBox> m_pDownloadsSpin;
+        QSpinBox* m_pDownloadsSpin;
     };
 
     class ProxyTab : public QWidget
