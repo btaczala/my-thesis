@@ -43,6 +43,9 @@ class MainWindow : public QMainWindow
         static QStringList getLinksFromClipboard();
 
         void addDownload(const QString& url, const QString& fileDestination); 
+        void bringWindowToFront();
+
+        static const QString ActivateWindowMessage;
 
     public slots:
         void about();
@@ -52,6 +55,7 @@ class MainWindow : public QMainWindow
         void moveToTray();
         void restoreFromTray();
         void addNewDownload();
+        void handleMessage(const QString& message);
     signals:
         void signalMoveToTray();
         void signalRestoreFromTray();
@@ -78,7 +82,6 @@ class MainWindow : public QMainWindow
         QDownloadWidget*                m_DownloadWidget;
         QSystemTrayIcon*                m_trayIcon;
         bool                            m_forceExit;
-        Qt::WindowStates                m_oldstate; //used by tray icon functions
         QMenu                           m_trayContextMenu;
 };
 #endif

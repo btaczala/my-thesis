@@ -13,6 +13,8 @@
 
 namespace
 {
+    static const QString _appUid = "E246EC21-B7BD-4c2b-B0B2-A8A157D9AE16";
+
     struct advancedXor13
     {
         QChar operator()(QChar& c)
@@ -75,4 +77,9 @@ QString Proxy::decrypt(const QString& data)
     QString buf(data);
     std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
     return buf;
+}
+
+QString Proxy::getAppUid()
+{
+    return _appUid;
 }

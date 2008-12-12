@@ -42,6 +42,8 @@ class Proxy
         static QString getAppVersion(){ return QString(APP_VERSION); }
         static QString getAppName(){ return QString(APP_NAME); }
         static QString getAppCompany(){ return QString(APP_COMPANY); }
+
+        static QString getAppUid();
         
 	private:
 		static Proxy* proxy() ;

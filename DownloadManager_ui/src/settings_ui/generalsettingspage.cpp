@@ -145,16 +145,19 @@ namespace general_settings_tabs
     ApplicationTab::ApplicationTab(QWidget *parent)
         :QWidget(parent)
     {
+        bool autostart = Proxy::settings()->value(SettingsValNames::scStartAppWithSystemStartup).toBool();
         QCheckBox* autostartCheck = new QCheckBox;
         autostartCheck->setText(tr("Start application on system startup"));
+        autostartCheck->setChecked(autostart);
+        connect(autostartCheck, SIGNAL(stateChanged(int)), this, SLOT(onAutostartCheck(int)));
 
-        bool minimize2tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray).value<bool>();
+        bool minimize2tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray).toBool();
         QCheckBox* minimize2TrayCheck = new QCheckBox;
         minimize2TrayCheck->setText(tr("Move to tray icon when minimized"));
         minimize2TrayCheck->setChecked(minimize2tray);
         connect(minimize2TrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onMinimize2TrayCheck(int)));
 
-        bool close2tray = Proxy::settings()->value(SettingsValNames::scClose2Tray).value<bool>();
+        bool close2tray = Proxy::settings()->value(SettingsValNames::scClose2Tray).toBool();
         QCheckBox* close2TrayCheck = new QCheckBox;
         close2TrayCheck->setText(tr("Move to tray icon when closed - Tip: Press Shift key to force exit"));
         close2TrayCheck->setChecked(close2tray);
@@ -166,17 +169,23 @@ namespace general_settings_tabs
         startInTrayCheck->setChecked(startInTray);
         connect(startInTrayCheck, SIGNAL(stateChanged(int)), this, SLOT(onStartInTray(int)));
 
+        bool oneInstance = Proxy::settings()->value(SettingsValNames::scOnlyOneInstanceAllowed).toBool();
         QCheckBox* oneInstanceCheck = new QCheckBox;
         oneInstanceCheck->setText(tr("Allow only 1 copy of application at a time"));
+        oneInstanceCheck->setChecked(oneInstance);
+        connect(oneInstanceCheck, SIGNAL(stateChanged(int)), this, SLOT(onOneInstanceCheck(int)));
 
-        bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit).value<bool>();
+        bool confirmAppExit = Proxy::settings()->value(SettingsValNames::scConfirmAppExit).toBool();
         QCheckBox* confirmAppExitCheck = new QCheckBox;
         confirmAppExitCheck->setText(tr("Confirm application exit"));
         confirmAppExitCheck->setChecked(confirmAppExit);
         connect(confirmAppExitCheck, SIGNAL(stateChanged(int)), this, SLOT(onConfirmAppExit(int)));
 
+        bool confirmItemDelete = Proxy::settings()->value(SettingsValNames::scConfirmItemDelete).toBool();
         QCheckBox* confirmDeleteCheck = new QCheckBox;
         confirmDeleteCheck->setText(tr("Confirm item delete"));
+        confirmDeleteCheck->setChecked(confirmItemDelete);
+        connect(confirmDeleteCheck, SIGNAL(stateChanged(int)), this, SLOT(onConfirmItemDelete(int)));
 
         QVBoxLayout* layout = new QVBoxLayout;
         layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
@@ -216,5 +225,20 @@ namespace general_settings_tabs
     void ApplicationTab::onStartInTray(int state)
     {
         Proxy::settings()->setValue(SettingsValNames::scStartInTrayArea, static_cast<int>(state == Qt::Checked));
+    }
+
+    void ApplicationTab::onOneInstanceCheck(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scOnlyOneInstanceAllowed, static_cast<int>(state == Qt::Checked));
+    }
+
+    void ApplicationTab::onConfirmItemDelete(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scConfirmItemDelete, static_cast<int>(state == Qt::Checked));
+    }
+
+    void ApplicationTab::onAutostartCheck(int state)
+    {
+        Proxy::settings()->setValue(SettingsValNames::scStartAppWithSystemStartup, static_cast<int>(state == Qt::Checked));
     }
 }

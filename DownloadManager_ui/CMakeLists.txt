@@ -32,7 +32,8 @@ SET( APP_SRCS
 	src/settings_ui/generalsettingspage.cpp
 	src/settings_ui/connectionsettingspage.cpp
 	src/settings_ui/serversettingspage.cpp
-)
+	)
+	
 SET( APP_HDRS
     src/mainwindow.h
     src/qdownloadwidget.h
@@ -48,7 +49,8 @@ SET( APP_HDRS
 	src/settings_ui/generalsettingspage.h
 	src/settings_ui/connectionsettingspage.h
 	src/settings_ui/serversettingspage.h
-)
+	)
+	
 SET( APP_MOC_HDRS
     src/mainwindow.h
     src/qdownloadwidget.h
@@ -63,9 +65,24 @@ SET( APP_MOC_HDRS
 	src/settings_ui/generalsettingspage.h
 	src/settings_ui/connectionsettingspage.h
 	src/settings_ui/serversettingspage.h
-)
-SET( APP_UI_FORMS src/ui/columnsConfig.ui
-    )
+	)
+
+#3rdparty code
+SET(APP_SRCS ${APP_SRCS} 
+	src/3rdparty/singleapplication.cpp
+	)
+	
+SET(APP_HDRS ${APP_HDRS} 
+	src/3rdparty/singleapplication.h
+	src/3rdparty/singleapplication_p.h
+	)
+	
+SET(APP_MOC_HDRS ${APP_MOC_HDRS} 
+	src/3rdparty/singleapplication.h
+	src/3rdparty/singleapplication_p.h
+	)
+	
+SET( APP_UI_FORMS src/ui/columnsConfig.ui )
 SET(APP_RSC src/resources/main_resources.qrc )
 
 INCLUDE( ${QT_USE_FILE})
@@ -73,6 +90,7 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR})
 INCLUDE_DIRECTORIES( "../proxy_lib/src" )
 INCLUDE_DIRECTORIES( "../DownloadManager_lib/src" )
+INCLUDE_DIRECTORIES( "src/3rdparty" )
 QT4_ADD_RESOURCES(APP_RSC_SCRS ${APP_RSC})
 
 if (WIN32) 

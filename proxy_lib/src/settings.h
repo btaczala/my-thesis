@@ -17,6 +17,7 @@ namespace SettingsValNames
     static const char scProxyPass[] = "proxyPass";
     static const char scProxyServer[] = "proxyServer";
     static const char scProxyPort[] = "proxyPort";
+    static const char scConfirmItemDelete[] = "confirmItemDelete";
     
     // UI NAMES
     static const char scColumnsInfo[] = "QDownloadWidgetColumnInfo";
@@ -26,6 +27,8 @@ namespace SettingsValNames
     static const char scClose2Tray[] = "close2tray";
     static const char scConfirmAppExit[] = "confirmAppExit";
     static const char scStartInTrayArea[] = "startInTrayArea";
+    static const char scOnlyOneInstanceAllowed[] = "onlyOneInstanceAllowed";
+    static const char scStartAppWithSystemStartup[] = "startAppWithSystemStartup";
     // PLUGINS NAMES
     static const char scPluginUsername[] = "username";
     static const char scPluginPassword[] = "password";

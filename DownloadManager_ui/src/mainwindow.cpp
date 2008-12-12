@@ -29,12 +29,13 @@
 #include <proxy.h>
 #include <settings.h>
 
+const QString MainWindow::ActivateWindowMessage = "ActivateWindowMessage";
+
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
     m_ToolbarWidget(new QToolBar("Download Toolbar", this)), m_trayIcon( new QSystemTrayIcon(this))
 {
     m_forceExit = false;
-    m_oldstate = Qt::WindowNoState;
 
     initializeWidgets();
     initializeActions();
@@ -57,6 +58,14 @@ QStringList MainWindow::getLinksFromClipboard()
 void MainWindow::addDownload(const QString& url, const QString& fileDestination)
 {
     m_DownloadWidget->addDownload(url, fileDestination);
+}
+
+void MainWindow::bringWindowToFront()
+{
+    show();
+    setWindowState(windowState() & ~Qt::WindowMinimized);
+	raise();
+	activateWindow();
 }
 
 void MainWindow::initializeWidgets()
@@ -153,26 +162,13 @@ void MainWindow::moveToTray()
 
 void MainWindow::restoreFromTray()
 {
-//platform specific issues  
-#if WIN32
-    show();
-    if (isVisible())
-    {
-        //code below restore window state  for real since
-        //show() doesn't bring window to front, it's just leavs window minimized in taskbar
-        activateWindow();
-        if (m_oldstate & Qt::WindowMaximized)
-            showMaximized();
-        else
-            showNormal();
-    }
-#else
-    setWindowState(Qt::WindowNoState);
-    setVisible(true);
-#endif
+    bringWindowToFront();
     
-    m_trayIcon->hide();
-    disconnect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    if (m_trayIcon->isVisible())
+    {
+        m_trayIcon->hide();
+        disconnect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    }
 }
 
 void MainWindow::addNewDownload()
@@ -180,6 +176,12 @@ void MainWindow::addNewDownload()
     AddDownloadDialog dlg(this);
 
     dlg.exec();
+}
+
+void MainWindow::handleMessage(const QString& message)
+{
+    if (message == ActivateWindowMessage)
+        restoreFromTray();
 }
 
 void MainWindow::initializeActions()
@@ -333,7 +335,6 @@ void MainWindow::changeEvent(QEvent* event)
     {
         QWindowStateChangeEvent* e = static_cast<QWindowStateChangeEvent*>(event);
         unsigned int state = windowState();
-        m_oldstate = e->oldState();
  	    if (state & Qt::WindowMinimized)
         {
             bool minimize2Tray = Proxy::settings()->value(SettingsValNames::scMinimize2Tray).value<bool>();

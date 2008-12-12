@@ -27,6 +27,8 @@
 #include "mainwindow.h"
 #include <proxy.h>
 #include <settings.h>
+#include "singleapplication.h"
+
 int main(int argc, char *argv[])
 {	
 	#ifdef WIN32
@@ -41,17 +43,36 @@ int main(int argc, char *argv[])
     
 	Q_INIT_RESOURCE(main_resources);
     Proxy::init() ; 
-	MainWindow *window = new MainWindow();
-    bool startInTray = Proxy::settings()->value(SettingsValNames::scStartInTrayArea).toBool();
-    if (startInTray)
-        window->moveToTray();
-    else
-	    window->show();
-	int iRet = app.exec();
-#ifdef WIN32
-	///_CrtDumpMemoryLeaks();
-#endif // WIN32
-    delete window; 
+
+    int iRet = 0;
+    bool quitApp = false;
+    bool oneInstance = Proxy::settings()->value(SettingsValNames::scOnlyOneInstanceAllowed).toBool();
+    
+    SingleApplication instance(Proxy::getAppUid(), &app);
+
+    if (oneInstance && instance.isRunning())
+    {
+        instance.sendMessage(MainWindow::ActivateWindowMessage);
+        quitApp = true;
+    }
+
+    if (!quitApp)
+    {
+	    MainWindow *window = new MainWindow();
+        QObject::connect(&instance, SIGNAL(messageReceived(const QString&)), window, SLOT(handleMessage(const QString&))); 
+        bool startInTray = Proxy::settings()->value(SettingsValNames::scStartInTrayArea).toBool();
+        if (startInTray)
+            window->moveToTray();
+        else
+	        window->show();
+
+	    iRet = app.exec();
+    #ifdef WIN32
+	    ///_CrtDumpMemoryLeaks();
+    #endif // WIN32
+        delete window; 
+    }
+
     Proxy::deinit();
     qDebug() << "End of App";
 	return iRet;
