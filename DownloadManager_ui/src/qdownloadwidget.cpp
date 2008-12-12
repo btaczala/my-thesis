@@ -48,10 +48,11 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
 
-    setSelectionBehavior( QAbstractItemView::SelectRows );
+    setSelectionBehavior(QAbstractItemView::SelectRows);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    setAlternatingRowColors( true );
-    setRootIsDecorated( false );
+    setAlternatingRowColors(true);
+    setRootIsDecorated(false);
+    setAlternatingRowColors(false);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
 
@@ -477,11 +478,8 @@ namespace DownloadWidgetDelegates
     }
 
     void DownloadItemDelegate::drawStandardItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-    {
-        QSize size = QItemDelegate::sizeHint(option, index);
-        
+    {        
         QStyleOptionViewItem opt(option);
-        opt.rect.setHeight(size.height()+2);
 
         if (index.column() != QDownloadWidget::QDownloadWidgetColumnInfo::ColumnProgress)
         {

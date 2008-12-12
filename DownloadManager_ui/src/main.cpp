@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
 	QApplication::setStyle(new QCleanlooksStyle);
 	#endif
 	QApplication app(argc, argv);
-    QCoreApplication::setOrganizationName("settings"); // this is no organization name, but name of settings folder. 
-    QCoreApplication::setApplicationName("QRapidshare");
-    QSettings::setDefaultFormat( QSettings::IniFormat ) ; 
-    QString cp = QDir::currentPath() ;
+    QCoreApplication::setOrganizationName(Proxy::getAppCompany()); 
+    QCoreApplication::setApplicationName(Proxy::getAppName());
+    QSettings::setDefaultFormat( QSettings::IniFormat ); 
+    QString cp = QDir::currentPath();
     QSettings::setPath( QSettings::IniFormat, QSettings::UserScope, cp);
     
 	Q_INIT_RESOURCE(main_resources);
-    Proxy::init() ; 
+    Proxy::init(); 
 
     int iRet = 0;
     bool quitApp = false;
