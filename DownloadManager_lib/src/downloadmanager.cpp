@@ -235,9 +235,6 @@ int DownloadManager::percentage()
 void DownloadManager::connectWith(IDownload * pDownload)
 {
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( bytesRead( int , int ) ), this,SLOT( bytesRead( int , int ) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( downloadRate( const QString & ) ), this,SLOT( downloadRate( const QString & ) ) ) ;
-    //QObject::connect ( pDownload, SIGNAL( elapsedTime( unsigned int ) ), this,SLOT( elapsedTime( unsigned int  ) ) ) ;
     QObject::connect ( pDownload, SIGNAL( progressInfo( const ProgressInfo& ) ), this,SLOT( progressInfo( const ProgressInfo&  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
@@ -346,11 +343,8 @@ void DownloadManager::decreaseNumberOfCurrentDownloads()
 void DownloadManager::increaseNumberOfCurrentDownloads()
 {
     ++m_DownloadManagerSettings.m_CurrentDownloadingFiles;
-    if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles >= m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
+    if ( m_DownloadManagerSettings.m_CurrentDownloadingFiles > m_DownloadManagerSettings.m_MaxDownloadingFiles ) 
         LOG("Something is wrong");
     
 }
-
-
-
 

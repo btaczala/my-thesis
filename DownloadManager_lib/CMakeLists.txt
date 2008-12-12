@@ -17,10 +17,13 @@ SET( DownloadManager_SRCS
     src/rscommon.cpp 
     src/enginemanager.cpp
     src/optionscontainer.cpp
+	src/signalreceiver.cpp
+	src/signalreceiverfactory.cpp
     src/engines/rapidshare/qrapidsharedownload.cpp
     src/engines/rapidshare/qrapidshareuser.cpp
     src/engines/http/httpdownload.cpp
     src/engines/ftp/ftpdownload.cpp
+	
 ) 
 SET( DownloadManager_HDRS
     src/downloadmanager.h
@@ -33,6 +36,8 @@ SET( DownloadManager_HDRS
     src/engine.inl
     src/optionscontainer.h
     src/progressinfo.h
+	src/signalreceiver.h
+	src/signalreceiverfactory.h
     src/engines/rapidshare/qrapidsharedownload.h
     src/engines/rapidshare/qrapidshareuser.h
     src/engines/http/httpdownload.h
@@ -41,6 +46,7 @@ SET( DownloadManager_HDRS
 SET ( DownloadManager_MOC_HDRS 
     src/idownload.h
     src/downloadmanager.h
+	src/signalreceiver.h
 )
 SET ( PLUGINS_MOC_HDRS 
     src/engines/rapidshare/qrapidsharedownload.h

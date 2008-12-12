@@ -26,6 +26,7 @@
 #include <QPointer>
 
 #include <idownload.h>
+#include <QDebug>
 
 
 class QPaintEvent;
@@ -144,6 +145,7 @@ public:
         StandardItem,
         DetailedItem
     };
+    //SignalReceiver * m_pSignalReceiver ; 
 
 public slots:
     void StartPauseSelectedDownload();

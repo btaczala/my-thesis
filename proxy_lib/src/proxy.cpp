@@ -9,6 +9,8 @@
 #include <QTime>
 #include <cmath>
 #include <algorithm>
+#include <boost/lambda/lambda.hpp>
+#include <boost/bind.hpp>
 #include "settings.h"
 
 namespace
@@ -71,14 +73,20 @@ QString Proxy::encrypt(const QString& data)
     return buf;
 }
 
-
+int foo(const int a)
+{
+    return a-1;
+}
 QString Proxy::decrypt(const QString& data)
 {
     QString buf(data);
+    //using namespace boost::lambda;    
+    //std::transform(buf.begin(),buf.end(),buf.begin(), boost::lambda::_1 = ( boost::bind( &QChar::unicode, QChar('z') ) ) );
+    //std::for_each( buf.begin(),buf.end(),boost::bind( &QChar::unicode, boost::lambda::_1  ) );
     std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
+//    int a = boost::bind(foo,1);
     return buf;
 }
-
 QString Proxy::getAppUid()
 {
     return _appUid;

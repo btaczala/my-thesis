@@ -525,4 +525,3 @@ bool QRapidshareDownload::checkForErrors( const QByteArray& response )
     }
     return false;
 }
-

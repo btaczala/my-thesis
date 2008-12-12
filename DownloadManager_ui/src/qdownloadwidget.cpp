@@ -29,6 +29,7 @@
 #include <proxy.h>
 #include <settings.h>
 #include <downloadmanager.h>
+#include <signalreceiverfactory.h>
 
 #include <rslogger.h>
 #include <downloadmanager.h>
@@ -67,6 +68,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     //connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
     //connect( m_pDownloadManager,SIGNAL( elapsedTimeAt( int, unsigned int  ) ),this,SLOT( elapsedTimeAt( int,unsigned int ) ) );
     connect(m_pDownloadManager,SIGNAL( progressInfoAt( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
+
 }
 
 QDownloadWidget::~QDownloadWidget()
