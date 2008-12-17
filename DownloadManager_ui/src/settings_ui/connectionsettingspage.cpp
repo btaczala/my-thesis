@@ -171,7 +171,7 @@ namespace connection_settings_page
         Proxy::settings()->setValue(SettingsValNames::scProxyServer, m_serverEdit->text());
         Proxy::settings()->setValue(SettingsValNames::scProxyPort, m_portEdit->text());
         Proxy::settings()->setValue(SettingsValNames::scProxyUser, m_userEdit->text());
-        Proxy::settings()->setValue(SettingsValNames::scProxyPass, Proxy::decrypt(m_passwordEdit->text()));
+        Proxy::settings()->setValue(SettingsValNames::scProxyPass, Proxy::encrypt(m_passwordEdit->text()));
     }
 
     void ProxyTab::useProxyStateChanged(int state)

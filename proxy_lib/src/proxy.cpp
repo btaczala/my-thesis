@@ -9,21 +9,17 @@
 #include <QTime>
 #include <cmath>
 #include <algorithm>
-#include <boost/lambda/lambda.hpp>
-#include <boost/bind.hpp>
 #include "settings.h"
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+
+using namespace boost::lambda;
 
 namespace
 {
     static const QString _appUid = "E246EC21-B7BD-4c2b-B0B2-A8A157D9AE16";
 
-    struct advancedXor13
-    {
-        QChar operator()(QChar& c)
-        {
-            return c.unicode() ^ 13;
-        }
-    };
+    static const int advancedXor13HashKey = 13;
 }
 
 Proxy * Proxy::proxy() 
@@ -69,24 +65,15 @@ QString Proxy::encrypt(const QString& data)
 {
     QString buf(data);
     //haha - we're using advanced Xor 13 algorithm
-    std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
+    std::transform(buf.begin(), buf.end(), buf.begin(), ret<QChar>(bind<ushort>(boost::mem_fn(&QChar::unicode), boost::lambda::_1) ^ constant(advancedXor13HashKey)));
     return buf;
 }
 
-int foo(const int a)
-{
-    return a-1;
-}
 QString Proxy::decrypt(const QString& data)
 {
-    QString buf(data);
-    //using namespace boost::lambda;    
-    //std::transform(buf.begin(),buf.end(),buf.begin(), boost::lambda::_1 = ( boost::bind( &QChar::unicode, QChar('z') ) ) );
-    //std::for_each( buf.begin(),buf.end(),boost::bind( &QChar::unicode, boost::lambda::_1  ) );
-    std::transform(buf.begin(), buf.end(), buf.begin(), advancedXor13());
-//    int a = boost::bind(foo,1);
-    return buf;
+    return encrypt(data); //xor ;)
 }
+
 QString Proxy::getAppUid()
 {
     return _appUid;
