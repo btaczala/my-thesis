@@ -218,6 +218,28 @@ void QDownloadWidget::RemoveSelectedDownload()
 {
     QList<QTreeWidgetItem*> list = selectedItems() ;
     int index = -1; 
+
+    if (list.isEmpty())
+        return;
+
+    bool confirmDelete = Proxy::settings()->value(SettingsValNames::scConfirmItemDelete).toBool();
+
+    if (confirmDelete)
+    {
+        QString msg;
+
+        if (list.count() > 1)
+            msg = tr("Do you realy want to delete %1 items?").arg(list.count());
+        else
+            msg = tr("Do you realy want to delete selected item?");
+
+        QMessageBox dlg(QMessageBox::Question, tr("Confirm"), msg,  QMessageBox::Yes | QMessageBox::No, this);
+        dlg.setDefaultButton(QMessageBox::No);
+
+        if (dlg.exec() == QMessageBox::No)
+            return;
+    }
+
     Q_FOREACH( QTreeWidgetItem * pItem, list ) 
     {
         index = indexOfTopLevelItem(pItem) ;
@@ -273,6 +295,14 @@ void QDownloadWidget::contextMenu(QContextMenuEvent * event )
     pAction->setText( Actions::scHideCurrentColumnText.arg(txt));
     m_pContextMenu->addAction( pAction );
     contextMenuEvent(event);
+}
+
+void QDownloadWidget::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Delete)
+        RemoveSelectedDownload();
+
+    QTreeWidget::keyPressEvent(event);
 }
 
 void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )

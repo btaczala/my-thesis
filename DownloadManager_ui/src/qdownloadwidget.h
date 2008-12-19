@@ -175,6 +175,7 @@ private:
 protected:
     virtual void paintEvent(QPaintEvent *event);
     virtual void contextMenuEvent(QContextMenuEvent * event );
+    virtual void keyPressEvent(QKeyEvent* event);
 protected slots:
 
     void columnResized(int column, int oldSize, int newSize);
