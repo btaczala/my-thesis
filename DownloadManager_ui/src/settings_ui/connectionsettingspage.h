@@ -55,12 +55,12 @@ namespace connection_settings_page
             static const int UserLabelMinimumWidth = 80;
             static const int PasswordLabelMinimumWidth = 80;
         };
-        
+
         QCheckBox* m_useProxyCheck;
         QLineEdit* m_serverEdit;
         QLineEdit* m_portEdit;
         QLineEdit* m_userEdit;
-        QLineEdit* m_passwordEdit;        
+        QLineEdit* m_passwordEdit;
     };
 }
 
@@ -69,7 +69,7 @@ class ConnectionSettingsPage : public ISettingsPage
     Q_OBJECT
 public:
     ConnectionSettingsPage(QWidget* parent = 0);
-    
+
 
     virtual QIcon getIcon() const;
     virtual QString getTitle() const;

@@ -30,6 +30,7 @@
 #include <settings.h>
 #include <downloadmanager.h>
 #include <signalreceiverfactory.h>
+#include <signalreceiver.h>
 
 #include <rslogger.h>
 #include <downloadmanager.h>
@@ -45,8 +46,6 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     connect(header(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(sectionMoved(int, int, int)));
     initializeColumns();
     m_pDownloadManager  = Proxy::downloadManager();
-    //Proxy::settings()->loadSettings();
-    
     connect(header(), SIGNAL(contextMenu(QContextMenuEvent*)), this, SLOT(contextMenu(QContextMenuEvent*)));
 
     setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -56,18 +55,22 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     setAlternatingRowColors(false);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
+    SignalPlayGround::connectToPlayGround(this,QString("QDownloadWidget-Listener"), SignalPlayGround::ALL ) ; 
+//     connect( m_pListener,SIGNAL( statusChanged_signal( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
+//     connect( m_pListener,SIGNAL( progressInfoAt_signal( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 
     connect( Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
     connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
+    
 
-    connect( m_pDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
-    connect( m_pDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
-    connect( m_pDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
-    connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
+//     connect( m_pDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
+//     connect( m_pDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
+//     connect( m_pDownloadManager,SIGNAL( downloadDoneAt( int ) ),this,SLOT( downloadDoneAt( int ) ) );
+//     connect( m_pDownloadManager,SIGNAL( downloadOnHold( int ) ),this,SLOT( downloadOnHold( int ) ) );
     //connect( m_pDownloadManager,SIGNAL( bytesReadAt( int,int,int ) ),this,SLOT( bytesReadAt( int,int,int ) ) );
     //connect( m_pDownloadManager,SIGNAL( downloadRateAt( int, const QString & ) ),this,SLOT( downloadRateAt( int,const QString & ) ) );
     //connect( m_pDownloadManager,SIGNAL( elapsedTimeAt( int, unsigned int  ) ),this,SLOT( elapsedTimeAt( int,unsigned int ) ) );
-    connect(m_pDownloadManager,SIGNAL( progressInfoAt( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
+//     connect(m_pDownloadManager,SIGNAL( progressInfoAt( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 
 }
 
@@ -77,6 +80,8 @@ QDownloadWidget::~QDownloadWidget()
     saveColumns();
     disconnect();
     delete m_downloadItemDelegate;
+    SignalPlayGround::disconnectFromPlayGround(QString("QDownloadWidget-Listener")) ; 
+
     
 }
 void QDownloadWidget::initializeColumns()
@@ -378,7 +383,7 @@ void QDownloadWidget::bytesReadAt(int position,int read,int total)
 */
 void QDownloadWidget::progressInfoAt( int position, const ProgressInfo& _info )
 {
-    int read_kBytes = _info._DownloadedBytes / 1024 ; 
+    int read_kBytes = ( _info._DownloadedBytes / 1024 ) * 2; 
     int total_kBytes = _info._TotalBytes / 1024 ; 
     emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
     QTreeWidgetItem *pItem = topLevelItem(position);

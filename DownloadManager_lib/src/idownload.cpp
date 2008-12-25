@@ -127,7 +127,8 @@ void IDownload::timerEvent(QTimerEvent* event)
     //static qint64 prevDownloaded = 0;
     if( m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes > 0 )
     {
-        info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes)/ 1024),0, 'f',2);
+        //FIXME : '2' hardcoded
+        info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes)*2/ 1024),0, 'f',2);
     }
     m_SecondsDownloading++;
     info._ElapsedTime = m_SecondsDownloading / 2;

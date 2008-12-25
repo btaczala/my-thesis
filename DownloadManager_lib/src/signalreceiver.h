@@ -17,14 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef SIGNALRECIVER__H__
+#define SIGNALRECIVER__H__
+
 #include <QObject>
-class SignalReceiver : public QObject
+#include <QMap>
+#include <QPair>
+#include <QString>
+#include "downloadmanager.h"
+
+class ISignalListener 
 {
-	Q_OBJECT
 public:
-    SignalReceiver() ; 
-public slots :
-	void slot1() ; 
-signals:
-	void signal() ; 
+    virtual void statusChanged(int, DownloadState::States ) = 0 ; 
+    virtual void progressInfoAt( int at, const ProgressInfo& _info ) = 0 ;
+    ISignalListener () {};
 };
+class SignalPlayGround : public QObject
+{
+    Q_OBJECT
+public:
+     enum Bits
+     {
+         ALL = 0x1,
+         NONE = 0x2,
+         STATUSCHANGED = 0x4,
+         PROGRESSINFOAT = 0x8
+     };
+     typedef QPair<Bits, ISignalListener*> BitsOfListenerPair ; 
+     typedef QMap<QString, BitsOfListenerPair > MapType ; 
+     ~SignalPlayGround () ; 
+// private: 
+//     SignalReceiver() ; 
+// 
+//     Bits m_bits ; 
+public slots:
+     virtual void statusChanged( int at, DownloadState::States state  ) ; 
+     virtual void progressInfoAt( int at, const ProgressInfo& _info );
+private:
+    MapType m_MapOfListeners ; 
+    SignalPlayGround () {} ;
+    static SignalPlayGround * instance () ; 
+public:
+    static void connectToPlayGround( ISignalListener * listener, const QString & name, Bits mask = ALL ) ;
+    static void disconnectFromPlayGround( const QString & name) ;
+};
+#endif //SIGNALRECIVER__H__

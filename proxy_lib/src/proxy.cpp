@@ -78,3 +78,4 @@ QString Proxy::getAppUid()
 {
     return _appUid;
 }
+

@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
     if (oneInstance && instance.isRunning())
     {
         instance.sendMessage(MainWindow::ActivateWindowMessage);
-        quitApp = true;
+        //quitApp = true;
     }
 
     if (!quitApp)

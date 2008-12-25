@@ -28,10 +28,13 @@
 #include <idownload.h>
 #include <QDebug>
 
+#include <signalreceiver.h>
+
 
 class QPaintEvent;
 class QContextMenuEvent;
 class DownloadManager;
+
 
 #define UNSET_COL (-1)
 
@@ -84,7 +87,7 @@ namespace DownloadWidgetDelegates
 
 };
 
-class QDownloadWidget : public QTreeWidget
+class QDownloadWidget : public QTreeWidget, ISignalListener
 {
     Q_OBJECT
 public:
@@ -124,7 +127,7 @@ public:
         bool isVisible() const { return _visible; }
         int getWidth() const { return _width; }
         int getVisualIndex() const { return _visualIndex; }
-        
+
         void setVisible(bool visible) { _visible = visible; }
         void setWidth(int width) { _width = width; }
         void setVisualIndex(int visualIndex) {_visualIndex = visualIndex; }
@@ -145,7 +148,6 @@ public:
         StandardItem,
         DetailedItem
     };
-    //SignalReceiver * m_pSignalReceiver ; 
 
 public slots:
     void StartPauseSelectedDownload();
@@ -177,14 +179,14 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent * event );
     virtual void keyPressEvent(QKeyEvent* event);
 protected slots:
-
     void columnResized(int column, int oldSize, int newSize);
-
 protected:
     ColumnCollection m_columns;
     QPointer<QMenu>  m_pContextMenu ; 
     int              m_CurrentColumnID ; 
     DownloadWidgetDelegates::DownloadItemDelegate* m_downloadItemDelegate;
+    
+
 public:
     DownloadManager*  m_pDownloadManager ; 
 
