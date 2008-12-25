@@ -101,7 +101,7 @@ public:
      */
     void addDownload(const QString & url, const QString & fileDestination); 
     
-
+    static const QString ListenerName ; 
     class QDownloadWidgetColumnInfo
     {
     public:

@@ -28,14 +28,13 @@
 
 #include <proxy.h>
 #include <settings.h>
-#include <downloadmanager.h>
 #include <signalreceiverfactory.h>
 #include <signalreceiver.h>
 
 #include <rslogger.h>
-#include <downloadmanager.h>
 
 const int QDownloadWidget::QDownloadWidgetColumnInfo::VERSION = 1;
+const QString QDownloadWidget::ListenerName = QString("QDownloadWidget-Listener") ; 
 
 QDownloadWidget::QDownloadWidget(QWidget * parent) 
 : QTreeWidget(parent )
@@ -55,13 +54,13 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     setAlternatingRowColors(false);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
-    SignalPlayGround::connectToPlayGround(this,QString("QDownloadWidget-Listener"), SignalPlayGround::ALL ) ; 
+    SignalPlayGround::connectToPlayGround(this,ListenerName,SignalPlayGround::ALL ) ; 
 //     connect( m_pListener,SIGNAL( statusChanged_signal( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
 //     connect( m_pListener,SIGNAL( progressInfoAt_signal( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 
     connect( Actions::getAction( Actions::scConfigureColumnsActionText ), SIGNAL(triggered()), this, SLOT(onConfigureColumns()));
     connect ( Actions::getAction( Actions::scHideCurrentColumnText ) , SIGNAL( triggered() ), this, SLOT( columnHide() ) ) ; 
-    
+
 
 //     connect( m_pDownloadManager,SIGNAL( globalProgress( int ) ),this,SLOT( globalProgressChanged( int ) ) );
 //     connect( m_pDownloadManager,SIGNAL( statusChanged( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
@@ -80,7 +79,7 @@ QDownloadWidget::~QDownloadWidget()
     saveColumns();
     disconnect();
     delete m_downloadItemDelegate;
-    SignalPlayGround::disconnectFromPlayGround(QString("QDownloadWidget-Listener")) ; 
+    SignalPlayGround::disconnectFromPlayGround( ListenerName ) ; 
 
     
 }
@@ -355,35 +354,9 @@ void QDownloadWidget::globalProgressChanged( int value)
 {
     QWidget::update();
 }
-
-/*
-void QDownloadWidget::bytesReadAt(int position,int read,int total)
-{
-    int read_kBytes = read / 1024 ; 
-    int total_kBytes = total / 1024 ; 
-    emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
-    QTreeWidgetItem *pItem = topLevelItem(position);
-    if ( pItem == NULL ) 
-        return ; 
-    pItem->setText(2,QString(" %1 / %2 ").arg(read_kBytes).arg(total_kBytes));
-
-    // estimated time ;) 
-    bool ok ; 
-    double rate = pItem->text(7).toDouble(&ok);
-    if ( rate == 0 ) 
-        return ; 
-    int howMuch = (int)((double)(total_kBytes - read_kBytes) / rate);
-    int seconds = howMuch % 60 ; 
-    int minutes = (howMuch  - seconds)/60 ; 
-    QString sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
-    QString text = QString::number( minutes ) + ":" + sec ; 
-    pItem->setText(6,text);
-
-}
-*/
 void QDownloadWidget::progressInfoAt( int position, const ProgressInfo& _info )
 {
-    int read_kBytes = ( _info._DownloadedBytes / 1024 ) * 2; 
+    int read_kBytes = ( _info._DownloadedBytes / 1024 ) ; 
     int total_kBytes = _info._TotalBytes / 1024 ; 
     emit dataChanged( QModelIndex().child(position,3), QModelIndex().child(position,3) );
     QTreeWidgetItem *pItem = topLevelItem(position);
@@ -416,28 +389,6 @@ void QDownloadWidget::progressInfoAt( int position, const ProgressInfo& _info )
     pItem->setText(5,text);
 
 }
-/*
-void QDownloadWidget::downloadRateAt(int position, const QString &downloadRate)
-{
-    QTreeWidgetItem *pItem = topLevelItem(position);
-    if ( pItem ) 
-        pItem->setText(7,downloadRate);
-
-}
-
-void QDownloadWidget::elapsedTimeAt(int position, unsigned int timeElapsed )
-{
-    int seconds = timeElapsed % 60 ; 
-    int minutes = (timeElapsed - seconds)/60 ; 
-    
-    QString sec = (seconds < 10 ? QString::number( 0 ) + QString::number( seconds ) : QString::number( seconds ) ) ; 
-    QString text = QString::number( minutes ) + ":" + sec ;  
-    QTreeWidgetItem *pItem = topLevelItem(position);
-    if ( pItem ) 
-        pItem->setText(5,text);
-
-}
-*/
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)
 {

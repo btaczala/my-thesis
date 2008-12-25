@@ -65,6 +65,7 @@ bool DownloadManager::addDownload(const std::string & urlAddress, const std::str
     }
     pDownload->setUrlAddress(urlAddress) ;
     pDownload->setDestinationAddress(destination);
+    // TODO: check if file exists, if yes delete it ( ? ) 
     connectWith(pDownload);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
 

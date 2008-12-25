@@ -50,16 +50,39 @@ int main(int argc, char *argv[])
     
     SingleApplication instance(Proxy::getAppUid(), &app);
 
+    QStringList arguments = app.arguments();
     if (oneInstance && instance.isRunning())
     {
+        qDebug() << "Instance is running";
+        if ( arguments.count() > 1 ) 
+        {
+            int indexOf = arguments.indexOf( QString ("-add") );
+            if ( indexOf != -1 ) 
+            {
+                QString url = arguments[indexOf+1] ; 
+                instance.sendMessage(MainWindow::AddNewDownloadMessage + "-" + url);
+            }
+        }
         instance.sendMessage(MainWindow::ActivateWindowMessage);
-        //quitApp = true;
+        quitApp = true;
     }
 
     if (!quitApp)
     {
 	    MainWindow *window = new MainWindow();
         QObject::connect(&instance, SIGNAL(messageReceived(const QString&)), window, SLOT(handleMessage(const QString&))); 
+        
+        if ( arguments.count() > 1 ) 
+        {
+            int indexOf = arguments.indexOf( QString ("-add") );
+            if ( indexOf != -1 ) 
+            {
+                QString url = arguments[indexOf+1] ; 
+                window->addDownload(url);
+                instance.sendMessage(MainWindow::AddNewDownloadMessage + "-" + url);
+            }
+        }
+        
         bool startInTray = Proxy::settings()->value(SettingsValNames::scStartInTrayArea).toBool();
         if (startInTray)
             window->moveToTray();
@@ -71,6 +94,10 @@ int main(int argc, char *argv[])
 	    ///_CrtDumpMemoryLeaks();
     #endif // WIN32
         delete window; 
+    }
+    else
+    {
+        qDebug() << " Application already started " ; 
     }
 
     Proxy::deinit();

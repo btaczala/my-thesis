@@ -101,7 +101,7 @@ Q_OBJECT
     QString                             m_HostName;
     QString                             m_PathOnServer;
     QString                             m_RequestType;  
-    QFile                               m_FileLog;
+//     QFile                               m_FileLog;
     QList<const char*>                  m_errorsList;
     RS_State                            m_rssmState;
     qint64                              m_iPDownloaded;

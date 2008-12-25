@@ -36,6 +36,7 @@ public:
 class SignalPlayGround : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(SignalPlayGround)
 public:
      enum Bits
      {
@@ -47,10 +48,6 @@ public:
      typedef QPair<Bits, ISignalListener*> BitsOfListenerPair ; 
      typedef QMap<QString, BitsOfListenerPair > MapType ; 
      ~SignalPlayGround () ; 
-// private: 
-//     SignalReceiver() ; 
-// 
-//     Bits m_bits ; 
 public slots:
      virtual void statusChanged( int at, DownloadState::States state  ) ; 
      virtual void progressInfoAt( int at, const ProgressInfo& _info );

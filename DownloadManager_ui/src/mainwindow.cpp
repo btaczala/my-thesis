@@ -30,6 +30,7 @@
 #include <settings.h>
 
 const QString MainWindow::ActivateWindowMessage = "ActivateWindowMessage";
+const QString MainWindow::AddNewDownloadMessage = "AddNewDownloadMessage";
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
@@ -39,6 +40,9 @@ MainWindow::MainWindow(QWidget * parent)
 
     initializeWidgets();
     initializeActions();
+    
+    setWindowTitle("Rapidshare download manager ") ; 
+    setWindowIcon(QIcon(":/app_icon.png"));
 }
 
 MainWindow::~MainWindow() throw()
@@ -57,7 +61,12 @@ QStringList MainWindow::getLinksFromClipboard()
 
 void MainWindow::addDownload(const QString& url, const QString& fileDestination)
 {
-    m_DownloadWidget->addDownload(url, fileDestination);
+    QString dest ; 
+    if ( fileDestination.isEmpty() ) 
+        dest = Proxy::settings()->value(SettingsValNames::scDefaultDownloadDirectory ).toString() ; 
+    else 
+        dest = fileDestination ; 
+    m_DownloadWidget->addDownload( url, dest );
 }
 
 void MainWindow::bringWindowToFront()
@@ -180,8 +189,15 @@ void MainWindow::addNewDownload()
 
 void MainWindow::handleMessage(const QString& message)
 {
+    qDebug() << Q_FUNC_INFO << "message="<< message ; 
     if (message == ActivateWindowMessage)
         restoreFromTray();
+    if ( message.contains(AddNewDownloadMessage) )
+    {
+        QStringList a = message.split('-');
+        QString url = a[1];
+        addDownload( url );
+    }
 }
 
 void MainWindow::initializeActions()

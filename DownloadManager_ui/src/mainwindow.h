@@ -42,10 +42,11 @@ class MainWindow : public QMainWindow
 
         static QStringList getLinksFromClipboard();
 
-        void addDownload(const QString& url, const QString& fileDestination); 
+        void addDownload(const QString& url, const QString& fileDestination = "" ); 
         void bringWindowToFront();
 
         static const QString ActivateWindowMessage;
+        static const QString AddNewDownloadMessage;
 
     public slots:
         void about();
