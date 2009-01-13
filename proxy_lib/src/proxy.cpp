@@ -78,5 +78,5 @@ QString Proxy::decrypt(const QString& data)
 QString Proxy::getAppUid()
 {
     return _appUid;
-}k
+}
 
