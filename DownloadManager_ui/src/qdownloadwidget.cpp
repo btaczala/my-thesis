@@ -321,16 +321,26 @@ void QDownloadWidget::addDownload( const QString & url, const QString & fileDest
     if ( ! m_pDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
         return ; 
     
-    QIcon itemIcon(QPixmap(":/download_item.png"));
-
+    QFileIconProvider a;
+    QString suffix = url.at( url.size() -3 ) ;
+    suffix +=url.at( url.size() -2 ) ;
+    suffix +=url.at( url.size() -1 ) ;
+    QString nonExistingFile = QString( QDir::homePath() +"/"+"temp." + suffix);
+    QFile fTmp(nonExistingFile);
+    fTmp.open(QIODevice::Append);
+    fTmp.close();
+    QIcon itemIcon2 = a.icon(QFileInfo(nonExistingFile));
+    if ( itemIcon2.isNull() ) 
+        itemIcon2 = QIcon(QPixmap(":/download_item.png"));
     QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
     pItem->setText(0, url);
-    pItem->setIcon(0, itemIcon);
+    pItem->setIcon(0, itemIcon2);
     pItem->setText(1, fileDestination);
     pItem->setText(2, QString("0/0"));
     pItem->setText(4, "");
     pItem->setSizeHint(0, QSize(100, 20));
     addTopLevelItem(pItem);
+    QFile::remove(nonExistingFile);
 }
 
 void QDownloadWidget::statusChanged( int position, DownloadState::States status )

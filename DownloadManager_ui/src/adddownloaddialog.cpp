@@ -100,7 +100,7 @@ void AddDownloadDialog::initialize()
     m_folderCombo = new QComboBox;
     m_folderCombo->setEditable(true);
     QCompleter* completer = new QCompleter;
-    completer->setModel(new QDirModel());
+    completer->setModel(new QDirModel(completer));
     m_folderCombo->setCompleter(completer);
     m_folderCombo->setInsertPolicy(QComboBox::InsertAtCurrent);
     QPushButton* folderButton = new QPushButton(tr("..."));
