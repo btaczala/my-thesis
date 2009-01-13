@@ -263,6 +263,20 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
             qDebug() << DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
             LOG(QString("Starting download now %1!").arg(newUrl));
         }
+        if ( m_apFileUrl.get() ) 
+        {
+            QString host = m_apFileUrl->host() ; 
+            QRegExp regExp("^rs\\d+.rapidshare.com");
+            if ( regExp.indexIn(host) != -1 ) 
+            {
+                if ( m_rssmState == GET_FIRST ) 
+                {
+                    LOG(QString("Problably inserted address like http://rs666.rapidshare.com, which lead to direct download"));
+                    m_rssmState = DOWNLOADING;
+                    setState( DownloadState::DOWNLOADING , true );
+                }
+            }
+        }
     }
     else
         qDebug() << "Error response:"<< iStatusCode;
