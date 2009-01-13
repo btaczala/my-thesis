@@ -17,11 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifdef WIN32
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#endif // WIN32
+//#ifdef WIN32
+////#define CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+////#include <crtdbg.h>
+//#endif // WIN32
 
 #include <QCoreApplication>
 #include "mainwindow.h"

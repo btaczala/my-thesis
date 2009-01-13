@@ -183,10 +183,13 @@ void IDownload::removeFromFile( const QString& _post )
 void IDownload::renameFile()
 {
     QString dest = m_apFile->fileName();
+    QString destTemp = dest ; //
     int ind = dest.lastIndexOf( Download::TMPSTRING );
     dest = dest.left( ind );
     qDebug() << dest;
-    QFile::rename( m_apFile->fileName(), dest );
+    QFile::rename( destTemp, dest );
+    if ( QFile::exists(destTemp) ) 
+        QFile::remove(destTemp);
 }
 
 void IDownload::closeFile()
