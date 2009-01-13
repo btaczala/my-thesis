@@ -65,7 +65,8 @@ QString Proxy::encrypt(const QString& data)
 {
     QString buf(data);
     //haha - we're using advanced Xor 13 algorithm
-    std::transform(buf.begin(), buf.end(), buf.begin(), ret<QChar>(bind<ushort>(boost::mem_fn<ushort,QChar>(&QChar::unicode), boost::lambda::_1) ^ constant(advancedXor13HashKey)));
+    //std::transform(buf.begin(), buf.end(), buf.begin(), ret<QChar>(bind<ushort>(boost::mem_fn<ushort,QChar>(&QChar::unicode), boost::lambda::_1) ^ constant(advancedXor13HashKey)));
+	std::transform(buf.begin(), buf.end(), buf.begin(), ret<QChar>(boost::lambda::bind<ushort>( boost::mem_fn<ushort&,QChar>(&QChar::unicode), boost::lambda::_1) ^ constant(advancedXor13HashKey)));
     return buf;
 }
 
@@ -77,5 +78,5 @@ QString Proxy::decrypt(const QString& data)
 QString Proxy::getAppUid()
 {
     return _appUid;
-}
+}k
 
