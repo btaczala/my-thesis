@@ -19,6 +19,7 @@ Settings::~ Settings()
     m_Settings.sync();
     RSDM_LOG_FUNC;
 }
+
 OptionsContainer * Settings::optionsForEngine(const std::string & name )
 {
     return m_PluginsOptions[name].get();
@@ -51,6 +52,7 @@ void Settings::setValue(const QString & valName, const QVariant & value, Context
             m_Settings.setValue(valName,value);
             break; 
     }
+    m_Settings.sync();
 }
 
 QVariant Settings::value(const QString & valName, Context context, const QString & subGroup )
@@ -87,6 +89,7 @@ QVariant Settings::value(const QString & valName, Context context, const QString
 
 void apply_options_to_engine ( const std::pair<std::string,boost::shared_ptr<DownloadEngine> >  & pair ) 
 {
+
     pair.second->setOptionsForEngine( *( Proxy::settings()->optionsForEngine(pair.first) ) );
 }
 void Settings::loadSettings()
@@ -119,6 +122,9 @@ void Settings::loadPluginsOptions()
 };
 
 void Settings::loadUIOptions()
+{   
+}
+QString Settings::settingsDirectory() const
 {
-    
+    return m_Settings.fileName() ; 
 }

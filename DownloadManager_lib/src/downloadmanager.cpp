@@ -57,6 +57,7 @@ bool DownloadManager::addDownload(const std::string & urlAddress, const std::str
         LOG(QString("There is no registered engine that handles pattern %1").arg( urlAddress.c_str() ) ) ;
         return false; 
     }
+    LOG( QString( "Found engine:%1 for %2" ).arg( QString( pEngine->name().c_str() ) ).arg( urlAddress.c_str() ) );
     pDownload = pEngine->spawn() ; 
     if ( pDownload == NULL ) 
     {

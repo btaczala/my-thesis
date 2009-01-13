@@ -45,6 +45,9 @@ void GeneralSettingsPage::initialize()
 {    
     m_tabWidget->addTab(new general_settings_tabs::DownloadTab, tr("Download"));
     m_tabWidget->addTab(new general_settings_tabs::ApplicationTab, tr("Application"));
+#ifdef _DEBUG
+    m_tabWidget->addTab(new general_settings_tabs::InfoTab, tr("Debug information"));
+#endif
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(m_tabWidget);
@@ -240,5 +243,15 @@ namespace general_settings_tabs
     void ApplicationTab::onAutostartCheck(int state)
     {
         Proxy::settings()->setValue(SettingsValNames::scStartAppWithSystemStartup, static_cast<int>(state == Qt::Checked));
+    }
+    InfoTab::InfoTab(QWidget *parent ) : QWidget(parent)
+    {
+        QVBoxLayout* layout = new QVBoxLayout(this);
+        QLabel *label = new QLabel(this);
+        label->setText( Proxy::settings()->settingsDirectory() ) ; 
+        layout->addSpacing(settings_ui::SpaceBeforeFirstWidget);
+        layout->addWidget(label);
+        layout->addSpacing(settings_ui::SpaceBeetwenWidgets);
+        setLayout(layout);
     }
 }

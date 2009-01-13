@@ -113,8 +113,9 @@ namespace server_settings_page
         layout->addStretch(1);
         setLayout(layout);
 
-        QString userName = QString::fromStdString( boost::any_cast<std::string>( Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginUsername)));
-        QString userPass = QString::fromStdString( boost::any_cast<std::string>(Proxy::settings()->optionsForEngine("rapidshare")->option(SettingsValNames::scPluginPassword)));
+        QString userName = Proxy::settings()->value(SettingsValNames::scPluginUsername,Settings::PLUGINS,QString("rapidshare")).toString();
+        
+        QString userPass = Proxy::settings()->value(SettingsValNames::scPluginPassword,Settings::PLUGINS,QString("rapidshare")).toString();
         
         if (!userPass.isEmpty())
             userPass = Proxy::decrypt(userPass);

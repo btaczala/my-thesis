@@ -45,14 +45,14 @@ void EngineManager::loadEngines(const std::string &path)
     */
     //boost::shared_ptr<DownloadEngine> pRSEngine ( new RapidshareEngine() ) ;
     DownloadEngine::StringList slHttp;
-    slHttp.push_back("http");
+    slHttp.push_back("http://");
     
     boost::shared_ptr<DownloadEngine> pEngineHttp ( new Engine<HttpDownload>("http"));
     pEngineHttp->setPatterns(slHttp);
     m_Engines[pEngineHttp->name()] = pEngineHttp;
     
     DownloadEngine::StringList slFtp;
-    slFtp.push_back("ftp");
+    slFtp.push_back("ftp://");
     
     boost::shared_ptr<DownloadEngine> pEngineFtp ( new Engine<FtpDownload>("ftp"));
     pEngineFtp->setPatterns(slFtp);
@@ -60,9 +60,9 @@ void EngineManager::loadEngines(const std::string &path)
     
     
     DownloadEngine::StringList sl;
-    sl.push_back("rapidshare");
-    sl.push_back("rs");
-    sl.push_back("rapids");
+    sl.push_back("http://rapidshare");
+    sl.push_back("http://rs");
+    //sl.push_back("rapids");
 
     boost::shared_ptr<DownloadEngine> pRSEngine ( new Engine<QRapidshareDownload>("rapidshare"));
     pRSEngine->setPatterns(sl);

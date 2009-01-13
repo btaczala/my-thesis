@@ -96,6 +96,8 @@ class Settings
         QString defaultDownloadDirectory() const ; 
         void    setDefaultDownloadDirectory() ;
 
+        QString settingsDirectory() const ;
+
 	private:
         /**
          * load plugin options. sets group to "Plugin"

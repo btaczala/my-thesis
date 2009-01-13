@@ -61,6 +61,14 @@ namespace general_settings_tabs
         void onConfirmItemDelete(int state);
         void onAutostartCheck(int state);
     };
+//#ifdef _DEBUG
+    class InfoTab : public QWidget
+    {
+        Q_OBJECT
+    public:
+        InfoTab ( QWidget *parent = 0 ) ; 
+    };
+//#endif
 }
 
 class GeneralSettingsPage : public ISettingsPage
