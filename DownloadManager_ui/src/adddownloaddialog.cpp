@@ -35,13 +35,23 @@ AddDownloadDialog::AddDownloadDialog(QWidget* parent)
 
 AddDownloadDialog::~AddDownloadDialog()
 {
+    QStringList folders;
+
+    if (m_folderCombo->count() <= 0)
+        return;
+
+    for(int i = 0; i < m_folderCombo->count(); ++i)
+    {
+        folders << m_folderCombo->itemText(i);
+    }
+
+    Proxy::settings()->setValue(SettingsValNames::scRecentDownloadFolders, folders, Settings::LIBRARY);
 }
 
 void AddDownloadDialog::accept()
 {
     QString str = m_urlEdit->toPlainText();
     QString folder = m_folderCombo->currentText();
-    int i = m_folderCombo->currentIndex();
 
     if (str.isEmpty())
     {
@@ -61,6 +71,8 @@ void AddDownloadDialog::accept()
     {
         qobject_cast<MainWindow*>(parent())->addDownload(url, folder);
     }
+
+    QDialog::accept();
 }
 
 void AddDownloadDialog::resetItemBackground()
@@ -131,9 +143,16 @@ void AddDownloadDialog::initialize()
 
     pasteButton->click();
 
+    QStringList folders = Proxy::settings()->value(SettingsValNames::scRecentDownloadFolders, Settings::LIBRARY).toStringList();
+
     QString defaultDir = Proxy::settings()->value(SettingsValNames::scDefaultDownloadDirectory).toString();
-    if (!defaultDir.isEmpty())
+    if (!defaultDir.isEmpty() && !folders.contains(defaultDir))
         m_folderCombo->addItem(defaultDir);
+
+    Q_FOREACH(QString one, folders)
+    {
+        m_folderCombo->addItem(one);
+    }
 
     QTextCursor cursor = m_urlEdit->textCursor();
     cursor.setPosition(QTextCursor::Start);

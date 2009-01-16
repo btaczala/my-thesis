@@ -113,42 +113,33 @@ namespace server_settings_page
         layout->addStretch(1);
         setLayout(layout);
 
-        QString userName = Proxy::settings()->value(SettingsValNames::scPluginUsername,Settings::PLUGINS,QString("rapidshare")).toString();
-        
+        QString userName = Proxy::settings()->value(SettingsValNames::scPluginUsername,Settings::PLUGINS,QString("rapidshare")).toString();        
         QString userPass = Proxy::settings()->value(SettingsValNames::scPluginPassword,Settings::PLUGINS,QString("rapidshare")).toString();
+        bool useCredentials = Proxy::settings()->value(SettingsValNames::scUseCredentials,Settings::PLUGINS,QString("rapidshare")).toBool();
         
         if (!userPass.isEmpty())
             userPass = Proxy::decrypt(userPass);
 
         
-        LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName ).arg( userPass ));
-        if ( userName.isEmpty() || userPass.isEmpty() ) 
-            credentialsCheck->setCheckState( Qt::Unchecked );
-        else
-        {
-            credentialsCheck->setCheckState( Qt::Checked );
-            m_UserEdit->setText(userName); 
-            m_PasswordEdit->setText(userPass); 
-        }
+        //LOG(QString("User Name and pass from QSettings are : %1 - %2 ").arg( userName ).arg( userPass ));
+
+        credentialsCheck->setChecked(useCredentials);
+        m_UserEdit->setText(userName); 
+        m_PasswordEdit->setText(userPass); 
         useCredentialChecked(credentialsCheck->checkState());
     }
+
     ServerTab::~ ServerTab()
     {
         Proxy::settings()->setValue( SettingsValNames::scPluginUsername,m_UserEdit->text(),Settings::PLUGINS,"rapidshare");
         Proxy::settings()->setValue( SettingsValNames::scPluginPassword,Proxy::encrypt(m_PasswordEdit->text()),Settings::PLUGINS,"rapidshare");
     }
+
     void ServerTab::useCredentialChecked(int state ) 
     {
-        if ( state == Qt::Unchecked ) 
-        {
-            m_UserEdit->setDisabled(true);
-            m_PasswordEdit->setDisabled(true);
-        }
-        if ( state == Qt::Checked ) 
-        {
-            m_UserEdit->setDisabled(false);
-            m_PasswordEdit->setDisabled(false);
-        }   
+        m_UserEdit->setDisabled(state == Qt::Unchecked);
+        m_PasswordEdit->setDisabled(state == Qt::Unchecked);
+        Proxy::settings()->setValue( SettingsValNames::scUseCredentials,(state == Qt::Checked),Settings::PLUGINS,"rapidshare");
     }
 }
 

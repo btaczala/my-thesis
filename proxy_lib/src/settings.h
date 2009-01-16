@@ -29,9 +29,11 @@ namespace SettingsValNames
     static const char scStartInTrayArea[] = "startInTrayArea";
     static const char scOnlyOneInstanceAllowed[] = "onlyOneInstanceAllowed";
     static const char scStartAppWithSystemStartup[] = "startAppWithSystemStartup";
+    static const char scRecentDownloadFolders[] = "recentDownloadFolders";
     // PLUGINS NAMES
     static const char scPluginUsername[] = "username";
     static const char scPluginPassword[] = "password";
+    static const char scUseCredentials[] = "useCredentials";
 };
     
 class OptionsContainer;

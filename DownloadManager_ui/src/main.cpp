@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	QApplication::setStyle(new QCleanlooksStyle);
 	#endif
 	QApplication app(argc, argv);
-    QCoreApplication::setOrganizationName(Proxy::getAppCompany()); 
+    QCoreApplication::setOrganizationName("settings"); 
     QCoreApplication::setApplicationName(Proxy::getAppName());
     QSettings::setDefaultFormat( QSettings::IniFormat ); 
     QString cp = QDir::currentPath();
