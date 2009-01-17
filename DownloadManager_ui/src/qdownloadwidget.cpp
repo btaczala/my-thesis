@@ -250,7 +250,7 @@ void QDownloadWidget::RemoveSelectedDownload()
         if ( index == -1 ) 
             continue ; 
         m_pDownloadManager->removeDownload( index ) ; 
-        delete pItem ; 
+        //delete pItem ; 
         pItem = NULL ; 
     }
 }
@@ -317,30 +317,8 @@ void QDownloadWidget::contextMenuEvent(QContextMenuEvent * event )
 
 void QDownloadWidget::addDownload( const QString & url, const QString & fileDestination ) 
 {
-    
     if ( ! m_pDownloadManager->addDownload(url.toStdString(),fileDestination.toStdString()) ) 
         return ; 
-    
-    QFileIconProvider a;
-    QString suffix = url.at( url.size() -3 ) ;
-    suffix +=url.at( url.size() -2 ) ;
-    suffix +=url.at( url.size() -1 ) ;
-    QString nonExistingFile = QString( QDir::homePath() +"/"+"temp." + suffix);
-    QFile fTmp(nonExistingFile);
-    fTmp.open(QIODevice::Append);
-    fTmp.close();
-    QIcon itemIcon2 = a.icon(QFileInfo(nonExistingFile));
-    if ( itemIcon2.isNull() ) 
-        itemIcon2 = QIcon(QPixmap(":/download_item.png"));
-    QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
-    pItem->setText(0, url);
-    pItem->setIcon(0, itemIcon2);
-    pItem->setText(1, fileDestination);
-    pItem->setText(2, QString("0/0"));
-    pItem->setText(4, "");
-    pItem->setSizeHint(0, QSize(100, 20));
-    addTopLevelItem(pItem);
-    QFile::remove(nonExistingFile);
 }
 
 void QDownloadWidget::statusChanged( int position, DownloadState::States status )
@@ -398,6 +376,36 @@ void QDownloadWidget::progressInfoAt( int position, const ProgressInfo& _info )
     text = QString::number( minutes ) + ":" + sec ;  
     pItem->setText(5,text);
 
+}
+void QDownloadWidget::downloadAdded( int newPosition ) 
+{
+	IDownload *pDownload = Proxy::downloadManager()->downloadAt(newPosition);
+	QFileIconProvider a;
+	QString url = pDownload->urlAddress().c_str();
+    QString suffix = url.at( url.size() -3 ) ;
+    suffix +=url.at( url.size() -2 ) ;
+    suffix +=url.at( url.size() -1 ) ;
+    QString nonExistingFile = QString( QDir::homePath() +"/"+"temp." + suffix);
+    QFile fTmp(nonExistingFile);
+    fTmp.open(QIODevice::Append);
+    fTmp.close();
+    QIcon itemIcon2 = a.icon(QFileInfo(nonExistingFile));
+    if ( itemIcon2.isNull() ) 
+        itemIcon2 = QIcon(QPixmap(":/download_item.png"));
+    QTreeWidgetItem *pItem = new QTreeWidgetItem(this);
+    pItem->setText(0, url);
+    pItem->setIcon(0, itemIcon2);
+	pItem->setText(1, pDownload->destinationAddress().c_str() );
+    pItem->setText(2, QString("0/0"));
+    pItem->setText(4, "");
+    pItem->setSizeHint(0, QSize(100, 20));
+    addTopLevelItem(pItem);
+    QFile::remove(nonExistingFile);
+}
+void QDownloadWidget::downloadRemoved(int position)
+{
+	QTreeWidgetItem *pItem = takeTopLevelItem(position);
+	delete pItem;
 }
 QTestWidget::QTestWidget(QWidget* parent)
     :QWidget(parent)

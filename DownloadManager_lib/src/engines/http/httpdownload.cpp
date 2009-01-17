@@ -93,7 +93,6 @@ void HttpDownload::requestFinished(const int & idReq, const bool & isFalse)
         setError( m_HttpObj.errorString().toStdString());
         return ; 
     }
-    
 }
 void HttpDownload::stateChanged(const int & iState)
 {

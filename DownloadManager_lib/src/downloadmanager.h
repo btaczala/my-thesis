@@ -199,5 +199,15 @@ class DownloadManager : public QObject
          * @param total - how big is file. 
          */
         void                    progressInfoAt( int at, const ProgressInfo& _info );
+		/**
+		 * signal downloadAdded() 
+		 * Will emit when some frontend will add some download to queue. 
+		 */
+		void					downloadAdded( int newPosition ) ; 
+		/**
+		 * signal downloadRemoved() 
+		 * Will emit when some frontend will remove download from queue. 
+		 */
+		void					downloadRemoved( int position ) ; 
 };
 #endif // DOWNLOADMANAGER_H

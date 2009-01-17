@@ -31,6 +31,8 @@ class ISignalListener
 public:
     virtual void statusChanged(int, DownloadState::States ) = 0 ; 
     virtual void progressInfoAt( int at, const ProgressInfo& _info ) = 0 ;
+	virtual void downloadAdded( int newPosition ) = 0 ;
+	virtual void downloadRemoved( int newPosition ) = 0 ;
     ISignalListener () {};
 };
 class SignalPlayGround : public QObject
@@ -42,8 +44,9 @@ public:
      {
          ALL = 0x1,
          NONE = 0x2,
-         STATUSCHANGED = 0x4,
-         PROGRESSINFOAT = 0x8
+         STATUSCHANGED  = 0x4,
+         PROGRESSINFOAT = 0x8,
+		 DOWNALODADDED  = 0x16,
      };
      typedef QPair<Bits, ISignalListener*> BitsOfListenerPair ; 
      typedef QMap<QString, BitsOfListenerPair > MapType ; 
@@ -51,6 +54,8 @@ public:
 public slots:
      virtual void statusChanged( int at, DownloadState::States state  ) ; 
      virtual void progressInfoAt( int at, const ProgressInfo& _info );
+	 virtual void downloadAdded( int at );
+	 virtual void downloadRemoved( int position ) ;
 private:
     MapType m_MapOfListeners ; 
     SignalPlayGround () {} ;

@@ -161,13 +161,18 @@ public slots:
     void sectionMoved(int logicalIndex, int oldVisualIndex, int newVisualIndex);
 
     void globalProgressChanged( int value ) ; 
-    void statusChanged( int position, DownloadState::States status );
+    
     void downloadDoneAt( int position );
     void downloadOnHold( int position ) ; 
     //void bytesReadAt( int position , int read , int total );
    //void downloadRateAt( int position , const QString & downloadRate );
     //void elapsedTimeAt( int position , unsigned int timeElapsed );
-    void progressInfoAt( int, const ProgressInfo& _info );
+    
+	// from ISignalListener interface
+	void statusChanged( int position, DownloadState::States status );
+	void progressInfoAt( int, const ProgressInfo& _info );
+	void downloadAdded( int newPosition ) ;
+	void downloadRemoved( int position ) ;
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
     void initializeColumns();

@@ -72,6 +72,7 @@ bool DownloadManager::addDownload(const std::string & urlAddress, const std::str
 
     
     update() ; 
+	emit downloadAdded(m_DownloadList.size()-1);
     return true ; 
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
@@ -169,7 +170,9 @@ void DownloadManager::removeDownload(const std::string &urlAddress)
     DownloadListType::iterator it = std::find_if( m_DownloadList.begin(), m_DownloadList.end(), boost::bind(raaa, _1 ) == urlAddress) ; 
     if ( it == m_DownloadList.end() ) 
         return ; 
+	int pos = findPosition(urlAddress) ;
     m_DownloadList.erase(it);
+	emit downloadRemoved( pos );
 }
 void DownloadManager::removeDownload( int position )
 {
@@ -178,7 +181,7 @@ void DownloadManager::removeDownload( int position )
         return ; 
     }
     IDownload *pDownload = m_DownloadList[position].get();
-    removeDownload(pDownload->urlAddress());
+    removeDownload( pDownload->urlAddress() );
 }
 void DownloadManager::slot_listChanged()
 {
