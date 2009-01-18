@@ -1,0 +1,15 @@
+
+
+Modules : 
+	Library 
+		DownloadManager - whole. Only to export from library 
+			- AddToDownload(char *, char * ) // check if file was transfered before. 
+			
+		DownloadSession - session to RapidshareDownloadManager. 
+			
+		IDownload - interface for downloading files. 
+
+		RapidshareDownload : public IDownload - Implements IDownload 
+	App : 
+		QRsdm
+
