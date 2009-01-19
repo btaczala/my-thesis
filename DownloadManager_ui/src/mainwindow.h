@@ -66,7 +66,7 @@ class MainWindow : public QMainWindow
         void initializeDownloadWidget();
         void initializeWidgets();
         void initializeMenuBar();
-        void initializeTrayIcon();
+        //void initializeTrayIcon();
         void initializeGeometry();
 
         bool confirmAppExit();
@@ -81,7 +81,8 @@ class MainWindow : public QMainWindow
         MenuBar*                        m_MenuBar; 
         QToolBar*                       m_ToolbarWidget; 
         QDownloadWidget*                m_DownloadWidget;
-        QSystemTrayIcon*                m_trayIcon;
+        //QSystemTrayIcon*                m_trayIcon;
+		SystemDock*						m_pSystemDock;
         bool                            m_forceExit;
         QMenu                           m_trayContextMenu;
 };

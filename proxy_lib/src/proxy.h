@@ -51,6 +51,6 @@ class Proxy
 		Proxy(const Proxy & rhs) ; // hidden 
         boost::shared_ptr<DownloadManager>      m_pDownloadManager ;  
         boost::shared_ptr<Settings>		        m_apSettings ;
-        boost::shared_ptr<SignalHandler>             m_apSignalHandler ;
+        boost::shared_ptr<SignalHandler>        m_apSignalHandler ;
 };
 #endif //__PROXY_H__

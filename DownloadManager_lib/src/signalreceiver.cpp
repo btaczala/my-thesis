@@ -1,11 +1,15 @@
 #include "signalreceiver.h"
 #include <proxy.h>
+#include <rslogger.h>
 
 
 void SignalPlayGround::connectToPlayGround(ISignalListener * listener, const QString & name, Bits mask )
 {
     SignalPlayGround * instance = SignalPlayGround::instance() ; 
-    instance->m_MapOfListeners[name] = qMakePair(mask,listener); 
+	if ( instance->m_MapOfListeners.find(name) != instance->m_MapOfListeners.end() )
+		instance->m_MapOfListeners[name] = qMakePair(mask,listener); 
+	else
+		LOG(QString(" SignalPlayGround::connectToPlayGround, the same listener is trying twice to be added"));
 }
 SignalPlayGround * SignalPlayGround::instance()
 {

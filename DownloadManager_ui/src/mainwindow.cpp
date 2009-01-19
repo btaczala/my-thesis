@@ -34,7 +34,7 @@ const QString MainWindow::AddNewDownloadMessage = "AddNewDownloadMessage";
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent), m_MenuBar(new MenuBar(this)), m_DownloadWidget(new QDownloadWidget(this)),
-    m_ToolbarWidget(new QToolBar("Download Toolbar", this)), m_trayIcon( new QSystemTrayIcon(this))
+    m_ToolbarWidget(new QToolBar("Download Toolbar", this)), /*m_trayIcon( new QSystemTrayIcon(this)),*/m_pSystemDock(new SystemDock(this))
 {
     m_forceExit = false;
 
@@ -82,7 +82,7 @@ void MainWindow::initializeWidgets()
     initializeMenuBar();
     initializeToolbarWidget();
     initializeDownloadWidget();
-    initializeTrayIcon();
+    //initializeTrayIcon();
     initializeGeometry();
 }
 
@@ -116,13 +116,14 @@ void MainWindow::initializeDownloadWidget()
 {
     setCentralWidget(m_DownloadWidget);
 }
-
+/*
 void MainWindow::initializeTrayIcon()
 {
     m_trayIcon->setIcon(QIcon(":/app_icon.png"));
     m_trayContextMenu.addAction(tr("Restore"));
     m_trayIcon->setContextMenu(&m_trayContextMenu);
 }
+*/
 
 void MainWindow::initializeGeometry()
 {   
@@ -164,19 +165,20 @@ bool MainWindow::confirmAppExit()
 
 void MainWindow::moveToTray()
 {
-    m_trayIcon->show();
+	m_pSystemDock->showTray();
+    //m_trayIcon->show();
     hide();
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    //connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason
 }
 
 void MainWindow::restoreFromTray()
 {
     bringWindowToFront();
     
-    if (m_trayIcon->isVisible())
+    if (m_pSystemDock->systemTrayIcon()->isVisible())
     {
-        m_trayIcon->hide();
-        disconnect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+        m_pSystemDock->hideTray();
+        //disconnect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
     }
 }
 

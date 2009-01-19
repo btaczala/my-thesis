@@ -17,14 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef systemdock_h__
+#define systemdock_h__
+#include <QObject>
+#include <signalreceiver.h>
 #include <QSystemTrayIcon>
-class SystemDock : public QSystemTrayIcon
+class SystemDock : public QObject, ISignalListener
 {
-    Q_OBJECT 
+	Q_OBJECT
 public:
-    SystemDock(QObject *parent);
-signals:
-    void trayActivated(QSystemTrayIcon::ActivationReason reason);
-private slots : 
-    void activated(QSystemTrayIcon::ActivationReason reason); 
+    SystemDock(QObject *parent=NULL);
+	~SystemDock();
+	void showTray();
+	void showWidget();
+	void hideTray();
+	void hideWidget();
+	static const QString SystemDockName ; 
+	const QSystemTrayIcon * systemTrayIcon() const 
+	{
+		return m_pTrayIcon;
+	}
+private:
+	QSystemTrayIcon*    m_pTrayIcon ; 
+	QWidget*			m_pToolTipBig;
+	QWidget*			m_pToolTipSmall;
+	void				registerAtSignalPlayGround();
+	void				unregisterAtSignalPlayGround();
+
+	// from ISignalListener
+	void				statusChanged(int, DownloadState::States ); 
+	void				progressInfoAt( int at, const ProgressInfo& _info ) ;
+	void				downloadAdded( int newPosition ) ;
+	void				downloadRemoved( int newPosition ) ;
+	void				initWidgets(void);
+private slots:
+	void				systemTrayActivated( QSystemTrayIcon::ActivationReason reason );
+
 };
+#endif // systemdock_h__
