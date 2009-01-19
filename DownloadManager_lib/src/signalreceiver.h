@@ -34,6 +34,7 @@ public:
 	virtual void downloadAdded( int newPosition ) = 0 ;
 	virtual void downloadRemoved( int newPosition ) = 0 ;
     ISignalListener () {};
+    virtual ~ISignalListener(){};
 };
 class SignalPlayGround : public QObject
 {

@@ -211,6 +211,9 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
             if( -1 == btmp )
             {
                 qDebug()<<("write failed");
+                m_apHttpObj->abort();
+                setError("Unable to save downloaded data");
+                setState(DownloadState::FAILED, true);
                 return;
             }
         }

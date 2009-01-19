@@ -84,7 +84,7 @@ class IDownload : public QObject
         const std::string&                  urlAddress() const ; 
         const std::string&                  destinationAddress() const ; 
         void                                setDestinationAddress ( const std::string & localAddress  ) ;
-        const std::string                   error() ; 
+        const std::string                   error() const { return m_Error;}; 
         void                                setState(const DownloadState::States& _state, bool triggerEmit = false);
         void                                emitStatusChanged(){ emit( statusChanged(m_pDownloadInfo->m_State));};
         unsigned int                        progress() const;

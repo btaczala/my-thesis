@@ -325,7 +325,10 @@ void QDownloadWidget::statusChanged( int position, DownloadState::States status 
 {
     QTreeWidgetItem *pItem = topLevelItem(position);
     if ( pItem ) 
-        pItem->setText(4,DownloadStateToString(status));
+    {
+        pItem->setText(4,status == DownloadState::FAILED ? m_pDownloadManager->downloadAt(position)->error().c_str() : DownloadStateToString(status));
+        //pItem->setText(4,DownloadStateToString(status));
+    }
 }
 
 void QDownloadWidget::downloadDoneAt( int position)
