@@ -158,11 +158,6 @@ QString FtpDownload::nextDir()
     return res;
 }
 
-void FtpDownload::ftpCommandStarted ( int id )
-{
-    qDebug() << "commandStarted";
-}
-
 void FtpDownload::ftpDataTransferProgress ( qint64 done, qint64 total )
 {
     if( total == -1 )
@@ -171,21 +166,10 @@ void FtpDownload::ftpDataTransferProgress ( qint64 done, qint64 total )
     LOG(QString("dataTransferProgress %1 of %2").arg(done).arg(total));
     emit bytesRead(done,total);
 }
+
 void FtpDownload::ftpDone ( bool error )
 {
     qDebug() << "done";
-}
-void FtpDownload::ftpListInfo ( const QUrlInfo & i )
-{
-    qDebug() << "listInfo";
-}
-void FtpDownload::ftpRawCommandReply ( int replyCode, const QString & detail )
-{
-    qDebug() << "rawCommandReply";
-}
-void FtpDownload::ftpReadyRead ()
-{
-    qDebug() << "readyRead";
 }
 
 void FtpDownload::ftpStateChanged ( int _ftpstate )
@@ -207,16 +191,6 @@ void FtpDownload::ftpDisconect()
     closeFile();
 }
 
-void FtpDownload::timerEvent(QTimerEvent *event)
-{
-
-}
-
-void FtpDownload::renameFile()
-{
-
-}
-
 void FtpDownload::beginDownload()
 {
     if( openFile() )
@@ -227,12 +201,11 @@ void FtpDownload::beginDownload()
         
         m_apFtpObj.get()->get(m_FileName, m_apFile.get());
     }
-       //}
-    //else
-    //{
-       // setState(DownloadState::FAILED, true );
-       // ftpDisconect();
-    //}
+    else
+    {
+        setState(DownloadState::FAILED, true );
+        ftpDisconect();
+    }
 }
 
 void FtpDownload::ftpLogin()

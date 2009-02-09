@@ -53,8 +53,6 @@ public:
 private:
     FtpDownload( const FtpDownload & _cpy ) ; // hide 
     FtpDownload&                        operator=( const FtpDownload& rhs );
-    void                                renameFile();
-    virtual void                        timerEvent(QTimerEvent *event);
     void                                ftpDisconect();
     void                                setConnection();
     void                                beginDownload();
@@ -75,12 +73,8 @@ private:
     
     private slots:
     void ftpCommandFinished ( int id, bool error );
-    void ftpCommandStarted ( int id );
     void ftpDataTransferProgress ( qint64 done, qint64 total );
     void ftpDone ( bool error );
-    void ftpListInfo ( const QUrlInfo & i );
-    void ftpRawCommandReply ( int replyCode, const QString & detail );
-    void ftpReadyRead ();
     void ftpStateChanged ( int state );
       
 signals:
