@@ -96,6 +96,8 @@ class IDownload : public QObject
         void                                renameFile();
         void                                closeFile();
         bool                                openFile();
+        QIODevice*                          file(){ return m_apFile.get(); };
+        const std::string&                  fileName(){ return m_FileName; };
         bool                                isFileOpen();
         qint64                                writeToFile( const char* _data, qint64 _amount );
         void                                calculateProgress( qint64 _done, qint64 _total ){ 
@@ -111,18 +113,18 @@ class IDownload : public QObject
         std::string                         m_FileDestination ;
         std::string                         m_Error ; 
         OptionsContainer*                   m_Options;
+        std::string                         m_FileName;
         
-
     private:
         std::auto_ptr< DownloadState >      m_pDownloadInfo ;
         int                                 m_TimerId;
         unsigned int                        m_SecondsDownloading ;
+    protected:
         std::auto_ptr<QFile>                m_apFile;
         
     signals :
         void                        downloadStatus(const int & istate );
         void                        statusChanged( DownloadState::States status );
         void                        progressInfo( const ProgressInfo& _info );
-        
 };
 #endif //  IDOWNLOAD_H

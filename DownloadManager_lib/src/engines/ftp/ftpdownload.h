@@ -60,16 +60,18 @@ private:
     void                                beginDownload();
     void                                ftpLogin();
     void                                makeCdOrDownload();
+    QString                             nextDir();
     
 private:
     QString                             m_DownloadServerHost ;
     std::auto_ptr<QFtp>                 m_apFtpObj;
-    std::auto_ptr<QFile>                m_apFile;
     std::auto_ptr<QUrl>                 m_apHost;
     qint64                              m_readedBytes;
     int                                 m_timerId;
     QString                             m_user;
     QString                             m_pass;
+    QString                             m_path;
+    QString                             m_FileName;
     
     private slots:
     void ftpCommandFinished ( int id, bool error );

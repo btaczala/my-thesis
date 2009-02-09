@@ -5,8 +5,9 @@
 
 void SignalPlayGround::connectToPlayGround(ISignalListener * listener, const QString & name, Bits mask )
 {
+    LOG(QString("Adding to playground name = %1, listener ( addr) = %2").arg(name).arg((long)&listener));
     SignalPlayGround * instance = SignalPlayGround::instance() ; 
-	if ( instance->m_MapOfListeners.find(name) != instance->m_MapOfListeners.end() )
+	if ( instance->m_MapOfListeners.find(name) == instance->m_MapOfListeners.end() )
 		instance->m_MapOfListeners[name] = qMakePair(mask,listener); 
 	else
 		LOG(QString(" SignalPlayGround::connectToPlayGround, the same listener is trying twice to be added"));

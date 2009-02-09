@@ -152,16 +152,19 @@ qDebug() << "initFile";
         m_apFile.reset( new QFile());
         QString fileName(m_FileDestination.c_str());
         if( fileName.right(1) != "/" )
-          fileName += "/";
+            fileName += "/";
 
         QString tmp(m_UrlAddress.c_str());
         tmp = tmp.right(tmp.length() - tmp.lastIndexOf("/") - 1);
+        
+        m_FileName = tmp.toStdString();
+        qDebug() << QString::fromStdString(m_FileName);
+        
         fileName += tmp;
         fileName += Download::TMPSTRING;
         m_apFile->setFileName( fileName );
         qDebug() << m_apFile->fileName();
     }
-
 }
 
 void IDownload::removeFromFile( const QString& _post )

@@ -54,7 +54,7 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     setAlternatingRowColors(false);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
-    SignalPlayGround::connectToPlayGround(this,ListenerName,SignalPlayGround::ALL ) ; 
+    SignalPlayGround::connectToPlayGround(this,ListenerName,SignalPlayGround::ALL );
 //     connect( m_pListener,SIGNAL( statusChanged_signal( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
 //     connect( m_pListener,SIGNAL( progressInfoAt_signal( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 

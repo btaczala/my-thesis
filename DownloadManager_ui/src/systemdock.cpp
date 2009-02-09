@@ -24,7 +24,8 @@ SystemDock::~SystemDock()
 void SystemDock::initWidgets( void )
 {
 	QVBoxLayout* layout = new QVBoxLayout(m_pToolTipBig);
-	layout->addWidget(new QDownloadWidget(m_pToolTipBig));
+	//
+    //layout->addWidget(new QDownloadWidget(m_pToolTipBig));
 	m_pToolTipBig->setLayout(layout);
 }
 
