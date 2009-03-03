@@ -76,12 +76,6 @@ static const QString scRsdm_SettingsDownloadListPercentage = QString( "Download_
 static const QString scRsdm_SettingsDownloadListFileSize = QString( "Download_list/%1/FileSize" ) ;
 static const QString scRsdm_SettingsDownloadListHost = QString( "Download_list/%1/Host" ) ;
 
-#ifndef LOG_FUNC_TO_OUT
-#define LOG_FUNC_TO_OUT			qDebug() << TimeToString() << __FUNCTION_NAME__ 
+static const int scDefaultContentValue = 524288 ; 
 
-
-//<p>The Account has been found, but the password is incorrect.</p>
-
-
-#endif
 #endif //RSCOMMON_H

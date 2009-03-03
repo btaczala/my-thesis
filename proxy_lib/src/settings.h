@@ -99,7 +99,7 @@ class Settings
         void    setDefaultDownloadDirectory() ;
 
         QString settingsDirectory() const ;
-
+        QSettings       m_Settings ; 
 	private:
         /**
          * load plugin options. sets group to "Plugin"
@@ -116,6 +116,6 @@ class Settings
         
 		
 		PluginsOptions m_PluginsOptions ; 
-        QSettings       m_Settings ; 
+        
 };
 #endif //__SETTINGS_H__

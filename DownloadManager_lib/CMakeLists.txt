@@ -8,6 +8,7 @@ add_definitions( -DENGINES_BUILT_IN )
 SET(CMAKE_VERBOSE_MAKEFILE OFF)
 SET(QT_USE_QTNETWORK 1)
 include_directories ( "src/" ) 
+SET ( BUILD_TEST_APP ON ) 
 
 SET( DownloadManager_SRCS 
     src/downloadmanager.cpp
@@ -63,6 +64,6 @@ target_link_libraries ( downloadmanager_lib ${QT_LIBRARIES}  )
 
 if( BUILD_TEST_APP )
 QT4_WRAP_CPP(QTAPP_MOC_SRC qtestapp.h )
-ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp ${QTAPP_MOC_SRC})
-TARGET_LINK_LIBRARIES(qrsdmtest downloadmanager_lib)
+ADD_EXECUTABLE(qrsdmtest qrsdmtest.cpp ${QTAPP_MOC_SRC} )
+TARGET_LINK_LIBRARIES(qrsdmtest downloadmanager_lib ${QT_LIBRARIES} proxy_lib)
 endif( BUILD_TEST_APP )

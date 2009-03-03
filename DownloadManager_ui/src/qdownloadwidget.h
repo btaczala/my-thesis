@@ -88,7 +88,7 @@ namespace DownloadWidgetDelegates
 
 };
 
-class QDownloadWidget : public QTreeWidget, ISignalListener
+class QDownloadWidget : public QTreeWidget
 {
     Q_OBJECT
 public:

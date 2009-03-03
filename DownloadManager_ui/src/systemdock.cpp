@@ -16,7 +16,6 @@ SystemDock::SystemDock(QObject *parent ) : QObject(parent), m_pTrayIcon( new QSy
 }
 SystemDock::~SystemDock()
 {
-	unregisterAtSignalPlayGround();
 	delete m_pTrayIcon;
 	delete m_pToolTipBig;
 }
@@ -29,33 +28,24 @@ void SystemDock::initWidgets( void )
 	m_pToolTipBig->setLayout(layout);
 }
 
-void SystemDock::registerAtSignalPlayGround()
-{
-	SignalPlayGround::connectToPlayGround(this,"SystemDock");
-}
-void SystemDock::unregisterAtSignalPlayGround()
-{
-	SignalPlayGround::disconnectFromPlayGround("SystemDock");
-}
+
 
 void SystemDock::showTray()
 {
-	registerAtSignalPlayGround();
-	m_pTrayIcon->show();
+    m_pTrayIcon->show();
 }
 void SystemDock::hideTray()
 {
-	unregisterAtSignalPlayGround();
-	m_pTrayIcon->hide();
+    m_pTrayIcon->hide();
 }
 
 void SystemDock::showWidget()
 {
-	registerAtSignalPlayGround();
-	m_pToolTipBig->show();
-	int x = m_pTrayIcon->geometry().x();
-	int y = m_pTrayIcon->geometry().y();
-	m_pToolTipBig->move(100,100);
+    
+    m_pToolTipBig->show();
+    int x = m_pTrayIcon->geometry().x();
+    int y = m_pTrayIcon->geometry().y();
+    m_pToolTipBig->move(100,100);
 }
 
 void SystemDock::statusChanged( int, DownloadState::States )

@@ -28,9 +28,7 @@
 
 #include <proxy.h>
 #include <settings.h>
-#include <signalreceiverfactory.h>
-#include <signalreceiver.h>
-
+#include <downloadmanager.h>
 #include <rslogger.h>
 
 const int QDownloadWidget::QDownloadWidgetColumnInfo::VERSION = 1;
@@ -54,7 +52,6 @@ QDownloadWidget::QDownloadWidget(QWidget * parent)
     setAlternatingRowColors(false);
 
     m_pContextMenu->addAction(Actions::getAction( Actions::scConfigureColumnsActionText ));
-    SignalPlayGround::connectToPlayGround(this,ListenerName,SignalPlayGround::ALL );
 //     connect( m_pListener,SIGNAL( statusChanged_signal( int, DownloadState::States ) ),this,SLOT( statusChanged( int, DownloadState::States ) ) );
 //     connect( m_pListener,SIGNAL( progressInfoAt_signal( int, const ProgressInfo& ) ),this,SLOT( progressInfoAt( int, const ProgressInfo&  ) ) );
 
@@ -78,10 +75,7 @@ QDownloadWidget::~QDownloadWidget()
     RSDM_LOG_FUNC;
     saveColumns();
     disconnect();
-    delete m_downloadItemDelegate;
-    SignalPlayGround::disconnectFromPlayGround( ListenerName ) ; 
-
-    
+    delete m_downloadItemDelegate;    
 }
 void QDownloadWidget::initializeColumns()
 {
@@ -202,7 +196,6 @@ void QDownloadWidget::StartPauseSelectedDownload()
         
     }
 }
-
 void QDownloadWidget::StopSelectedDownload()
 {
     QList<QTreeWidgetItem*> list = selectedItems() ;

@@ -15,6 +15,7 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
 , m_apFileUrl( new QUrl() )
 , m_iPDownloaded(0)
 {
+    PROFILE_FUNCTION;
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestStarted( int ) ), this, SLOT( requestStarted( int ) ) );
     QObject::connect( m_apHttpObj.get(), SIGNAL( requestFinished( int,bool ) ), this, SLOT( requestFinished( int,bool ) ) );
     QObject::connect( m_apHttpObj.get(), SIGNAL( stateChanged( int ) ), this, SLOT( stateChanged( int ) ) );
@@ -32,18 +33,19 @@ QRapidshareDownload::QRapidshareDownload(OptionsContainer* options): IDownload(o
     int content_length = Proxy::settings()->value(SettingsValNames::scContentLength,Settings::LIBRARY).value<int>() ; 
     if ( content_length == 0 ) 
     {
-        Proxy::settings()->setValue( SettingsValNames::scContentLength ,1024,Settings::LIBRARY);
+        Proxy::settings()->setValue( SettingsValNames::scContentLength ,scDefaultContentValue,Settings::LIBRARY);
     }
 }
 
 QRapidshareDownload::~QRapidshareDownload()
 {
-//     RSDM_LOG_FUNC ;
+    PROFILE_FUNCTION;
     m_apHttpObj.get()->disconnect();
 }
 
 void QRapidshareDownload::start()
 {
+    PROFILE_FUNCTION;
     setUrlFileAddress( m_UrlAddress.c_str() );
     //invalid url set
     if( m_apFileUrl->isEmpty())
@@ -80,7 +82,7 @@ void QRapidshareDownload::start()
 
 void QRapidshareDownload::stop()
 {
-//     RSDM_LOG_FUNC ;
+    PROFILE_FUNCTION;
     DownloadState::States curState = state();
     if( curState == DownloadState::STOPPED
         || curState  == DownloadState::DONE
@@ -93,6 +95,7 @@ void QRapidshareDownload::stop()
 
 void QRapidshareDownload::restart()
 {
+    PROFILE_FUNCTION;
     m_iPDownloaded = downloadedBytes();
 //     RSDM_LOG_FUNC ;
     //m_apHttpRequestHeader->removeValue(); // LENGTH REQUIRED ?? ;(
@@ -107,7 +110,7 @@ void QRapidshareDownload::restart()
     m_apHttpRequestHeader->setValue("Referer", m_ReferrerFileAddress);
     int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY).value<int>();
     if ( content_length == 0 ) 
-        content_length = 1024 ; 
+        content_length = scDefaultContentValue ; 
     m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
     qDebug() << QString("Resumed !!!!!!");
     QString httpHeader = DebugUtils::httpReqToString(*m_apHttpRequestHeader) ;
@@ -119,7 +122,7 @@ void QRapidshareDownload::restart()
 
 void QRapidshareDownload::setUrlFileAddress(const QString & _addr )
 {
-    RSDM_LOG_FUNC ;
+    PROFILE_FUNCTION;
     DebugUtils::q_Log( QString(" _addr = ") + _addr);
     if( ! _addr.isEmpty() )
     {
@@ -130,11 +133,12 @@ void QRapidshareDownload::setUrlFileAddress(const QString & _addr )
 /********** SLOTS **************/
 void QRapidshareDownload::requestStarted(const int & idReq)
 {
+    PROFILE_FUNCTION;
 //     qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq ;
 }
 void QRapidshareDownload::requestFinished(const int & idReq, const bool & isFalse)
 {  
-//     qDebug() << __FUNCTION_NAME__<< "idReq =  " << idReq << "isFalse=" << isFalse ;
+    PROFILE_FUNCTION;
     closeFile();
     if( isFalse )
     {
@@ -152,7 +156,8 @@ void QRapidshareDownload::dataSendProgress(const int & done, const int & total)
 }
 void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 {
-//     qDebug() << __FUNCTION_NAME__<< "done =  " << done << "total=" << total ;
+    PROFILE_FUNCTION;
+    //LOG( "done="<<done<< "total="<< total );
     // support for Direct downloads
     char *buff = NULL ; 
     qint64 iBytes2 = 0;
@@ -162,7 +167,7 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
         buff = new char[bytes];
         iBytes2 = m_apHttpObj->read(buff, bytes);
         if( -1 == iBytes2 )
-            qDebug()<<("ERROR while reading from Http stream ");
+            LOG( "ERROR while reading from Http stream ");
         QString decive ( buff ) ;
         if( decive.contains("<!DOCTYPE") )
         {
@@ -228,10 +233,12 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total)
 }
 void QRapidshareDownload::authenticationRequired(const QString & hostname, quint16 port, QAuthenticator * authenticator)
 {
+    PROFILE_FUNCTION;
 //     qDebug() << __FUNCTION_NAME__<< "hostname =  " << hostname << "port=" << port ;
 }
 void QRapidshareDownload::proxyAuthenticationRequired(const QNetworkProxy & proxy, QAuthenticator * authenticator)
 {
+    PROFILE_FUNCTION;
 //     qDebug() << __FUNCTION_NAME__;
 }
 void QRapidshareDownload::readyRead ( const QHttpResponseHeader & resp )
@@ -269,12 +276,12 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
         if ( m_apFileUrl.get() ) 
         {
             QString host = m_apFileUrl->host() ; 
-            QRegExp regExp("^rs\\d+.rapidshare.com");
+            QRegExp regExp("^rs\\d+\\w+.rapidshare.com");
             if ( regExp.indexIn(host) != -1 ) 
             {
                 if ( m_rssmState == GET_FIRST ) 
                 {
-                    LOG(QString("Problably inserted address like http://rs666.rapidshare.com, which lead to direct download"));
+                    LOG("Problably inserted address like http://rs666.rapidshare.com, which lead to direct download");
                     m_rssmState = DOWNLOADING;
                     setState( DownloadState::DOWNLOADING , true );
                 }
@@ -282,11 +289,10 @@ void QRapidshareDownload::responseHeaderReceived( const QHttpResponseHeader & re
         }
     }
     else
-        qDebug() << "Error response:"<< iStatusCode;
+        LOG("Error response:"<< iStatusCode);
 }
 void QRapidshareDownload::done(const bool & error)
 {
-//     RSDM_LOG_FUNC ;
     if( error )
     {
         qDebug() << m_apHttpObj->errorString();
@@ -345,7 +351,7 @@ void QRapidshareDownload::done(const bool & error)
         m_apHttpRequestHeader->setValue("Content-Type", "application/x-www-form-urlencoded");
         int content_length = Proxy::settings()->value( SettingsValNames::scContentLength,Settings::LIBRARY ).value<int>();
         if ( content_length == 0 ) 
-            content_length = 1024 ; 
+            content_length = scDefaultContentValue ; 
         m_apHttpRequestHeader->setValue("Content-Length", QString::number( content_length ) );
         m_apHttpRequestHeader->setValue("Referrer", m_ReferrerFileAddress);
         qDebug() << "First post";       
@@ -397,7 +403,7 @@ void QRapidshareDownload::abort()
     //m_rssmState = DownloadState::STOPPED;
     m_pDownloadInfo->m_State = DownloadState::STOPPED;
     m_apHttpObj->abort();
-    // do not emit, cause it will be removed from list. 
+    // do not id, cause it will be removed from list. 
 }
 */
 
@@ -530,14 +536,17 @@ void QRapidshareDownload::setDownloadHost( const QString & _host )
 {
     m_DownloadServerHost = _host ;
 }
-
 bool QRapidshareDownload::checkForErrors( const QByteArray& response )
 {
     QList<const char*>::iterator it = m_errorsList.begin();
     while( it != m_errorsList.end() )
     {
         if( response.contains(*it))
+        {
+//             LOG(response);
+            setError(*it);
             return true;
+        }
         ++it;
     }
     return false;

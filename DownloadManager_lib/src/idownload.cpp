@@ -93,8 +93,8 @@ unsigned int IDownload::progress() const
 
 void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
 {
-    qDebug() << DownloadStateToString( _state );
-    if( m_pDownloadInfo->m_State != DownloadState::DOWNLOADING && _state == DownloadState::DOWNLOADING )
+    LOG(DownloadStateToString( _state ));
+    if( m_pDownloadInfo->m_State != DownloadState::DOWNLOADING && _state == DownloadState::DOWNLOADING ) // we're starting a download
     {
         startTimer(Download::TIMERINT);
     }
@@ -118,7 +118,7 @@ void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
 void IDownload::setError( const std::string& _err )
 {
      m_Error = _err; 
-     qDebug() <<_err.c_str();
+     FATAL( _err.c_str() );
 }
 
 void IDownload::timerEvent(QTimerEvent* event)
@@ -131,20 +131,21 @@ void IDownload::timerEvent(QTimerEvent* event)
         info._DownloadRate =  QString("%1").arg( ((double) (m_pDownloadInfo->m_DownloadedBytes - m_pDownloadInfo->m_PrevDownloadedBytes)*2/ 1024),0, 'f',2);
     }
     m_SecondsDownloading++;
-    info._ElapsedTime = m_SecondsDownloading / 2;
+    info._ElapsedTime = m_SecondsDownloading ;
     info._DownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
     info._TotalBytes = m_pDownloadInfo->m_TotalBytes;
+    LOG("emit( progressInfo())");
     emit( progressInfo( info ));
     m_pDownloadInfo->m_PrevDownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
 }
 
 void IDownload::initFile()
 {
-qDebug() << "initFile";
+    LOG("initFile");
     if( m_FileDestination.empty() || m_UrlAddress.empty() )
     {
-        qDebug() << m_FileDestination.c_str();
-        qDebug() << m_UrlAddress.c_str();
+        CRITICAL( m_FileDestination.c_str());
+        CRITICAL( m_UrlAddress.c_str());
         return;
     }
     else
@@ -158,12 +159,12 @@ qDebug() << "initFile";
         tmp = tmp.right(tmp.length() - tmp.lastIndexOf("/") - 1);
         
         m_FileName = tmp.toStdString();
-        qDebug() << QString::fromStdString(m_FileName);
+        LOG( QString::fromStdString(m_FileName) );
         
         fileName += tmp;
         fileName += Download::TMPSTRING;
         m_apFile->setFileName( fileName );
-        qDebug() << m_apFile->fileName();
+        LOG( m_apFile->fileName());
     }
 }
 

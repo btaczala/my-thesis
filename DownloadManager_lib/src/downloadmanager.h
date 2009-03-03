@@ -53,9 +53,9 @@ class DownloadManager : public QObject
          * @brief Will add download into queue
          * @param urlAddress url address of file to download
          * @param destination where to put the file ( directory only ) 
-         * @return if any engine handles pattern, returns true, otherwise false. 
+         * @return download currently added. If NULL - download was not added to list 
          */
-        bool                    addDownload( const std::string & urlAddress, const std::string & destination ) ;
+        const IDownload * addDownload( const std::string & urlAddress, const std::string & destination ) ;
         /**
          * @brief Will force on manager to start downloading this file
          * @param urlAddress url address of file to download

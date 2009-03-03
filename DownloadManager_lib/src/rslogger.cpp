@@ -19,161 +19,42 @@
  ***************************************************************************/
 #include "rslogger.h"
 //
-// const char* const RSLogger::sm_TimeFormat= "dd.MM.yyyy - hh:mm:ss.zzz ";
-// const QString RSLogger::rsEndLine = QString ( "__endline__");
-/*RSLogger::RSLogger( const QString & fileName ) : m_fileMutex( new QMutex() ), m_fileName(NULL), m_fileLogger(NULL), m_bOpenedFile(false), m_NumberOfLogs(0), m_bIsOneLine( true )
-{
-	QString fn = fileName;
-	if( ! fileName.isEmpty() )
-	{
-		if(!fn.endsWith(".log"))
-			fn += ".log";
-		SetFile( fn ) ;
-	}
-	OpenFile();
-	
+ProfileLogger* ProfileLogger::instance() {
+    static std::auto_ptr<ProfileLogger> spRet ( new ProfileLogger() ) ; 
+    return spRet.get() ;
 }
-RSLogger::~RSLogger()
-{
-	m_fileLogger->flush();
-	if(m_fileLogger.get() != NULL )
-	{
-		if( m_fileLogger->isOpen() )
-		{
-			m_fileLogger->close();
-		}
-	}
-	m_fileLogger.release();
-	m_fileMutex.release();
-	m_fileName.release();
+void ProfileLogger::Log(const QString& _funcName) {
+    ProfileLogger *pLog = instance() ;
+    int value = 0 ; 
+    if ( pLog->m_ProfileMap.contains(_funcName) ){
+        value =pLog->m_ProfileMap[_funcName];
+        value++;
+    }
+    else
+        value = 0 ; 
+    pLog->m_ProfileMap[_funcName]=value; 
 }
-bool RSLogger::OpenFile()
-{
-	if( m_fileName.get() == NULL)
-		return false;
-	if( m_fileName->isEmpty() ) 
-		return false;
-	if(m_fileLogger.get() == NULL)
-		m_fileLogger.reset(new QFile( *m_fileName ) ) ;
-	if(! m_fileLogger->isOpen() )
-	{
-		if( ! m_fileLogger->open( QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append ))
-		{
-			DebugUtils::q_Error("Unable to open log file " + *m_fileName );
-			return false ;
-		}
-		m_fileLogger->write("-----NEW LOG ----- \n");		
-	}
-	m_bOpenedFile = true ; 
-	return true;
-};
-QString RSLogger::GetCurrentTime() const 
-{
-	QString toRet ;
-	QDateTime now ( QDate::currentDate(), QTime::currentTime());
-	toRet = now.toString(sm_TimeFormat);
-	return toRet;
+void ProfileLogger::DumpToQDebug() {
+    ProfileLogger *pLog = instance() ;
+    QMap<QString, int>::const_iterator i = pLog->m_ProfileMap.constBegin();
+    while (i != pLog->m_ProfileMap.constEnd() ) {
+        LOG( "Function :" << i.key() << " was called " << i.value() );
+        ++i;
+    }
 }
-QString RSLogger::createLogEntry(const QString & toLog) const 
-{
-	QString logEntry = GetCurrentTime();
-	logEntry +=toLog;*/
-// 	return logEntry;
-// }
-/*void RSLogger::writeToFile( const QString & toLog ) const 
-{
-	QByteArray log ;
-	log.append(toLog);
-	m_fileLogger->write( log );
-	m_fileLogger->write("\n");
-	++m_NumberOfLogs;
-	if( m_NumberOfLogs >= sm_MaxNonFlushedLogs )
-	{
-			m_NumberOfLogs = 0;
-			m_fileLogger->flush();
-	}
-}
-void RSLogger::Write( const QString & toLog ) const 
-{
-	m_fileMutex->lock();
-	if(!m_bOpenedFile)
-	{
-		m_fileMutex->unlock();
-		return;
-	}
-	QString lToLog = createLogEntry(toLog);
-	writeToFile(lToLog);
-	m_fileMutex->unlock();
-};
-void RSLogger::Error( const QString & toLog )
-{
-	m_fileMutex->lock();
-	if(!OpenFile())
-		return;
-	QString logString = GetCurrentTime() + "FATAL ERROR! " +  toLog; 
-	writeToFile(logString);
-	m_fileMutex->unlock();
-};
-
-void RSLogger::SetFile(const QString & fileName ) 
-{
-	QDir dir( s_RSDMLogPath );
-	if( !dir.exists() )
-		dir.mkpath(dir.path());
-	QString filePath = dir.path() + "/" + fileName;
-	m_fileName.reset(new QString( filePath ) ) ;
-	m_fileLogger.reset( new QFile( filePath ) );
-	
-}
-RSLogger& RSLogger::operator<<(const QString & toLog)
-{*/
-	/*
-	if( toLog.contains(rsEndLine) )
-	{
-		writeToFile(m_tmpOneLine) ; 
-		m_tmpOneLine="";
-	}
-	else
-	{
-		if ( m_tmpOneLine.isEmpty())
-		{
-			m_tmpOneLine += GetCurrentTime() ; 
-		}
-		m_tmpOneLine += toLog ; 
-	}*/
-	
-// 	QString log = toLog ; 
-// 	if(log.contains("err:"))
-// 		Error(log.remove("err:"));
-// 	else
-// 		Write(toLog);
-// 	return *this;
-// }
-// RSLogger& RSLogger::operator<<(const int & toLog)
-// {
-// 	operator<<(QString::number(toLog));
-// 	//Write(QString::number(toLog));
-// 	return *this;
-// };
-// ILogable::ILogable(const QString & fileName) : m_Logger(fileName)
-// {
-// 	;
-// }
 void DebugUtils::q_Warn( const QString & toWarn, const char * functionName )
 {
-	qDebug() << "Warning: " ;
-	if( functionName != NULL ) 
-		qDebug() << functionName ;
-	qDebug() << toWarn;
-		
-	 
+    qDebug() << "Warning: " ;
+    if( functionName != NULL ) 
+        qDebug() << functionName ;
+    qDebug() << toWarn;
 }
 void DebugUtils::q_Log( const QString & toLog, const char * functionName )
 {
-	qDebug() << "Log: " ;
-	if( functionName != NULL ) 
-		qDebug() << functionName ;
-	qDebug() << toLog;	 
+    qDebug() << "Log: " ;
+    if( functionName != NULL ) 
+        qDebug() << functionName ;
+    qDebug() << toLog;	 
 }
 void DebugUtils::q_Error( const QString & toLog, const char * functionName )
 {

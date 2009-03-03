@@ -39,10 +39,9 @@ void DownloadManager::init()
     setState ( DOWNLOADING ) ; 
     
 }
-bool DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
+const IDownload* DownloadManager::addDownload(const std::string & urlAddress, const std::string & destination)
 {
-    LOG(QString("void DownloadManager::addDownload(const std::string & urlAddress = %1, const std::string & destination = %2)").arg(urlAddress.c_str() ).arg(destination.c_str() ));
-    
+    LOG("const IDownload* DownloadManager::addDownload" << urlAddress.c_str() << ","<<destination.c_str()<<")");
     IDownload *pDownload = NULL ; 
 
     if ( find(urlAddress ) != NULL ) 
@@ -69,11 +68,10 @@ bool DownloadManager::addDownload(const std::string & urlAddress, const std::str
     // TODO: check if file exists, if yes delete it ( ? ) 
     connectWith(pDownload);
     m_DownloadList.push_back(IDownloadSmartPtr(pDownload));
-
-    
     update() ; 
+    LOG(" emit downloadAdded(" <<m_DownloadList.size()-1<<")");
 	emit downloadAdded(m_DownloadList.size()-1);
-    return true ; 
+    return pDownload ; 
 };
 void DownloadManager::startDownload(const std::string &urlAddress)
 {
@@ -172,6 +170,7 @@ void DownloadManager::removeDownload(const std::string &urlAddress)
         return ; 
 	int pos = findPosition(urlAddress) ;
     m_DownloadList.erase(it);
+    LOG("emit downloadRemoved( "<<pos<<")");
 	emit downloadRemoved( pos );
 }
 void DownloadManager::removeDownload( int position )
@@ -205,7 +204,6 @@ IDownload* DownloadManager::find(const std::string & urlAddress )
 }
 void DownloadManager::statusChanged(DownloadState::States what)
 {
-//     qDebug() << (int) what;
     if ( what == DownloadState::DONE || what == DownloadState::FAILED || what == DownloadState::PAUSED ) 
     {
         //m_DownloadManagerSettings.m_CurrentDownloadingFiles-- ; 
@@ -214,7 +212,10 @@ void DownloadManager::statusChanged(DownloadState::States what)
     }
     int pos = getPositionWithinSlot( sender() ) ;  
     if ( pos !=-1 )
+    {
+        LOG("emit statusChanged("<<pos<<","<<what<<")");
         emit statusChanged(pos,what);
+    }
 }
 /*
 void DownloadManager::downloadDone()
@@ -260,9 +261,13 @@ int DownloadManager::getPositionWithinSlot( QObject * sender )
 
 void DownloadManager::progressInfo( const ProgressInfo& _info )
 {
+    
     int pos = getPositionWithinSlot( sender() );
     if( pos != -1 )
+    {
+        LOG("emit (progressInfoAt( "<<pos<<")");
         emit (progressInfoAt( pos, _info ));
+    }
 }
 
 void DownloadManager::update()

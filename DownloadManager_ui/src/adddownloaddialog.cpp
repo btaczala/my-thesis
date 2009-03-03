@@ -64,7 +64,6 @@ void AddDownloadDialog::accept()
         markWidgetContentAsInvalid(m_folderCombo);
         return;
     }
-
     QStringList urls = str.split(QRegExp("\\s+"));
 
     Q_FOREACH(QString url, urls)

@@ -1,55 +1,21 @@
 
-#include <QDialog>
+
 #include <QApplication>
 #include <QMainWindow>
-#include <QDir>
-
-#include "src/downloadmanager.h"
-#include "src/downloadengine.h"
-#include "src/enginemanager.h"
-#include "src/optionscontainer.h"
-
 #include "qtestapp.h"
-#include "../proxy_lib/src/proxy.h"
+#include "rslogger.h"
 
 int main(int argc, char** argv)
 {
-    /*
     QApplication app(argc, argv); 
-    QDialog tmp ; 
-    RapidShareDownloadManager foo;
-    foo.SetUser(QRapidshareUser ("4625386","WM2FTZgx5Y") );
-    foo.AddDownload(
-        QString("http://rapidshare.com/files/88058939/Moonspell_-_1994_-_Anno_Satanae.rar"),
-        QString(QDir::homePath() + "/ziom")
-        );
-    foo.Start() ;
-    tmp.show() ;
+    QTestApp wnd ; 
+    LOG( Proxy::settings()->m_Settings.fileName() );
+    Proxy::settings()->setValue(SettingsValNames::scPluginUsername,QString("4625386"),Settings::PLUGINS, "rapidshare");
+    Proxy::settings()->setValue(SettingsValNames::scPluginPassword,QString(Proxy::encrypt("maggot666_rs")),Settings::PLUGINS, "rapidshare");
+    LOG ( Proxy::settings()->value(SettingsValNames::scPluginUsername,Settings::PLUGINS, "rapidshare") ) ; 
+    LOG ( Proxy::decrypt( Proxy::settings()->value(SettingsValNames::scPluginPassword,Settings::PLUGINS, "rapidshare").toString() ) ) ; 
+    wnd.addDownload("http://rapidshare.com/files/190593491/Rguls.DVDRip.XviD-SAPHiRE.part1.rar");
+    wnd.show();
+    ProfileLogger::DumpToQDebug();
     app.exec() ;
-    */
-    QApplication app(argc, argv); 
-    DownloadManager *dwnlMgr = new DownloadManager();///*Proxy::downloadManager() ; 
-    DownloadEngine * pEngine = dwnlMgr->engineManager()->findEngine("http") ;
-
-    OptionsContainer options ;//= new OptionsContainer();
-    options.addOption(SettingsValNames::scPluginUsername, std::string("4625386"));
-    options.addOption(SettingsValNames::scPluginPassword, std::string("maggot666_rs"));
-    pEngine->setOptionsForEngine( options ); 
-    //delete options;
-    /*
-    http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar
-    http://rapidshare.com/files/166196575/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part2.rar
-    http://rapidshare.com/files/166201581/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part3.rar
-    http://rapidshare.com/files/166212106/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part4.rar
-    */
-
-   // dwnlMgr.addDownload("http://rapidshare.com/files/166197404/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part1.rar",QDir::homePath().toStdString() );
-    //dwnlMgr.addDownload("http://rapidshare.com/files/166196575/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part2.rar",QDir::homePath().toStdString() );
-    //dwnlMgr.addDownload("http://rapidshare.com/files/166201581/Flashpoint.S02E01.PREAiR.PDTV.XviD-DiNA.part3.rar",QDir::homePath().toStdString() );
-    dwnlMgr->addDownload("http://sui-side.com/pinio/dach.jpg",QDir::homePath().toStdString() );
-    QTestApp t ; 
-    t.setConnector( dwnlMgr ) ;
-    t.show();
-    //delete dwnlMgr;
-    return app.exec();
 }

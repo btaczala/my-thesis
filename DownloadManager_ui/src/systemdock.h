@@ -20,9 +20,9 @@
 #ifndef systemdock_h__
 #define systemdock_h__
 #include <QObject>
-#include <signalreceiver.h>
 #include <QSystemTrayIcon>
-class SystemDock : public QObject, ISignalListener
+#include <downloadmanager.h>
+class SystemDock : public QObject
 {
 	Q_OBJECT
 public:
@@ -41,8 +41,7 @@ private:
 	QSystemTrayIcon*    m_pTrayIcon ; 
 	QWidget*			m_pToolTipBig;
 	QWidget*			m_pToolTipSmall;
-	void				registerAtSignalPlayGround();
-	void				unregisterAtSignalPlayGround();
+
 
 	// from ISignalListener
 	void				statusChanged(int, DownloadState::States ); 

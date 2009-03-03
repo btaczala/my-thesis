@@ -8,8 +8,6 @@
 #include <QStringList>
 #include <rslogger.h>
 
-
-
 Settings::Settings()
 {
     // read all plugins options ;)
@@ -19,12 +17,10 @@ Settings::~ Settings()
     m_Settings.sync();
     RSDM_LOG_FUNC;
 }
-
 OptionsContainer * Settings::optionsForEngine(const std::string & name )
 {
     return m_PluginsOptions[name].get();
 };
-
 void Settings::setValue(const QString & valName, const QVariant & value, Context context, const QString & subGroup )
 {
     switch ( context ) 
@@ -54,7 +50,6 @@ void Settings::setValue(const QString & valName, const QVariant & value, Context
     }
     m_Settings.sync();
 }
-
 QVariant Settings::value(const QString & valName, Context context, const QString & subGroup )
 {
     QVariant ret ; 
@@ -86,10 +81,8 @@ QVariant Settings::value(const QString & valName, Context context, const QString
     return ret ; 
     
 }
-
 void apply_options_to_engine ( const std::pair<std::string,boost::shared_ptr<DownloadEngine> >  & pair ) 
 {
-
     pair.second->setOptionsForEngine( *( Proxy::settings()->optionsForEngine(pair.first) ) );
 }
 void Settings::loadSettings()
@@ -99,7 +92,6 @@ void Settings::loadSettings()
     loadPluginsOptions();
     std::for_each(map.begin(),map.end(),boost::bind( apply_options_to_engine, _1 ) ); 
 }
-
 void Settings::loadPluginsOptions()
 {
     m_Settings.beginGroup("Plugins");

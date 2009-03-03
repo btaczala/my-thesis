@@ -59,7 +59,7 @@ public:
 
 namespace Download
 {
-    static int TIMERINT = 500; //1sek
+    static int TIMERINT = 1000; //1sek
     static const QString TMPSTRING = ".part";
 }
 
@@ -99,7 +99,7 @@ class IDownload : public QObject
         QIODevice*                          file(){ return m_apFile.get(); };
         const std::string&                  fileName(){ return m_FileName; };
         bool                                isFileOpen();
-        qint64                                writeToFile( const char* _data, qint64 _amount );
+        qint64                              writeToFile( const char* _data, qint64 _amount );
         void                                calculateProgress( qint64 _done, qint64 _total ){ 
                                                                 m_pDownloadInfo->m_TotalBytes = _total;
                                                                 m_pDownloadInfo->m_DownloadedBytes = _done; };
