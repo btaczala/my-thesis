@@ -152,7 +152,8 @@ class DownloadManager : public QObject
          * Connect QObject signal/slot mechanism with signals from pDownload
          * @param pDownload 
          */
-        void                    connectWith( IDownload *pDownload ) ; 
+        void                    connectWith( IDownload *pDownload ) ;
+        void                    disconnectWith( IDownload *pDownload ) ; 
         /**
          * Return position of download in container which send a signal
          * @param sender - Download that sends the signal. Will be casted to IDownload*
@@ -169,6 +170,9 @@ class DownloadManager : public QObject
         
         void                    decreaseNumberOfCurrentDownloads();
         void                    increaseNumberOfCurrentDownloads();
+        
+        void                    startDownloadAndConnect ( IDownload *pDownload ) ;
+        void                    stopDownloadAndDisconnect(IDownload *pDownload ) ;
     private slots:
         void                    slot_listChanged() ; 
 

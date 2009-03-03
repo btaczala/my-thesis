@@ -204,13 +204,15 @@ IDownload* DownloadManager::find(const std::string & urlAddress )
 }
 void DownloadManager::statusChanged(DownloadState::States what)
 {
+    int pos = getPositionWithinSlot( sender() ) ;  
     if ( what == DownloadState::DONE || what == DownloadState::FAILED || what == DownloadState::PAUSED ) 
     {
-        //m_DownloadManagerSettings.m_CurrentDownloadingFiles-- ; 
+        IDownload *pDownload = m_DownloadList.at(pos).get();
+        stopDownloadAndDisconnect(pDownload);
         decreaseNumberOfCurrentDownloads();
         update() ; 
     }
-    int pos = getPositionWithinSlot( sender() ) ;  
+    
     if ( pos !=-1 )
     {
         LOG("emit statusChanged("<<pos<<","<<what<<")");
@@ -242,6 +244,11 @@ void DownloadManager::connectWith(IDownload * pDownload)
 {
     QObject::connect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
     QObject::connect ( pDownload, SIGNAL( progressInfo( const ProgressInfo& ) ), this,SLOT( progressInfo( const ProgressInfo&  ) ) ) ;
+}
+void DownloadManager::disconnectWith(IDownload * pDownload)
+{
+    QObject::disconnect ( pDownload, SIGNAL( statusChanged( DownloadState::States ) ), this,SLOT( statusChanged(DownloadState::States) ) ) ;
+    QObject::disconnect ( pDownload, SIGNAL( progressInfo( const ProgressInfo& ) ), this,SLOT( progressInfo( const ProgressInfo&  ) ) ) ;
 }
 int DownloadManager::findPosition(const std::string & url)
 {
@@ -290,8 +297,7 @@ void DownloadManager::update()
                 continue ; 
             if ( canIDownload() ) 
             {
-                pDownload->start() ; 
-                //m_DownloadManagerSettings.m_CurrentDownloadingFiles += 1;
+                startDownloadAndConnect(pDownload);
                 increaseNumberOfCurrentDownloads();
             }
             counter++;
@@ -312,9 +318,15 @@ void DownloadManager::update()
     }
     
 }
+void DownloadManager::startDownloadAndConnect ( IDownload *pDownload ) {
+    connectWith(pDownload);
+    pDownload->start();
+}
+void DownloadManager::stopDownloadAndDisconnect ( IDownload *pDownload ) {
+    disconnectWith(pDownload);
+}
 
-void DownloadManager::setState(DownloadManagerState state)
-{
+void DownloadManager::setState(DownloadManagerState state){
     m_State = state ; 
     update() ; 
 }

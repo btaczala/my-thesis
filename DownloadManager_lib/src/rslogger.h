@@ -34,6 +34,7 @@
 #define RSDM_LOG_FUNC LOG("")
 #define LOG(a)  qDebug()<< __FILE__ << "@" <<__LINE__ << "in: "<<Q_FUNC_INFO << a
 #define PROFILE_FUNCTION ProfileLogger::Log(Q_FUNC_INFO) 
+#define LOG_AND_PROFILE PROFILE_FUNCTION ; RSDM_LOG_FUNC ;
 #define FATAL(a) qDebug()<< __FILE__ << "@" <<__LINE__ << "in: "<<Q_FUNC_INFO << a 
 #define CRITICAL(a) qDebug()<< __FILE__ << "@" <<__LINE__ << "in: "<<Q_FUNC_INFO << a 
 

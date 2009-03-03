@@ -49,8 +49,8 @@ static const char* err2 = "The Account has been found, but the password is incor
 
 class QRapidshareDownload :  public IDownload
 {
-Q_OBJECT
- public:
+    Q_OBJECT
+public:
  
 
      enum RS_State
@@ -89,6 +89,14 @@ Q_OBJECT
 
     bool                                checkForErrors( const QByteArray& response );
     QString                             transformUrlPathToLocalPath(const QString & url);
+    
+    void                                connectToQHttp() ; 
+    void                                disconnectFromQHttp() ; 
+    
+    void                                setFailed();
+    void                                setStopped();
+    void                                setPaused();
+    
     QRapidshareDownload&                operator=( const QRapidshareDownload& rhs );
  private:
     QString                             m_ReferrerFileAddress;
@@ -107,16 +115,10 @@ Q_OBJECT
     qint64                              m_iPDownloaded;
 
  private slots:
-    void                                requestStarted(const int & idReq) ;
     void                                requestFinished(const int & idReq, const bool & isFalse) ;
-    void                                stateChanged(const int & iState) ;
-    void                                dataSendProgress(const int & done, const int & total) ;
     void                                dataReadProgress(const int & done, const int & total) ;
     void                                responseHeaderReceived( const QHttpResponseHeader & resp) ;
     void                                done(const bool & error);
-    void                                authenticationRequired ( const QString & hostname, quint16 port, QAuthenticator *authenticator );
-    void                                proxyAuthenticationRequired ( const QNetworkProxy & proxy, QAuthenticator * authenticator );
-    void                                readyRead ( const QHttpResponseHeader & resp );
  
 signals:
     //void                                statusChanged( DownloadState::States status );
