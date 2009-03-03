@@ -32,25 +32,24 @@ public:
 	void showWidget();
 	void hideTray();
 	void hideWidget();
+    void connectToDownloadManager() ;
+    void disconnectFromDownloadManager() ; 
+    
 	static const QString SystemDockName ; 
-	const QSystemTrayIcon * systemTrayIcon() const 
-	{
-		return m_pTrayIcon;
-	}
+	inline const QSystemTrayIcon * systemTrayIcon() const {return m_pTrayIcon;}
 private:
 	QSystemTrayIcon*    m_pTrayIcon ; 
 	QWidget*			m_pToolTipBig;
 	QWidget*			m_pToolTipSmall;
-
-
 	// from ISignalListener
-	void				statusChanged(int, DownloadState::States ); 
-	void				progressInfoAt( int at, const ProgressInfo& _info ) ;
-	void				downloadAdded( int newPosition ) ;
-	void				downloadRemoved( int newPosition ) ;
-	void				initWidgets(void);
 private slots:
-	void				systemTrayActivated( QSystemTrayIcon::ActivationReason reason );
-
+    void                statusChanged(int, DownloadState::States ); 
+    void                progressInfoAt( int at, const ProgressInfo& _info ) ;
+    void                downloadAdded( int newPosition ) ;
+    void                downloadRemoved( int newPosition ) ;
+    void                initWidgets(void);
+    void                systemTrayActivated( QSystemTrayIcon::ActivationReason reason );
+private:
+    const DownloadManager * m_pDownloadManger ;  
 };
 #endif // systemdock_h__

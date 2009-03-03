@@ -2,17 +2,19 @@
 
 #include <QSystemTrayIcon>
 #include <proxy.h>
-#include <signalreceiverfactory.h>
 #include <QWidget>
 #include <QLayout>
+#include <QVBoxLayout>
 #include "qdownloadwidget.h"
 const QString SystemDock::SystemDockName = QString("SystemDock");
 
-SystemDock::SystemDock(QObject *parent ) : QObject(parent), m_pTrayIcon( new QSystemTrayIcon(this)), m_pToolTipBig( new QWidget(NULL,Qt::ToolTip))
+SystemDock::SystemDock(QObject *parent ) : QObject(parent), m_pTrayIcon( new QSystemTrayIcon(this)), m_pToolTipBig( new QWidget(NULL,Qt::ToolTip)),m_pDownloadManger(NULL)
 {
 	initWidgets();
 	m_pTrayIcon->setIcon(QIcon(":/app_icon.png"));
 	connect(m_pTrayIcon,SIGNAL(activated( QSystemTrayIcon::ActivationReason )),this,SLOT(systemTrayActivated( QSystemTrayIcon::ActivationReason )));
+    
+    m_pDownloadManger = Proxy::downloadManager() ; 
 }
 SystemDock::~SystemDock()
 {
@@ -27,8 +29,6 @@ void SystemDock::initWidgets( void )
     //layout->addWidget(new QDownloadWidget(m_pToolTipBig));
 	m_pToolTipBig->setLayout(layout);
 }
-
-
 
 void SystemDock::showTray()
 {
@@ -47,25 +47,29 @@ void SystemDock::showWidget()
     int y = m_pTrayIcon->geometry().y();
     m_pToolTipBig->move(100,100);
 }
-
-void SystemDock::statusChanged( int, DownloadState::States )
-{
+void SystemDock::connectToDownloadManager() {
+    connect ( m_pDownloadManger , SIGNAL ( downloadAdded(int)), this, SLOT (downloadAdded(int)) );
+    connect ( m_pDownloadManger , SIGNAL ( downloadRemoved(int)), this, SLOT ( downloadRemoved(int)) );
+}
+void SystemDock::disconnectFromDownloadManager() {  
+    disconnect ( m_pDownloadManger , SIGNAL ( downloadAdded(int)), this, SLOT (downloadAdded(int)) );
+}
+void SystemDock::statusChanged( int, DownloadState::States ){
 }
 
-void SystemDock::progressInfoAt( int at, const ProgressInfo& _info )
-{
+void SystemDock::progressInfoAt( int at, const ProgressInfo& _info ){
 }
 
-void SystemDock::downloadAdded( int newPosition )
-{
+void SystemDock::downloadAdded( int newPosition ){
+    //const IDownload *pDownload = m_pDownloadManger->downloadAt(newPosition);
+    m_pTrayIcon->setToolTip( QString("Download added at %1").arg(newPosition) );
 }
 
-void SystemDock::downloadRemoved( int newPosition )
-{
+void SystemDock::downloadRemoved( int newPosition ){
+    m_pTrayIcon->setToolTip( QString("Download added at %1").arg(newPosition) );
 }
 
-void SystemDock::systemTrayActivated( QSystemTrayIcon::ActivationReason reason )
-{
+void SystemDock::systemTrayActivated( QSystemTrayIcon::ActivationReason reason ){
 	if ( m_pToolTipBig->isVisible() )
 		m_pToolTipBig->hide();
 	else

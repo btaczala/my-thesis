@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2008 by Bartek Tacza�a                                  *
+ *   Copyright (C) 2008 by Bartek Taczała                                  *
  *   b@kontrasty.szczecin.pl                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -24,19 +24,11 @@
 #include <QHeaderView>
 #include <vector>
 #include <QPointer>
-
 #include <idownload.h>
 #include <QDebug>
-
-#include <signalreceiver.h>
-
-
-
 class QPaintEvent;
 class QContextMenuEvent;
 class DownloadManager;
-
-
 #define UNSET_COL (-1)
 
 class QDownloadHeaderView : public QHeaderView
@@ -168,13 +160,15 @@ public slots:
    //void downloadRateAt( int position , const QString & downloadRate );
     //void elapsedTimeAt( int position , unsigned int timeElapsed );
     
-	// from ISignalListener interface
-	void statusChanged( int position, DownloadState::States status );
-	void progressInfoAt( int, const ProgressInfo& _info );
-	void downloadAdded( int newPosition ) ;
-	void downloadRemoved( int position ) ;
+    void statusChanged( int position, DownloadState::States status );
+    void progressInfoAt( int, const ProgressInfo& _info );
+    void downloadAdded( int newPosition ) ;
+    void downloadRemoved( int position ) ;
 private:
     QDownloadWidget(const QDownloadWidget & ) ; // hidden 
+    
+    void connectWithDownloadManager() ;
+    void disconnectFromDownloadManager() ;
     void initializeColumns();
     void reloadColumns(bool readSettings = false);
     void saveColumns();
@@ -191,9 +185,6 @@ protected:
     QPointer<QMenu>  m_pContextMenu ; 
     int              m_CurrentColumnID ; 
     DownloadWidgetDelegates::DownloadItemDelegate* m_downloadItemDelegate;
-    
-
-public:
     DownloadManager*  m_pDownloadManager ; 
 
 };

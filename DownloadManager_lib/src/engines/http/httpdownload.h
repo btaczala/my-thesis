@@ -33,8 +33,8 @@ class OptionsContainer;
  
 class HttpDownload :  public IDownload
 {
-Q_OBJECT
- public:
+    Q_OBJECT
+public:
 
      // Ctors:
     HttpDownload( OptionsContainer* options );
@@ -46,16 +46,16 @@ Q_OBJECT
  
     bool                                operator==( const HttpDownload & _cmp );
     
- private:
+private:
     HttpDownload( const HttpDownload & _cpy ) ; // hide 
     HttpDownload&                       operator=( const HttpDownload& rhs );
     void                                renameFile();
- private:
+private:
     QString                             m_DownloadServerHost ;
     QHttp                               m_HttpObj;
     std::auto_ptr<QHttpRequestHeader>   m_apHttpRequestHeader;
 
- private slots:
+private slots:
     void                                requestStarted(const int & idReq) ;
     void                                requestFinished(const int & idReq, const bool & isFalse) ;
     void                                stateChanged(const int & iState) ;
@@ -69,7 +69,7 @@ Q_OBJECT
  
 signals:
     void                                statusChanged( DownloadState::States status );
- };
+};
 #endif //HTTPDOWNLOAD_H
 //eof
 

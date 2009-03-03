@@ -51,7 +51,7 @@ class QTestApp : public QMainWindow
         {
             RSDM_LOG_FUNC;
             QTreeWidgetItem *pItem = new QTreeWidgetItem( m_pTreeWidget ) ;
-            IDownload *pDownload = m_DownloadManager.downloadAt(position);
+            const IDownload *pDownload = m_DownloadManager.downloadAt(position);
             pItem->setText(0,pDownload->urlAddress().c_str());
             pItem->setText(1,pDownload->urlAddress().c_str());
             QString ss = "0/" + QString::number( pDownload->totalBytes() );

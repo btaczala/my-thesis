@@ -332,7 +332,7 @@ DownloadManager::DownloadManagerState DownloadManager::state() const
 {
     return m_State ; 
 }
-IDownload * DownloadManager::downloadAt(unsigned int position)
+const IDownload * DownloadManager::downloadAt(unsigned int position)
 {
     if ( position >= m_DownloadList.size() || position < 0 ) 
     {

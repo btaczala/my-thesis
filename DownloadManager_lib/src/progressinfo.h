@@ -20,6 +20,7 @@
 
 #ifndef PROGRESINFO_H
 #define PROGRESINFO_H
+#include <QString>
 
 struct ProgressInfo
 {

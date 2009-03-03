@@ -118,7 +118,7 @@ class DownloadManager : public QObject
         void setState ( DownloadManagerState state ) ; 
         DownloadManagerState state () const ; 
 
-        IDownload *downloadAt ( unsigned int position ) ; 
+        const IDownload *downloadAt ( unsigned int position ) ; 
         
         
     private : 
