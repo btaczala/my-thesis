@@ -1,4 +1,4 @@
-
+w
 #include <QApplication>
 #include <QMainWindow>
 #include "qtestapp.h"
