@@ -33,13 +33,12 @@
 /// qwt 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_picker.h>
 
 UI::FunctionWidget::FunctionWidget(QWidget* pParent) 
 : QWidget( pParent ) 
 {
     m_pLayout = new QVBoxLayout( this ) ; 
-    
-    
     QWidget *pFunctionEditLineWidget = new QWidget( this  );
     QHBoxLayout *pFunctionEditLineLayout = new QHBoxLayout( pFunctionEditLineWidget );
     m_pFunctionsAvaible = new QToolButton(this ) ; 
@@ -103,6 +102,8 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
     
     setLayout(m_pLayout);
     
+    m_pPlotPicker = new QwtPlotPicker( m_pPlot->canvas() );
+    
     
 //     m_apFunction.reset(new Math::Function2D());
 //     m_apFunction->setEquation("sin(x)");
@@ -116,6 +117,8 @@ UI::FunctionWidget::~FunctionWidget() {
 void UI::FunctionWidget::connects() {
     connect ( m_pRecentToolButton, SIGNAL ( pressed()), this, SLOT(recentFunctions()) );
     connect ( m_pFunctionEditLine, SIGNAL( functionChanged(QString)), this, SLOT( functionChanged(QString)) ) ; 
+    connect ( m_pPlotPicker, SIGNAL(selected(QwtDoublePoint)),this,SLOT(pickerSelected(QwtDoublePoint)));
+    connect ( m_pPlotPicker, SIGNAL(moved(QwtDoublePoint)),this,SLOT(pickerMoved(QwtDoublePoint)));
 }
 void UI::FunctionWidget::disconnects() {
 
@@ -149,3 +152,10 @@ void UI::FunctionWidget::recentFunctions() {
 void UI::FunctionWidget::functionChanged(const QString& _equation) {
     m_pPlot->addFunction(new Math::Function2D(_equation.toStdString()) );
 }
+void UI::FunctionWidget::pickerSelected(const QwtDoublePoint& pos) {
+    qDebug() << pos ; 
+}
+void UI::FunctionWidget::pickerMoved(const QwtDoublePoint& pos) {
+    qDebug() << pos ; 
+}
+

@@ -45,8 +45,6 @@ UI::FunctionPlot::FunctionPlot(QWidget* pParent) : QwtPlot(QwtText( "function") 
     QwtPlotGrid *pGrid = new QwtPlotGrid() ; 
     pGrid->attach(this);
     replot();
-
-    canvas()->installEventFilter( new UI::MouseEventOnCanvas(this));
 }
 void UI::FunctionPlot::addFunction( Math::Function2D *  _pFunction) {
     boost::scoped_array<double> pXs ; 
@@ -82,30 +80,19 @@ void UI::FunctionPlot::mouseReleaseEvent(QMouseEvent* pEvent) {
 void UI::FunctionPlot::mouseMoveEvent(QMouseEvent* pEvent) {
     // [ 0 - size().x ] -> [ xmin - xmax ] 
 
-    QPoint canvasPosition =     canvas()->pos() ;
-    
-    double xpos = pEvent->pos().x() - canvasPosition.x()/2  + 1;
-    double ypos = pEvent->pos().y() - canvasPosition.y() ;
-    double length_of_set_X = abs( m_XMax) + abs ( m_XMin );
-    double length_of_set_Y = abs( m_XMax) + abs ( m_XMin );
-    double new_x =  ( ( xpos ) / ( size().width() ) ) * ( length_of_set_X )  + m_XMin ; 
-    double new_y =  ( ( ypos ) / ( size().height() ) ) * ( length_of_set_Y ) ; 
-    qDebug() << pEvent->pos() << "is : (" << new_x << "," << new_y << ")"; 
-    QString txt = "(" + QString::number(new_x) + "," + QString::number(new_y) + " )" ;
-    setTitle(txt);
+//     QPoint canvasPosition =     canvas()->pos() ;
+//     
+//     double xpos = pEvent->pos().x() - canvasPosition.x()/2  + 1;
+//     double ypos = pEvent->pos().y() - canvasPosition.y() ;
+//     double length_of_set_X = abs( m_XMax) + abs ( m_XMin );
+//     double length_of_set_Y = abs( m_XMax) + abs ( m_XMin );
+//     double new_x =  ( ( xpos ) / ( size().width() ) ) * ( length_of_set_X )  + m_XMin ; 
+//     double new_y =  ( ( ypos ) / ( size().height() ) ) * ( length_of_set_Y ) ; 
+//     qDebug() << pEvent->pos() << "is : (" << new_x << "," << new_y << ")"; 
+//     QString txt = "(" + QString::number(new_x) + "," + QString::number(new_y) + " )" ;
+//     setTitle(txt);
     QwtPlot::mouseMoveEvent(pEvent);
 }
 void UI::FunctionPlot::keyPressEvent(QKeyEvent* pEvent) {
     QwtPlot::keyPressEvent(pEvent);
-}
-
-bool UI::MouseEventOnCanvas::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::MouseMove) {
-        QMouseEvent *keyEvent = static_cast<QMouseEvent *>(event);
-        qDebug("Ate mouse move ");
-        return true;
-    } else {
-        return QObject::eventFilter(obj, event);
-    }
 }

@@ -23,6 +23,8 @@
 
 #include <memory>
 
+#include <qwt_double_rect.h>
+
 
 class QLineEdit ; 
 class QToolButton ; 
@@ -33,6 +35,7 @@ class QMouseEvent ;
 class QListWidget ; 
 
 class QwtPlot ; 
+class QwtPlotPicker ; 
 namespace Math
 {
     class Function2D ; 
@@ -68,18 +71,19 @@ namespace UI
             /// 
             //QPointer<QGraphicsView> m_pFunctionPlot ; 
             QPointer<FunctionPlot> m_pPlot ; 
+            QPointer<QwtPlotPicker> m_pPlotPicker ; 
             QPointer<QVBoxLayout> m_pLayout ; 
             QPointer<QWidget> m_pToolboxWidget ; 
             QPointer<QListWidget> m_pFunctionListWidget ;  
             
-            
             /// function!
             std::auto_ptr<Math::Function2D> m_apFunction ; 
-            
         ///slots
         private slots:
             void recentFunctions() ; 
             void functionChanged( const QString & _equation ) ; 
+            void pickerSelected( const QwtDoublePoint & ) ; 
+            void pickerMoved( const QwtDoublePoint & ) ; 
     };
 }
 #endif // FUNCTIONWIDGET_H
