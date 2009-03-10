@@ -24,6 +24,7 @@
 #include <QAction>
 #include <QHBoxLayout>
 #include <QMenuBar>
+#include <QStatusBar>
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QKeyEvent>
@@ -67,4 +68,9 @@ void MainWindow::addSubWindow() {
 void MainWindow::keyPressEvent(QKeyEvent* pEvent) {
 //     if ( pEvent->key() == Qt::Key_F 
     QWidget::keyPressEvent(pEvent);
+}
+void MainWindow::mouseChangedInFunctionPlot(double _x, double _y ) 
+{
+    QString txt = "(" + QString::number(_x) + "," + QString::number(_y) + ")";
+    statusBar()->showMessage(txt);
 }

@@ -49,6 +49,7 @@ class MainWindow : public QMainWindow {
     private slots:
         void initUI() ; 
         void addSubWindow();
+        void mouseChangedInFunctionPlot( double _x, double _y ) ; 
 };
 
 #endif // MAINWINDOW_H

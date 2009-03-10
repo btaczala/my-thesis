@@ -60,9 +60,15 @@ namespace UI
             
             bool                    m_isLMBPressed ; 
             QPoint                  m_PointWhereLMBWasPressed ;
-            QPoint                  m_PointWhereLMBWasReleased ; 
-            
-            
+            QPoint                  m_PointWhereLMBWasReleased ;
+    };
+    class MouseEventOnCanvas : public QObject
+    {
+        Q_OBJECT
+        public:
+            MouseEventOnCanvas( QObject *pParent ) : QObject(pParent){}
+        protected:
+            bool eventFilter(QObject *obj, QEvent *event) ; 
     };
 }
 #endif // FUNCTIONPLOT_H
