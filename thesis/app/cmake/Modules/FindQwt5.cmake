@@ -29,11 +29,12 @@ ENDIF(NOT QT4_FOUND)
 IF( QT4_FOUND )
 	# Is Qwt5 installed? Look for header files
 	FIND_PATH( Qwt5_INCLUDE_DIR qwt.h 
-               PATHS ${QT_INCLUDE_DIR} /usr/local
+               PATHS ${QT_INCLUDE_DIR} /usr/local d:/dev/Qt/include
                PATH_SUFFIXES qwt qwt5 qwt-qt4 qwt5-qt4 qwt-qt3 qwt5-qt3 include qwt/include qwt5/include qwt-qt4/include qwt5-qt4/include qwt-qt3/include qwt5-qt3/include ENV PATH)
 	
 	# Find Qwt version
 	IF( Qwt5_INCLUDE_DIR )
+		message ( STATUS ${Qwt5_INCLUDE_DIR})
 		FILE( READ ${Qwt5_INCLUDE_DIR}/qwt_global.h QWT_GLOBAL_H )
 		STRING( REGEX MATCH "#define *QWT_VERSION *(0x05*)" QWT_IS_VERSION_5 ${QWT_GLOBAL_H})
 		
@@ -41,7 +42,10 @@ IF( QT4_FOUND )
 		STRING(REGEX REPLACE ".*#define[\\t\\ ]+QWT_VERSION_STR[\\t\\ ]+\"([0-9]+\\.[0-9]+\\.[0-9]+)\".*" "\\1" Qwt_VERSION "${QWT_GLOBAL_H}")
 
 		# Find Qwt5 library linked to Qt4
-		FIND_LIBRARY( Qwt5_Qt4_TENTATIVE_LIBRARY NAMES qwt5-qt4 qwt-qt4 qwt5 qwt PATHS /usr/local/qwt/lib /usr/local/lib /usr/lib /usr/local/qwt5/lib)
+		FIND_LIBRARY( Qwt5_Qt4_TENTATIVE_LIBRARY NAMES qwtd5 qwt5-qt4 qwt-qt4 qwt5 qwt PATHS /usr/local/qwt/lib /usr/local/lib /usr/lib /usr/local/qwt5/lib d:/dev/Qt/lib)
+		if ( Qwt5_Qt4_TENTATIVE_LIBRARY ) 
+			message ( STATUS ${Qwt5_Qt4_TENTATIVE_LIBRARY} )
+		ENDIF( Qwt5_Qt4_TENTATIVE_LIBRARY ) 
 		IF( UNIX AND NOT CYGWIN)
 			IF( Qwt5_Qt4_TENTATIVE_LIBRARY )
 				#MESSAGE("Qwt5_Qt4_TENTATIVE_LIBRARY = ${Qwt5_Qt4_TENTATIVE_LIBRARY}")
