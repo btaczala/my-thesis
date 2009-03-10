@@ -15,6 +15,9 @@ CurrentBuildType=
 CurrentInstallDir=
 ProjectRootRelative=./
 
+[Project]
+VersionControlSupport=kdevsubversion
+
 [Run Options]
 Run Targets=app
 

@@ -59,6 +59,7 @@ namespace UI
             void disconnects() ; 
             ///fields
             UI::FunctionEdit * m_pFunctionEditLine ; 
+            QPointer<QToolButton> m_pFunctionsAvaible ; 
             /// tool buttons 
             QPointer<QWidget> m_pToolButtonsWidget ; 
             QPointer<QHBoxLayout> m_pToolButtonsWidgetLayout ; 

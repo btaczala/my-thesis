@@ -28,6 +28,7 @@
 #include <QListWidget>
 #include <QMenu>
 #include <QDebug>
+#include <QSpinBox>
 
 /// qwt 
 #include <qwt_plot.h>
@@ -37,8 +38,18 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
 : QWidget( pParent ) 
 {
     m_pLayout = new QVBoxLayout( this ) ; 
+    
+    
+    QWidget *pFunctionEditLineWidget = new QWidget( this  );
+    QHBoxLayout *pFunctionEditLineLayout = new QHBoxLayout( pFunctionEditLineWidget );
+    m_pFunctionsAvaible = new QToolButton(this ) ; 
+    m_pFunctionsAvaible->setText(tr("show f(x)"));
+    
     m_pFunctionEditLine = new UI::FunctionEdit( this, "f(x) = ") ; 
-    m_pLayout->addWidget(m_pFunctionEditLine);
+    pFunctionEditLineLayout->addWidget(m_pFunctionEditLine);
+    pFunctionEditLineLayout->addWidget(m_pFunctionsAvaible);
+    
+    m_pLayout->addWidget ( pFunctionEditLineWidget ) ; 
     
     /// upper toolBox
     m_pToolButtonsWidget = new QWidget ( this ) ; 
@@ -58,10 +69,27 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
     
     m_pLayout->addWidget( m_pToolButtonsWidget ) ; 
     
+    
     m_pPlot = new UI::FunctionPlot(this);
+    
+    QWidget *pCenterWidget = new QWidget( this ) ; 
+    QHBoxLayout *pCenterLayout  = new QHBoxLayout(pCenterWidget);
+    
+    QWidget * pSliderWidget = new QWidget ( pCenterWidget  ) ; 
+    QVBoxLayout * pSliderLayout = new QVBoxLayout ( pSliderWidget ) ; 
+    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
+    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
+    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
+    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
+    
+    
+    pCenterLayout->addWidget( m_pPlot ) ; 
+    pCenterLayout->addWidget( pSliderWidget ) ; 
+    
+    
 //     m_pPlot->setAxisScale(0,ymin,ymax);
 //     m_pPlot->setAxisScale(2,xmin,xmax);
-    m_pLayout->addWidget( m_pPlot );
+    m_pLayout->addWidget( pCenterWidget );
     
     // toolBox
     m_pToolboxWidget = new QWidget( this ) ; 

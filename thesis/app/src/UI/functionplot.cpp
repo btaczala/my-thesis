@@ -16,11 +16,15 @@
 
 #include "functionplot.h"
 #include "../math/function.h"
+/// qt
 #include <QWidget>
 #include <QMouseEvent>
+#include <QDebug>
 
+///qwt
 #include <qwt_plot_curve.h>
 
+///std
 #include <cmath>
 UI::FunctionPlot::FunctionPlot(QWidget* pParent) {
     m_XMin = -5 ; 
@@ -31,6 +35,8 @@ UI::FunctionPlot::FunctionPlot(QWidget* pParent) {
     m_NumberOfValues = (int) ( abs(m_XMin) + abs(m_XMax) ) / m_Step ; 
     setAxisScale(0,m_YMin,m_YMax);
     setAxisScale(2,m_XMin,m_XMax);
+    
+    setMouseTracking( true );
 }
 void UI::FunctionPlot::addFunction( Math::Function2D *  _pFunction) {
     boost::scoped_array<double> pXs ; 
@@ -64,6 +70,15 @@ void UI::FunctionPlot::mouseReleaseEvent(QMouseEvent* pEvent) {
     QwtPlot::mouseReleaseEvent(pEvent);
 }
 void UI::FunctionPlot::mouseMoveEvent(QMouseEvent* pEvent) {
+    // [ 0 - size().x ] -> [ xmin - xmax ] 
+    
+    double xpos = pEvent->pos().x() ;
+    double ypos = pEvent->pos().y() ;
+    double length_of_set_X = abs( m_XMax) + abs ( m_XMin );
+    double length_of_set_Y = abs( m_XMax) + abs ( m_XMin );
+    double new_x =  ( ( xpos ) / ( size().width() ) ) * ( length_of_set_X ) +  length_of_set_X/2 ;
+    double new_y =  ( ( ypos ) / ( size().height() ) ) * ( length_of_set_Y ) +  length_of_set_Y/2 ; 
+    qDebug() << pEvent->pos() << "is : (" << new_x << "," << new_y << ")"; 
     QwtPlot::mouseMoveEvent(pEvent);
 }
 void UI::FunctionPlot::keyPressEvent(QKeyEvent* pEvent) {
