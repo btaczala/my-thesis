@@ -33,6 +33,8 @@ class QHBoxLayout;
 class QGraphicsView ; 
 class QMouseEvent ; 
 class QListWidget ; 
+class QSpinBox ; 
+class QLineEdit ; 
 
 class QwtPlot ; 
 class QwtPlotPicker ; 
@@ -76,7 +78,7 @@ namespace UI
             QPointer<QwtPlotPicker> m_pPlotPicker ; 
             QPointer<QVBoxLayout> m_pLayout ; 
             QPointer<QWidget> m_pToolboxWidget ; 
-            QPointer<QListWidget> m_pFunctionListWidget ;  
+            QPointer<QListWidget> m_pFunctionListWidget ;
             
             /// function!
             std::auto_ptr<Math::Function2D> m_apFunction ; 

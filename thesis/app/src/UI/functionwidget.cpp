@@ -28,7 +28,7 @@
 #include <QListWidget>
 #include <QMenu>
 #include <QDebug>
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 
 /// qwt 
 #include <qwt_plot.h>
@@ -80,10 +80,11 @@ void UI::FunctionWidget::createUI() {
     
     QWidget * pSliderWidget = new QWidget ( pCenterWidget  ) ; 
     QVBoxLayout * pSliderLayout = new QVBoxLayout ( pSliderWidget ) ; 
-    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
-    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
-    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
-    pSliderLayout->addWidget(new QSpinBox(pSliderWidget ));
+    
+    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
+    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
+    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
+    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
     
     
     pCenterLayout->addWidget( m_pPlot ) ; 

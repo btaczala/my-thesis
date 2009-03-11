@@ -33,6 +33,12 @@ namespace Math
             ParserFactory( const ParserFactory& _rhs ) ; 
             ParserFactory & operator=(const ParserFactory & _rhs ) ; 
     };
+    class SpecialFunctions
+    {
+        public:
+            static double NormalDistribution( double ) ; 
+            static double sinc_pi( double ) ; 
+    };
 }
 
 #endif // PARSERFACTORY_H
