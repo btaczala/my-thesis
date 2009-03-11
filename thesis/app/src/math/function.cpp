@@ -66,7 +66,7 @@ double Math::Function2D::Parser::evaluate(double _x) {
         qDebug() << "exception!" << e.GetMsg().c_str() ; 
     }
         
-    qDebug() << "evaluate f( " << _x << " )= " << ret ; 
+    //qDebug() << "evaluate f( " << _x << " )= " << ret ; 
     return ret ; 
 }
 void Math::Function2D::getData(boost::scoped_array< double >& _x, boost::scoped_array< double >& _y, int _size, double _xMin, double _xMax, double _step) {

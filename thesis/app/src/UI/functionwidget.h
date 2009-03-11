@@ -60,6 +60,8 @@ namespace UI
             ///methods
             void connects() ; 
             void disconnects() ; 
+            void createUI() ; 
+
             ///fields
             UI::FunctionEdit * m_pFunctionEditLine ; 
             QPointer<QToolButton> m_pFunctionsAvaible ; 
@@ -84,6 +86,8 @@ namespace UI
             void functionChanged( const QString & _equation ) ; 
             void pickerSelected( const QwtDoublePoint & ) ; 
             void pickerMoved( const QwtDoublePoint & ) ; 
+        signals:
+            void pickerMouseSelected(double _x,double _y) ; 
     };
 }
 #endif // FUNCTIONWIDGET_H

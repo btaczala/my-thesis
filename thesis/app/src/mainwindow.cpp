@@ -58,7 +58,9 @@ void MainWindow::connectToActions(){
 void MainWindow::addSubWindow() {
     QWidget *pWidget = new QWidget( this ) ; 
     m_pLayout = new QHBoxLayout( pWidget );
-    m_pLayout->addWidget(new UI::FunctionWidget( pWidget ) );
+    UI::FunctionWidget *pFunctionWidget = new UI::FunctionWidget( pWidget );
+    m_pLayout->addWidget(pFunctionWidget);
+    connect ( pFunctionWidget, SIGNAL(pickerMouseSelected(double,double)),this,SLOT(mouseChangedInFunctionPlot(double,double)));
 //     m_pLayout->addWidget(new UI::FunctionWidget( pWidget ) );
     pWidget->setLayout(m_pLayout);
     pWidget->setAttribute( Qt::WA_DeleteOnClose, true );

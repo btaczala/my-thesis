@@ -25,7 +25,6 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_canvas.h>
 #include <qwt_plot_grid.h>
-
 ///std
 #include <cmath>
 UI::FunctionPlot::FunctionPlot(QWidget* pParent) : QwtPlot(QwtText( "function") ,pParent){
@@ -54,45 +53,10 @@ void UI::FunctionPlot::addFunction( Math::Function2D *  _pFunction) {
     pCurve->setData( pXs.get(),pYs.get(), m_NumberOfValues ) ;
     pCurve->attach( this );
     
-    m_MapOfFunctions.insert(tMapFunctionKey( _pFunction ) , tMapFunctionValue( pCurve ) );
+    m_MapOfFunctions.insert( tMapFunctionKey( _pFunction ) , tMapFunctionValue( pCurve ) );
     replot();
 }
 void UI::FunctionPlot::replot() {
     QwtPlot::replot();
 }
-void UI::FunctionPlot::mousePressEvent(QMouseEvent* pEvent) {
-    if ( pEvent->button() == Qt::LeftButton ) 
-    {
-        m_PointWhereLMBWasPressed = pEvent->pos();
-        m_isLMBPressed = true ; 
-    }
-    QwtPlot::mousePressEvent(pEvent);
-}
-void UI::FunctionPlot::mouseReleaseEvent(QMouseEvent* pEvent) {
-    if ( m_isLMBPressed ) 
-    {
-        m_PointWhereLMBWasReleased = pEvent->pos();
-        int xShift = m_PointWhereLMBWasReleased.x() - m_PointWhereLMBWasPressed.x();
-        int yShift = m_PointWhereLMBWasReleased.y() - m_PointWhereLMBWasPressed.y();
-    }
-    QwtPlot::mouseReleaseEvent(pEvent);
-}
-void UI::FunctionPlot::mouseMoveEvent(QMouseEvent* pEvent) {
-    // [ 0 - size().x ] -> [ xmin - xmax ] 
 
-//     QPoint canvasPosition =     canvas()->pos() ;
-//     
-//     double xpos = pEvent->pos().x() - canvasPosition.x()/2  + 1;
-//     double ypos = pEvent->pos().y() - canvasPosition.y() ;
-//     double length_of_set_X = abs( m_XMax) + abs ( m_XMin );
-//     double length_of_set_Y = abs( m_XMax) + abs ( m_XMin );
-//     double new_x =  ( ( xpos ) / ( size().width() ) ) * ( length_of_set_X )  + m_XMin ; 
-//     double new_y =  ( ( ypos ) / ( size().height() ) ) * ( length_of_set_Y ) ; 
-//     qDebug() << pEvent->pos() << "is : (" << new_x << "," << new_y << ")"; 
-//     QString txt = "(" + QString::number(new_x) + "," + QString::number(new_y) + " )" ;
-//     setTitle(txt);
-    QwtPlot::mouseMoveEvent(pEvent);
-}
-void UI::FunctionPlot::keyPressEvent(QKeyEvent* pEvent) {
-    QwtPlot::keyPressEvent(pEvent);
-}

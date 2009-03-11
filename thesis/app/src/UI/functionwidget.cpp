@@ -38,29 +38,33 @@
 UI::FunctionWidget::FunctionWidget(QWidget* pParent) 
 : QWidget( pParent ) 
 {
+    createUI() ; 
+    connects() ; 
+}
+UI::FunctionWidget::~FunctionWidget() {
+    disconnects(); 
+}
+void UI::FunctionWidget::createUI() {
+    // main layout
     m_pLayout = new QVBoxLayout( this ) ; 
     QWidget *pFunctionEditLineWidget = new QWidget( this  );
     QHBoxLayout *pFunctionEditLineLayout = new QHBoxLayout( pFunctionEditLineWidget );
-    m_pFunctionsAvaible = new QToolButton(this ) ; 
+    m_pFunctionsAvaible = new QToolButton( this ) ; 
     m_pFunctionsAvaible->setText(tr("show f(x)"));
-    
     m_pFunctionEditLine = new UI::FunctionEdit( this, "f(x) = ") ; 
     pFunctionEditLineLayout->addWidget(m_pFunctionEditLine);
     pFunctionEditLineLayout->addWidget(m_pFunctionsAvaible);
-    
     m_pLayout->addWidget ( pFunctionEditLineWidget ) ; 
-    
     /// upper toolBox
     m_pToolButtonsWidget = new QWidget ( this ) ; 
     m_pToolButtonsWidgetLayout = new QHBoxLayout( m_pToolButtonsWidget );
-    
     m_pRecentToolButton = new QToolButton( this ) ; 
     m_pRecentToolButton->setText("recent");
     m_pAddFunctionButton = new QToolButton( this ) ; 
     m_pAddFunctionButton->setText(tr("Add Function"));
     QMenu * pMenu = new QMenu ( m_pAddFunctionButton ) ; 
-    pMenu->addAction("someaction");
-    m_pAddFunctionButton->setMenu(pMenu);
+    //pMenu->addAction("someaction");
+    m_pAddFunctionButton->setMenu( pMenu );
     
     m_pToolButtonsWidgetLayout->addWidget(m_pRecentToolButton);
     m_pToolButtonsWidgetLayout->addWidget(m_pAddFunctionButton);
@@ -69,7 +73,7 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
     m_pLayout->addWidget( m_pToolButtonsWidget ) ; 
     
     
-    m_pPlot = new UI::FunctionPlot(this);
+    m_pPlot = new UI::FunctionPlot( this );
     
     QWidget *pCenterWidget = new QWidget( this ) ; 
     QHBoxLayout *pCenterLayout  = new QHBoxLayout(pCenterWidget);
@@ -85,9 +89,6 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
     pCenterLayout->addWidget( m_pPlot ) ; 
     pCenterLayout->addWidget( pSliderWidget ) ; 
     
-    
-//     m_pPlot->setAxisScale(0,ymin,ymax);
-//     m_pPlot->setAxisScale(2,xmin,xmax);
     m_pLayout->addWidget( pCenterWidget );
     
     // toolBox
@@ -96,32 +97,26 @@ UI::FunctionWidget::FunctionWidget(QWidget* pParent)
     pLay->addWidget(new QToolButton(m_pToolboxWidget));
     pLay->addWidget(new QToolButton(m_pToolboxWidget));
     m_pToolboxWidget->setLayout(pLay);
-//     m_pToolboxWidget->hide();
-//     hidden = true ; 
     m_pLayout->addWidget(m_pToolboxWidget);
     
     setLayout(m_pLayout);
-    
-    m_pPlotPicker = new QwtPlotPicker( m_pPlot->canvas() );
-    
-    
-//     m_apFunction.reset(new Math::Function2D());
-//     m_apFunction->setEquation("sin(x)");
-    connects() ; 
-//     m_pFunctionEditLine->setFocus();
-}
-UI::FunctionWidget::~FunctionWidget() {
-    disconnects(); 
+
+    m_pPlotPicker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPicker::PointSelection | QwtPicker::DragSelection,  QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_pPlot->canvas() );
+    /*m_pPlotPicker->setTrackerMode(QwtPicker::AlwaysOn);*/
 }
 
 void UI::FunctionWidget::connects() {
     connect ( m_pRecentToolButton, SIGNAL ( pressed()), this, SLOT(recentFunctions()) );
     connect ( m_pFunctionEditLine, SIGNAL( functionChanged(QString)), this, SLOT( functionChanged(QString)) ) ; 
-    connect ( m_pPlotPicker, SIGNAL(selected(QwtDoublePoint)),this,SLOT(pickerSelected(QwtDoublePoint)));
-    connect ( m_pPlotPicker, SIGNAL(moved(QwtDoublePoint)),this,SLOT(pickerMoved(QwtDoublePoint)));
+
+    connect ( m_pPlotPicker, SIGNAL( selected(const QwtDoublePoint& )),this,SLOT(pickerSelected(const QwtDoublePoint & )));
+    connect ( m_pPlotPicker, SIGNAL( moved( const QwtDoublePoint& )),this,SLOT(pickerMoved(const QwtDoublePoint& )));
 }
 void UI::FunctionWidget::disconnects() {
-
+    disconnect ( m_pRecentToolButton, SIGNAL ( pressed()), this, SLOT(recentFunctions()) );
+    disconnect ( m_pFunctionEditLine, SIGNAL( functionChanged(QString)), this, SLOT( functionChanged(QString)) ) ; 
+    disconnect ( m_pPlotPicker, SIGNAL(selected(QwtDoublePoint)),this,SLOT(pickerSelected(QwtDoublePoint)));
+    disconnect ( m_pPlotPicker, SIGNAL(moved(QwtDoublePoint)),this,SLOT(pickerMoved(QwtDoublePoint)));
 }
 void UI::FunctionWidget::mouseMoveEvent(QMouseEvent* pEvent) {
     QWidget::mouseMoveEvent(pEvent);
@@ -132,16 +127,9 @@ void UI::FunctionWidget::mousePressEvent(QMouseEvent* pEvent) {
 void UI::FunctionWidget::mouseReleaseEvent(QMouseEvent* pEvent) {
     QWidget::mouseReleaseEvent(pEvent);
 }
-
 void UI::FunctionWidget::keyPressEvent(QKeyEvent* pEvent) {
-    if ( pEvent->key() == Qt::Key_Enter ) 
-    {
-        
-    }
-    else
-        QWidget::keyPressEvent(pEvent);
+    QWidget::keyPressEvent(pEvent);
 }
-
 ///slots
 void UI::FunctionWidget::recentFunctions() {
     if ( m_pFunctionListWidget ) 
@@ -153,9 +141,11 @@ void UI::FunctionWidget::functionChanged(const QString& _equation) {
     m_pPlot->addFunction(new Math::Function2D(_equation.toStdString()) );
 }
 void UI::FunctionWidget::pickerSelected(const QwtDoublePoint& pos) {
-    qDebug() << pos ; 
+    double x,y;
+    x = m_pPlot->invTransform(QwtPlot::xBottom,pos.x());
+    y = m_pPlot->invTransform(QwtPlot::yLeft,pos.y());
+    emit pickerMouseSelected( x,y );
 }
 void UI::FunctionWidget::pickerMoved(const QwtDoublePoint& pos) {
-    qDebug() << pos ; 
+    pickerSelected(pos);
 }
-

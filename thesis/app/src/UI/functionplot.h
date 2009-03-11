@@ -29,26 +29,30 @@ class QMouseEvent ;
 class QKeyEvent ;
 
 class QwtPlotCurve;
+class QwtPlotPicker;
 namespace Math
 {
     class Function2D ; 
 }
 namespace UI
 {   
-    class FunctionPlot : public QwtPlot
+    class FunctionPlot : public QwtPlot/*, public QObject*/
     {
+        friend class MouseEventOnCanvas;
         public:
             typedef boost::shared_ptr<Math::Function2D> tMapFunctionKey;
             typedef boost::shared_ptr<QwtPlotCurve> tMapFunctionValue;
             typedef QMap < tMapFunctionKey , tMapFunctionValue > tMapFunction;
+
             FunctionPlot( QWidget *pParent ) ;
+            virtual ~FunctionPlot() {}
             virtual void            replot();
             void                    addFunction ( Math::Function2D * _pFunction ) ; 
+            const QwtPlotPicker *   picker() const { return m_pPlotPicker;}
+            
         protected:
-            virtual void            mousePressEvent(QMouseEvent* );
-            virtual void            mouseReleaseEvent(QMouseEvent* );
-            virtual void            mouseMoveEvent(QMouseEvent* );
-            virtual void            keyPressEvent(QKeyEvent* );
+        
+
         private:
             tMapFunction            m_MapOfFunctions ; 
             double                  m_XMin ; 
@@ -61,6 +65,7 @@ namespace UI
             bool                    m_isLMBPressed ; 
             QPoint                  m_PointWhereLMBWasPressed ;
             QPoint                  m_PointWhereLMBWasReleased ;
+            QwtPlotPicker *         m_pPlotPicker ;
     };
 }
 #endif // FUNCTIONPLOT_H
