@@ -81,10 +81,15 @@ void UI::FunctionWidget::createUI() {
     QWidget * pSliderWidget = new QWidget ( pCenterWidget  ) ; 
     QVBoxLayout * pSliderLayout = new QVBoxLayout ( pSliderWidget ) ; 
     
-    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
-    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
-    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
-    pSliderLayout->addWidget(new QDoubleSpinBox( pSliderWidget ));
+    m_pMinXSpinBox = new QDoubleSpinBox( pSliderWidget );
+    m_pMinYSpinBox = new QDoubleSpinBox( pSliderWidget );
+    m_pMaxXSpinBox = new QDoubleSpinBox( pSliderWidget );
+    m_pMaxYSpinBox = new QDoubleSpinBox( pSliderWidget );
+
+    pSliderLayout->addWidget( m_pMinXSpinBox );
+    pSliderLayout->addWidget( m_pMaxXSpinBox );
+    pSliderLayout->addWidget( m_pMinYSpinBox );
+    pSliderLayout->addWidget( m_pMaxYSpinBox );
     
     
     pCenterLayout->addWidget( m_pPlot ) ; 
@@ -112,6 +117,11 @@ void UI::FunctionWidget::connects() {
 
     connect ( m_pPlotPicker, SIGNAL( selected(const QwtDoublePoint& )),this,SLOT(pickerSelected(const QwtDoublePoint & )));
     connect ( m_pPlotPicker, SIGNAL( moved( const QwtDoublePoint& )),this,SLOT(pickerMoved(const QwtDoublePoint& )));
+
+    connect ( m_pMinXSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(minXSpinBoxValueChanged(double)) );
+    connect ( m_pMaxXSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(maxXSpinBoxValueChanged(double)) );
+    connect ( m_pMinYSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(minYSpinBoxValueChanged(double)) );
+    connect ( m_pMaxYSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(maxYSpinBoxValueChanged(double)) );
 }
 void UI::FunctionWidget::disconnects() {
     disconnect ( m_pRecentToolButton, SIGNAL ( pressed()), this, SLOT(recentFunctions()) );
@@ -150,3 +160,16 @@ void UI::FunctionWidget::pickerSelected(const QwtDoublePoint& pos) {
 void UI::FunctionWidget::pickerMoved(const QwtDoublePoint& pos) {
     pickerSelected(pos);
 }
+void UI::FunctionWidget::minXSpinBoxValueChanged(double _value){
+    ;
+}
+void UI::FunctionWidget::maxXSpinBoxValueChanged(double _value){
+    ;
+}
+void UI::FunctionWidget::minYSpinBoxValueChanged(double _value){
+    ;
+}
+void UI::FunctionWidget::maxYSpinBoxValueChanged(double _value){
+    ;
+}
+

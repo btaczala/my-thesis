@@ -17,22 +17,34 @@
 #include "parserfactory.h"
 #include "muparser/muParser.h"
 #include <boost/math/special_functions/sinc.hpp>
+#include <boost/math/special_functions/asinh.hpp>
+#include <boost/math/special_functions/gamma.hpp>
+#include <boost/math/distributions/normal.hpp>
+
+
+#define ADD_FUN(func_name) #func_name ##, Math::SpecialFunctions::func_name, false 
+namespace Math
+{
+    namespace SpecialFunctions
+    {
+        static double square ( double _x ) 
+        { return _x * _x ; }
+        
+        static double gamma( double _x ) 
+        { return boost::math::tgamma(_x) ; }
+        static double normal( double _x ) 
+        { return boost::math::pdf( boost::math::normal(),_x); }
+        static double normal3( double _x,double _y, double _z) 
+        { return boost::math::pdf( boost::math::normal(_y,_z),_x); }
+    };
+}
+
 mu::Parser* Math::ParserFactory::factory() {
-    // add all functions from boost::math and declare most common constanst 
-    // caller taking ownership
     mu::Parser *pParser  = new mu::Parser() ; 
-    pParser->DefineFun(false,&SpecialFunctions::sinc_pi,"sinc_pi");
-    pParser->DefineFun(false,&SpecialFunctions::NormalDistribution,"square");
+    pParser->DefineFun(ADD_FUN(square));
+    pParser->DefineFun(ADD_FUN(gamma));
+    pParser->DefineFun(ADD_FUN(normal));
+    pParser->DefineFun(ADD_FUN(normal3));
+    
     return pParser ; 
 }
-double Math::SpecialFunctions::NormalDistribution(double x ) {
-    return x*x ; 
-}
-double Math::SpecialFunctions::sinc_pi(double x) {
-    if ( x == 0 ) 
-        return -1;
-    return boost::math::sinc_pi<double>(x);
-}
-
-
-

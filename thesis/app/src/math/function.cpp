@@ -33,6 +33,7 @@ double Math::Function2D::value( double _x ) {
         return -1 ; 
     else if ( m_Type == Math::eContinuous ) 
         return m_Parser.evaluate(_x);
+    return -1 ; 
 }
 void Math::Function2D::setEquation(const std::string& _equation) {
     ///TODO: check if _equation has 'x' 
@@ -57,16 +58,7 @@ void Math::Function2D::Parser::setEquation(const std::string& _equation) {
 double Math::Function2D::Parser::evaluate(double _x) {
     m_fVal = _x ; 
     double ret ; 
-    try
-    {
-        ret = m_pParser->Eval();
-    }
-    catch ( mu::Parser::exception_type & e ) 
-    {
-        qDebug() << "exception!" << e.GetMsg().c_str() ; 
-    }
-        
-    //qDebug() << "evaluate f( " << _x << " )= " << ret ; 
+    ret = m_pParser->Eval();
     return ret ; 
 }
 void Math::Function2D::getData(boost::scoped_array< double >& _x, boost::scoped_array< double >& _y, int _size, double _xMin, double _xMax, double _step) {
@@ -79,9 +71,22 @@ void Math::Function2D::getData(boost::scoped_array< double >& _x, boost::scoped_
     {
         if ( iter > _xMax ) 
             break ; 
-        _x[i] = iter ; 
-        _y[i] = value(iter);
+        try
+        {   
+            _y[i] = value(iter); // this will throw exception
+            _x[i] = iter ; 
+        }
+        catch ( mu::Parser::exception_type & e ) 
+        {
+            qDebug() << " This will not be evaluated" << equation().c_str() << "with" << i << " exception: " << e.GetMsg().c_str() ; 
+            i-- ; 
+        }
+        catch ( std::domain_error & err ) 
+        {
+            // this will not be evaluated ! 
+            qDebug() << " This will not be evaluated" << equation().c_str() << "with" << i << " exception: " << err.what() ; 
+            i-- ; 
+        }
         iter += _step;
     }
 }
-

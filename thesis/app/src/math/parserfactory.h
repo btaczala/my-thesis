@@ -17,6 +17,7 @@
 #ifndef PARSERFACTORY_H
 #define PARSERFACTORY_H
 
+#include <string>
 namespace mu
 {
     class Parser ; 
@@ -32,12 +33,6 @@ namespace Math
             ~ParserFactory() ; 
             ParserFactory( const ParserFactory& _rhs ) ; 
             ParserFactory & operator=(const ParserFactory & _rhs ) ; 
-    };
-    class SpecialFunctions
-    {
-        public:
-            static double NormalDistribution( double ) ; 
-            static double sinc_pi( double ) ; 
     };
 }
 

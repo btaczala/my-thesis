@@ -33,7 +33,8 @@ class QHBoxLayout;
 class QGraphicsView ; 
 class QMouseEvent ; 
 class QListWidget ; 
-class QSpinBox ; 
+class QDoubleSpinBox ; 
+
 class QLineEdit ; 
 
 class QwtPlot ; 
@@ -73,12 +74,15 @@ namespace UI
             QPointer<QToolButton>  m_pRecentToolButton ;
             QPointer<QToolButton>  m_pAddFunctionButton ;
             /// 
-            //QPointer<QGraphicsView> m_pFunctionPlot ; 
             QPointer<FunctionPlot> m_pPlot ; 
             QPointer<QwtPlotPicker> m_pPlotPicker ; 
             QPointer<QVBoxLayout> m_pLayout ; 
             QPointer<QWidget> m_pToolboxWidget ; 
             QPointer<QListWidget> m_pFunctionListWidget ;
+            QPointer<QDoubleSpinBox> m_pMinXSpinBox ; 
+            QPointer<QDoubleSpinBox> m_pMaxXSpinBox ; 
+            QPointer<QDoubleSpinBox> m_pMinYSpinBox ; 
+            QPointer<QDoubleSpinBox> m_pMaxYSpinBox ; 
             
             /// function!
             std::auto_ptr<Math::Function2D> m_apFunction ; 
@@ -88,6 +92,10 @@ namespace UI
             void functionChanged( const QString & _equation ) ; 
             void pickerSelected( const QwtDoublePoint & ) ; 
             void pickerMoved( const QwtDoublePoint & ) ; 
+            void minXSpinBoxValueChanged( double _value ) ; 
+            void maxXSpinBoxValueChanged( double _value ) ; 
+            void minYSpinBoxValueChanged( double _value ) ; 
+            void maxYSpinBoxValueChanged( double _value ) ; 
         signals:
             void pickerMouseSelected(double _x,double _y) ; 
     };
