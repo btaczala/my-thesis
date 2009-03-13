@@ -108,7 +108,6 @@ void UI::FunctionWidget::createUI() {
     setLayout(m_pLayout);
 
     m_pPlotPicker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPicker::PointSelection | QwtPicker::DragSelection,  QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_pPlot->canvas() );
-    /*m_pPlotPicker->setTrackerMode(QwtPicker::AlwaysOn);*/
 }
 
 void UI::FunctionWidget::connects() {
