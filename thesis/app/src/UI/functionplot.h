@@ -50,10 +50,10 @@ namespace UI
             void                    addFunction ( Math::Function2D * _pFunction ) ; 
             const QwtPlotPicker *   picker() const { return m_pPlotPicker;}
             
-            inline void setXMin( double _val ) { m_XMin = _value ; } 
-            inline void setXMax( double _val ) { m_XMax = _value ; } 
-            inline void setYMin( double _val ) { m_YMin = _value ; } 
-            inline void setYMax( double _val ) { m_YMax = _value ; } 
+            inline void setXMin( double _value ) { m_XMin = _value ; } 
+            inline void setXMax( double _value ) { m_XMax = _value ; } 
+            inline void setYMin( double _value ) { m_YMin = _value ; } 
+            inline void setYMax( double _value ) { m_YMax = _value ; } 
 
         protected:
         private:

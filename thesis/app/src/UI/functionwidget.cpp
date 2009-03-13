@@ -118,16 +118,21 @@ void UI::FunctionWidget::connects() {
     connect ( m_pPlotPicker, SIGNAL( selected(const QwtDoublePoint& )),this,SLOT(pickerSelected(const QwtDoublePoint & )));
     connect ( m_pPlotPicker, SIGNAL( moved( const QwtDoublePoint& )),this,SLOT(pickerMoved(const QwtDoublePoint& )));
 
-    connect ( m_pMinXSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(minXSpinBoxValueChanged(double)) );
-    connect ( m_pMaxXSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(maxXSpinBoxValueChanged(double)) );
-    connect ( m_pMinYSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(minYSpinBoxValueChanged(double)) );
-    connect ( m_pMaxYSpinBox, SIGNAL( valueChanged(double) ), this, SIGNAL(maxYSpinBoxValueChanged(double)) );
+    connect ( m_pMinXSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(minXSpinBoxValueChanged(double)) );
+    connect ( m_pMaxXSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(maxXSpinBoxValueChanged(double)) );
+    connect ( m_pMinYSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(minYSpinBoxValueChanged(double)) );
+    connect ( m_pMaxYSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(maxYSpinBoxValueChanged(double)) );
 }
 void UI::FunctionWidget::disconnects() {
     disconnect ( m_pRecentToolButton, SIGNAL ( pressed()), this, SLOT(recentFunctions()) );
     disconnect ( m_pFunctionEditLine, SIGNAL( functionChanged(QString)), this, SLOT( functionChanged(QString)) ) ; 
     disconnect ( m_pPlotPicker, SIGNAL(selected(QwtDoublePoint)),this,SLOT(pickerSelected(QwtDoublePoint)));
     disconnect ( m_pPlotPicker, SIGNAL(moved(QwtDoublePoint)),this,SLOT(pickerMoved(QwtDoublePoint)));
+    
+    disconnect ( m_pMinXSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(minXSpinBoxValueChanged(double)) );
+    disconnect ( m_pMaxXSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(maxXSpinBoxValueChanged(double)) );
+    disconnect ( m_pMinYSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(minYSpinBoxValueChanged(double)) );
+    disconnect ( m_pMaxYSpinBox, SIGNAL( valueChanged(double) ), this, SLOT(maxYSpinBoxValueChanged(double)) );
 }
 void UI::FunctionWidget::mouseMoveEvent(QMouseEvent* pEvent) {
     QWidget::mouseMoveEvent(pEvent);
