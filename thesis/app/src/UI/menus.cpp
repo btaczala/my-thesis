@@ -24,19 +24,31 @@
 
 UI::Menus::Menus(QWidget* pParent) : m_pFileMenu( NULL ), m_pAboutMenu(NULL) {
     m_pFileMenu = new QMenu (QObject::tr("&File"), pParent ) ; 
+    m_pFunctionMenu = new QMenu ( QObject::tr("F&unction"), pParent ) ; 
     m_pAboutMenu = new QMenu ( QObject::tr("&About"), pParent ) ; 
     addActions();
 }
 UI::Menus::~Menus() {
-
+    ;
 }
 void UI::Menus::attachTo(QMenuBar* _pMenuBar) {
     _pMenuBar->addMenu(m_pFileMenu);
+    _pMenuBar->addMenu(m_pFunctionMenu);
     _pMenuBar->addMenu(m_pAboutMenu);
 }
 void UI::Menus::addActions() {
     m_pFileMenu->addAction( UI::Actions::action("new_fun") ) ; 
     m_pFileMenu->addSeparator();
     m_pFileMenu->addAction( UI::Actions::action("quit") ) ; 
-    //m_pAboutMenu->
+    
+    /// function menu 
+    m_pFileMenu->addAction( UI::Actions::action("calculate integral") );
 }
+void UI::Menus::disableFunctionMenu() {
+    m_pFunctionMenu->setEnabled(false);
+}
+void UI::Menus::enableFunctionMenu() {
+    m_pFunctionMenu->setEnabled(true);
+}
+
+

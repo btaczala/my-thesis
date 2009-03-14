@@ -85,7 +85,16 @@ void UI::FunctionWidget::createUI() {
     m_pMinYSpinBox = new QDoubleSpinBox( pSliderWidget );
     m_pMaxXSpinBox = new QDoubleSpinBox( pSliderWidget );
     m_pMaxYSpinBox = new QDoubleSpinBox( pSliderWidget );
-
+    m_pMinXSpinBox->setRange(-1000,1000);
+    m_pMaxXSpinBox->setRange(-1000,1000);
+    m_pMinYSpinBox->setRange(-1000,1000);
+    m_pMaxYSpinBox->setRange(-1000,1000);
+    
+    m_pMinXSpinBox->setValue(m_pPlot->xMin());
+    m_pMaxXSpinBox->setValue(m_pPlot->xMax());
+    m_pMinYSpinBox->setValue(m_pPlot->yMin());
+    m_pMaxYSpinBox->setValue(m_pPlot->yMax());
+    
     pSliderLayout->addWidget( m_pMinXSpinBox );
     pSliderLayout->addWidget( m_pMaxXSpinBox );
     pSliderLayout->addWidget( m_pMinYSpinBox );
@@ -108,6 +117,8 @@ void UI::FunctionWidget::createUI() {
     setLayout(m_pLayout);
 
     m_pPlotPicker = new QwtPlotPicker( QwtPlot::xBottom, QwtPlot::yLeft, QwtPicker::PointSelection | QwtPicker::DragSelection,  QwtPlotPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_pPlot->canvas() );
+    
+    
 }
 
 void UI::FunctionWidget::connects() {
@@ -153,27 +164,31 @@ void UI::FunctionWidget::recentFunctions() {
     }
 }
 void UI::FunctionWidget::functionChanged(const QString& _equation) {
-    m_pPlot->addFunction(new Math::Function2D(_equation.toStdString()) );
+    m_pPlot->addFunction( _equation );
 }
 void UI::FunctionWidget::pickerSelected(const QwtDoublePoint& pos) {
     double x,y;
-    x = m_pPlot->invTransform(QwtPlot::xBottom,pos.x());
-    y = m_pPlot->invTransform(QwtPlot::yLeft,pos.y());
-    emit pickerMouseSelected( x,y );
+    //x = m_pPlot->invTransform(QwtPlot::xBottom,pos.x());
+    //y = m_pPlot->invTransform(QwtPlot::yLeft,pos.y());
+    emit pickerMouseSelected( pos.x(),pos.y() );
 }
 void UI::FunctionWidget::pickerMoved(const QwtDoublePoint& pos) {
     pickerSelected(pos);
 }
 void UI::FunctionWidget::minXSpinBoxValueChanged(double _value){
-    ;
+    QDoubleSpinBox *pSender = qobject_cast<QDoubleSpinBox*>( sender() ); 
+    m_pPlot->setXMin( _value );
 }
 void UI::FunctionWidget::maxXSpinBoxValueChanged(double _value){
-    ;
+    QDoubleSpinBox *pSender = qobject_cast<QDoubleSpinBox*>( sender() ); 
+    m_pPlot->setXMax( _value );
 }
 void UI::FunctionWidget::minYSpinBoxValueChanged(double _value){
-    ;
+    QDoubleSpinBox *pSender = qobject_cast<QDoubleSpinBox*>( sender() ); 
+    m_pPlot->setYMin( _value );
 }
 void UI::FunctionWidget::maxYSpinBoxValueChanged(double _value){
-    ;
+    QDoubleSpinBox *pSender = qobject_cast<QDoubleSpinBox*>( sender() ); 
+    m_pPlot->setYMax( _value );
 }
 

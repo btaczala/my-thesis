@@ -22,7 +22,7 @@
 #include <boost/math/distributions/normal.hpp>
 
 
-#define ADD_FUN(func_name) #func_name ##, Math::SpecialFunctions::func_name, false 
+//#define ADD_FUN(func_name) #func_name ##, Math::SpecialFunctions::func_name, false 
 namespace Math
 {
     namespace SpecialFunctions
@@ -41,10 +41,10 @@ namespace Math
 
 mu::Parser* Math::ParserFactory::factory() {
     mu::Parser *pParser  = new mu::Parser() ; 
-    pParser->DefineFun(ADD_FUN(square));
-    pParser->DefineFun(ADD_FUN(gamma));
-    pParser->DefineFun(ADD_FUN(normal));
-    pParser->DefineFun(ADD_FUN(normal3));
+    pParser->DefineFun("square", Math::SpecialFunctions::square, false );
+    pParser->DefineFun("gamma", Math::SpecialFunctions::gamma, false );
+    pParser->DefineFun("normal", Math::SpecialFunctions::normal, false );
+    pParser->DefineFun("normal3", Math::SpecialFunctions::normal3, false );
     
     return pParser ; 
 }

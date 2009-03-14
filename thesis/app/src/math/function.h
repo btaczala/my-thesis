@@ -78,7 +78,9 @@ namespace Math {
              */
             double value( double _x ) ; 
             
-            void getData ( boost::scoped_array<double> & _x, boost::scoped_array<double> & _y , int _size, double _xMin, double _xMax, double _step ) ; 
+            void recalculateData ( int _size, double _xMin, double _xMax, double _step ) ; 
+            const double * xs() const { return m_Xs.get() ;}
+            const double * ys() const { return m_Ys.get() ;}
         private:
             /// fields
             std::string m_Equation ; /*! < equation of function */
@@ -99,8 +101,9 @@ namespace Math {
                     std::auto_ptr<mu::Parser> m_pParser ; 
                     double m_fVal ; 
             } m_Parser ; 
-            boost::scoped_array<double> m_Xs ; 
-            boost::scoped_array<double> m_Ys ; 
+            boost::scoped_array< double > m_Xs ; 
+            boost::scoped_array< double > m_Ys ; 
+            int m_SizeOfArrays ; 
     };
     class Function3D
     {

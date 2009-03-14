@@ -12,6 +12,7 @@ UI/functionplot.cpp
 UI/stylesheets.cpp
 math/function.cpp
 math/parserfactory.cpp
+Common/settings.cpp
 )
 set(THESIS_HDRS
 mainwindow.h
@@ -23,6 +24,7 @@ UI/functionedit.h
 UI/stylesheets.h
 math/function.h
 math/parserfactory.h
+Common/settings.h
 )
 qt4_automoc(${THESIS_SRCS})
 qt4_wrap_cpp( THESIS_MOC mainwindow.h UI/functionwidget.h UI/functionedit.h  UI/functionplot.h) 

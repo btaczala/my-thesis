@@ -32,12 +32,15 @@ namespace UI {
             Menus( QWidget * pParent ) ; 
             void attachTo( QMenuBar * _pMenuBar ) ; 
             virtual ~Menus() ; 
+            
+            void disableFunctionMenu( ) ; 
+            void enableFunctionMenu( ) ; 
         private:
             /// methods 
             void addActions() ; 
             QPointer<QMenu> m_pFileMenu ; 
+            QPointer<QMenu> m_pFunctionMenu ; 
             QPointer<QMenu>  m_pAboutMenu ; 
-        }; 
+    }; 
 }
-
 #endif // UI_MENUS_H

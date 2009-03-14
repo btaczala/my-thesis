@@ -27,6 +27,7 @@
 class QWidget ; 
 class QMouseEvent ; 
 class QKeyEvent ;
+class QTimer ; 
 
 class QwtPlotCurve;
 class QwtPlotPicker;
@@ -38,26 +39,28 @@ namespace UI
 {   
     class FunctionPlot : public QwtPlot/*, public QObject*/
     {
-        friend class MouseEventOnCanvas;
         public:
-            typedef boost::shared_ptr<Math::Function2D> tMapFunctionKey;
-            typedef boost::shared_ptr<QwtPlotCurve> tMapFunctionValue;
-            typedef QMap < tMapFunctionKey , tMapFunctionValue > tMapFunction;
-
+            /*!
+             * \brief  ctor for FunctionPlot
+             */
             FunctionPlot( QWidget *pParent ) ;
             virtual ~FunctionPlot() {}
             virtual void            replot();
-            void                    addFunction ( Math::Function2D * _pFunction ) ; 
+            void                    addFunction ( const QString& _equation ) ; 
             const QwtPlotPicker *   picker() const { return m_pPlotPicker;}
             
-            inline void setXMin( double _value ) { m_XMin = _value ; } 
-            inline void setXMax( double _value ) { m_XMax = _value ; } 
-            inline void setYMin( double _value ) { m_YMin = _value ; } 
-            inline void setYMax( double _value ) { m_YMax = _value ; } 
+            void setXMin( double _value ) ; 
+            void setXMax( double _value ) ;
+            void setYMin( double _value ) ;
+            void setYMax( double _value ) ;
+            
+            inline double xMin () const {return m_XMin;}
+            inline double xMax () const {return m_XMax;}
+            inline double yMin () const {return m_YMin;}
+            inline double yMax () const {return m_YMax;}
 
         protected:
         private:
-            tMapFunction            m_MapOfFunctions ; 
             double                  m_XMin ; 
             double                  m_XMax ;
             double                  m_YMin ; 
@@ -69,6 +72,9 @@ namespace UI
             QPoint                  m_PointWhereLMBWasPressed ;
             QPoint                  m_PointWhereLMBWasReleased ;
             QwtPlotPicker *         m_pPlotPicker ;
+            boost::shared_ptr<Math::Function2D> m_pFunction ; 
+            boost::shared_ptr<QwtPlotCurve> m_pFunctionCurve ; 
+            boost::shared_ptr<QTimer> m_pTimer ; 
     };
 }
 #endif // FUNCTIONPLOT_H

@@ -21,7 +21,8 @@
 
 Math::Function2D::Function2D( const std::string & _equation) : 
   m_Equation(_equation) ,
-  m_apMatrixOfValues( NULL ) 
+  m_apMatrixOfValues( NULL ),
+  m_SizeOfArrays(0)
 {
     if ( ! _equation.empty() ) 
         setEquation( _equation ) ; // to switch function type to cintinous
@@ -42,7 +43,6 @@ void Math::Function2D::setEquation(const std::string& _equation) {
     m_Parser.setEquation( m_Equation );
     m_Type = Math::eContinuous;
 }
-
 /// Function2D::Parser impl
 Math::Function2D::Parser::Parser(const std::string& _equation) : m_pParser ( Math::ParserFactory::factory() )  {
     m_pParser->SetExpr( _equation );
@@ -61,11 +61,15 @@ double Math::Function2D::Parser::evaluate(double _x) {
     ret = m_pParser->Eval();
     return ret ; 
 }
-void Math::Function2D::getData(boost::scoped_array< double >& _x, boost::scoped_array< double >& _y, int _size, double _xMin, double _xMax, double _step) {
-    if ( _x.get() == NULL ) 
-        _x.reset(new double[_size] );
-    if ( _y.get() == NULL ) 
-        _y.reset(new double[_size] );
+void Math::Function2D::recalculateData( int _size, double _xMin, double _xMax, double _step ) {
+    if ( _size > m_SizeOfArrays ) {
+        m_SizeOfArrays = _size ;
+        m_Xs.reset( new double[m_SizeOfArrays] );
+        m_Ys.reset( new double[m_SizeOfArrays] );
+    }
+    else {
+        ;
+    }
     double iter = _xMin ; 
     for ( int i = 0 ; i < _size ; ++i ) 
     {
@@ -73,8 +77,8 @@ void Math::Function2D::getData(boost::scoped_array< double >& _x, boost::scoped_
             break ; 
         try
         {   
-            _y[i] = value(iter); // this will throw exception
-            _x[i] = iter ; 
+            m_Ys[i] = value(iter); // this will throw exception
+            m_Xs[i] = iter ; 
         }
         catch ( mu::Parser::exception_type & e ) 
         {
