@@ -93,22 +93,32 @@ unsigned int IDownload::progress() const
 
 void IDownload::setState(const DownloadState::States& _state, bool triggerEmit)
 {
+
     LOG(DownloadStateToString( _state ));
-    if( m_pDownloadInfo->m_State != DownloadState::DOWNLOADING && _state == DownloadState::DOWNLOADING ) // we're starting a download
+
+    switch ( _state )
     {
-        startTimer(Download::TIMERINT);
+        case DownloadState::INIT:
+            //m_TimerId = startTimer(Download::TIMERINT);
+            break;
+        case DownloadState::DOWNLOADING:
+            m_TimerId = startTimer(Download::TIMERINT);
+            break;
+        case DownloadState::PAUSED:
+            killTimer(m_TimerId);
+            break;
+        case DownloadState::DONE:
+            renameFile();
+            timerEvent(NULL);
+            break;
+        case DownloadState::FAILED:
+            killTimer(m_TimerId);
+            m_SecondsDownloading = 0;
+            break;
+        default:
+            break;
     }
 
-    if( m_pDownloadInfo->m_State == DownloadState::DOWNLOADING && _state != DownloadState::DOWNLOADING )
-    {
-        killTimer(m_TimerId);
-        m_SecondsDownloading = 0;
-    }
-
-    if( _state == DownloadState::DONE )
-    {
-        renameFile();
-    }
      m_pDownloadInfo->m_State = _state;
 
     if( triggerEmit == true )
@@ -137,6 +147,8 @@ void IDownload::timerEvent(QTimerEvent* event)
     LOG("emit( progressInfo())");
     emit( progressInfo( info ));
     m_pDownloadInfo->m_PrevDownloadedBytes = m_pDownloadInfo->m_DownloadedBytes;
+    if( info._DownloadedBytes == info._TotalBytes && info._TotalBytes != 0 )
+       killTimer(m_TimerId);
 }
 
 void IDownload::initFile()

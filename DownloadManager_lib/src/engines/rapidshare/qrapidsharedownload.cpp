@@ -226,7 +226,6 @@ void QRapidshareDownload::dataReadProgress(const int & done, const int & total){
     {
         setState( DownloadState::DONE );
         m_rssmState = FINISHED;
-        disconnectFromQHttp();
     }
 }
 
@@ -370,6 +369,7 @@ void QRapidshareDownload::done(const bool & error){
     else if( state() == DownloadState::DONE )
     {   
         emitStatusChanged();
+        disconnectFromQHttp();
     }
     else if( state() == DownloadState::PAUSED ) 
     {
